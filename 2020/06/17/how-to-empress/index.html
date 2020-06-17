@@ -85,12 +85,18 @@
 <meta property="og:url" content="https://blog.itmonkey.icu/2020/06/17/how-to-empress/index.html">
 <meta property="og:site_name" content="猿的野生香蕉">
 <meta property="og:description" content="介绍goreplay压测工具的使用">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/Goreplay/guaidian.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/Goreplay/record2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/Goreplay/result1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/Goreplay/result2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/Goreplay/result3.png">
 <meta property="article:published_time" content="2020-06-17T08:38:09.000Z">
-<meta property="article:modified_time" content="2020-06-17T08:51:24.678Z">
+<meta property="article:modified_time" content="2020-06-17T09:52:17.138Z">
 <meta property="article:author" content="野生">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="服务压测">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/Goreplay/guaidian.png">
 
 
 
@@ -371,7 +377,156 @@
       
 
       
-        <p>abc</p>
+        <h3 id="文章导读"><a href="#文章导读" class="headerlink" title="文章导读"></a>文章导读</h3><p>服务压力测试，是评估一个服务是否优秀的过程，他不仅能让你找到你的服务哪些地方存在性能瓶颈，而且还能让你准确的去做容量评估，防止容量不足，也规避了资源浪费。<br>本文会带你了解以下几点内容：</p>
+<ul>
+<li>压测的意义</li>
+<li>压测注意点</li>
+<li>压测准备</li>
+<li>模型压测的自我理解</li>
+<li>普通压测工具</li>
+<li>goreplay压测工具介绍</li>
+</ul>
+<h3 id="为什么要压测"><a href="#为什么要压测" class="headerlink" title="为什么要压测"></a>为什么要压测</h3><ul>
+<li>业务推广保障</li>
+<li>准确评估容量</li>
+<li>快速发现服务瓶颈</li>
+<li>极限压力测试</li>
+<li>服务迁移全链路测试<h3 id="压测需要注意哪些点-重点阅读"><a href="#压测需要注意哪些点-重点阅读" class="headerlink" title="压测需要注意哪些点(重点阅读)"></a>压测需要注意哪些点(重点阅读)</h3></li>
+<li>环境统一(基础环境、参数配置、资源型号、请求链路)</li>
+<li>压测机不能存在瓶颈</li>
+<li>压测姿势一致</li>
+<li>多次压测</li>
+<li>注意<code>写</code>流量(如果你不想产生脏数据)</li>
+<li>注意三方依赖服务(你压测A服务，要考虑是否会顺带压测到B服务)</li>
+<li>极限压测过程中注意拐点(某些时候你qps上不去，响应时间大幅度上涨，那就说明是拐点了)<h4 id="环境统一"><a href="#环境统一" class="headerlink" title="环境统一"></a>环境统一</h4>这个目前我们有两种方式，第一种是新建测试环境压测，第二种是直接在生产环境压测。<br>如果新建，那么我们需要考虑的点就是跟生产环境完全一致。</li>
+<li>基础环境，包括系统版本，系统参数配置</li>
+<li>软件环境，比如 Php 版本，Php 参数配置</li>
+<li>资源型号，机器的型号配置，Redis 的规格，MySql 的规格等</li>
+<li>请求链路，比如我请求的链路是经过两层 Nginx，不能在压测的时候只经过一层 Nginx。<h4 id="压测机器不能存在瓶颈"><a href="#压测机器不能存在瓶颈" class="headerlink" title="压测机器不能存在瓶颈"></a>压测机器不能存在瓶颈</h4>我们之前在压测过程中，会发现当压测到一定量级后就上不去了，这时候我们一直在排查服务端是否有什么问题，包括部署资源是否足够，后端资源是否性能瓶颈，带宽是否打满等信息，绕了一圈都没有发现问题。<br>最终我们发现是压测端机器性能较低，带宽打满了，最终换用了更高配的机器来进行压测。所以我们压测端一定不能成为压测计划的瓶颈。<h4 id="压测姿势一致"><a href="#压测姿势一致" class="headerlink" title="压测姿势一致"></a>压测姿势一致</h4><blockquote>
+<p>简单举个例子，用ab压测的时候，需要指定线程，压测时间等参数，假如第一次用10个线程，压测10分钟，第二次用12个线程，压测20分钟</p>
+</blockquote>
+</li>
+</ul>
+<p>那么这样得到的数据是完全无用的。</p>
+<h4 id="多次压测"><a href="#多次压测" class="headerlink" title="多次压测"></a>多次压测</h4><p>性能压测的数据是多次得来的，结论也是多次数据对比得出的。<br>由于每次压测都会有无法预知的问题，所以每次压测结束后，都需要分析结果，看看是否符合预期，比如在第二次压测，某截网络断了，那么得到的数据可能会非常差，那么这次的压测数据就不能使用。</p>
+<h4 id="注意写流量"><a href="#注意写流量" class="headerlink" title="注意写流量"></a>注意<code>写</code>流量</h4><p>这个也是跟我们的压测场景有关。</p>
+<ul>
+<li>当我们在生产压测，那么我们肯定不能有写流量的压测，那么我们的生产数据就会脏掉，除非这些数据能够把控，在压测后能完全删除，不然是只能压测读流量。</li>
+<li>当我们在测试环境压测，这种情况可以压测全链路，不过有一个点需要关注下，当我们是服务迁移的压测，这时候生产环境跟测试环境是数据实时同步的，测试环境的脏数据也会回写到生产环境。<h4 id="注意三方依赖服务"><a href="#注意三方依赖服务" class="headerlink" title="注意三方依赖服务"></a>注意三方依赖服务</h4><blockquote>
+<p>再举个例子，我美颜相机服务要准备压测，依赖登录、素材展示两个服务。</p>
+</blockquote>
+</li>
+</ul>
+<p>那么我们在压测的时候一定要去周知登录和素材的开发同学，以及让他们做好扩容准备和实时监控，实时反馈目前的一个服务状态，当有异常的时候，应立即停止压测。</p>
+<h4 id="极限压测过程中注意拐点"><a href="#极限压测过程中注意拐点" class="headerlink" title="极限压测过程中注意拐点"></a>极限压测过程中注意拐点</h4><p>在我们压测过程中，是需要记录每次压测的结果的，比如压测结果的qps、相应时间、服务SLA等信息。当某些值在一定持续增长的压力下增长缓慢、不增长甚至降低，那么这时候你就要考虑压测是否到达了一定的拐点，类似可以做一个如下的图来简单判断拐点：<br><img src="/img/Goreplay/guaidian.png" alt="guaidian"></p>
+<h3 id="压测前准备"><a href="#压测前准备" class="headerlink" title="压测前准备"></a>压测前准备</h3><ul>
+<li>明确整体系统链路情况</li>
+<li>依赖资源的容量评估，确认压测的时候是否需要扩容</li>
+<li>压测部分降级方案的确认</li>
+</ul>
+<h4 id="明确整体系统链路情况"><a href="#明确整体系统链路情况" class="headerlink" title="明确整体系统链路情况"></a>明确整体系统链路情况</h4><p>业务压测前，首先需要明确业务架构，开发需要配合运维梳理整个系统结构，开发补充业务层面，运维补充系统层面，整理出一个流量走势以及三方依赖图。明确是否跨机房、是否跨专线、是否存在网络隔离等问题。</p>
+<h4 id="依赖资源的容量评估"><a href="#依赖资源的容量评估" class="headerlink" title="依赖资源的容量评估"></a>依赖资源的容量评估</h4><blockquote>
+<p>例子，A业务压测，三方依赖服务有B和C，首先要记录当前生产业务的qps，B和C业务的使用量级。假如是1000qps，B用量10台机器，C用量20台机器。那么我们压测需要压到2000qps，理论上B用20台机器，C用40台机器。</p>
+</blockquote>
+<h4 id="压测部分降级方案的确认"><a href="#压测部分降级方案的确认" class="headerlink" title="压测部分降级方案的确认"></a>压测部分降级方案的确认</h4><p>做压测工作，我们需要明确几点：</p>
+<ul>
+<li>我们是为了保障线上业务稳定才做的压测，所有的评估都要有预留。</li>
+<li>压测遇到的问题也正是我们上生产或者迁移后遇到的问题，所以每一个问题都需要正视。</li>
+</ul>
+<p>所以针对上面两点，我们需要明确业务容量评估一定要留cache，降级方案、回退方案一定要有，防止真的出现问题。<br>下面是我们在压测过程中遇到的问题以及处理的过程：<br><img src="/img/Goreplay/record2.png" alt="reocrd"></p>
+<h3 id="模型压测-自我理解"><a href="#模型压测-自我理解" class="headerlink" title="模型压测(自我理解)"></a>模型压测(自我理解)</h3><p>这是我在压测过程中，总结的一个点，这个我可能没法用很好的词语来描述，我就用一个简单的例子来描述吧。</p>
+<blockquote>
+<p>业务场景：简单的 Nginx + PHP 业务，容器化部署。</p>
+</blockquote>
+<p>那么我们可以配置以下几个压测模型场景来进行压测，然后给出相应的结论：</p>
+<ol>
+<li>单 Pod CPU 内存压测</li>
+<li>单 Pod Nginx + PHP 空接口压测</li>
+<li>单 Pod Nginx + PHP 业务单接口压测</li>
+</ol>
+<ul>
+<li>关于单 Pod CPU 内存压测，我们可以在业务部署机器上启动一个空 Pod，然后进行压测，不涉及任何业务，这里得到的结论 — 排除底层平台带来的影响。</li>
+<li>单 Pod Nginx + PHP 空接口压测，这里你可以随便写一个php接口，return 一个 OK 就行，然后进行压测，这里得到的结论 — 排除业务基础环境带来的影响比如 Nginx + PHP 等。 </li>
+<li>单 Pod Nginx + PHP 业务单接口压测，这里找一个具有代表性的接口，什么是具有代表性的接口，比如这个接口是涉及到读 Redis 或者 MySql 等后端资源的。这里得到的结论 — 业务层面的一个压测结果。</li>
+</ul>
+<p>经过这一轮压测之后，你能非常明确你的压测结论是否存在异议，一步步排除环境因素。</p>
+<h3 id="普通压测工具介绍"><a href="#普通压测工具介绍" class="headerlink" title="普通压测工具介绍"></a>普通压测工具介绍</h3><p>目前来说，我在运维过程中使用的压测工具也就是ab，wrk等，其实针对不同的场景，每一个工具都有自己的优点和缺点。</p>
+<h4 id="ab"><a href="#ab" class="headerlink" title="ab"></a>ab</h4><ul>
+<li>支持多平台</li>
+<li>默认短链接</li>
+<li>只能单进程</li>
+<li>无法控制压测时间，控制速率</li>
+</ul>
+<h4 id="wrk"><a href="#wrk" class="headerlink" title="wrk"></a>wrk</h4><ul>
+<li>类unix</li>
+<li>支持多线程(更容易发挥多核的能力)</li>
+<li>支持自定义脚本</li>
+<li>默认长链接</li>
+</ul>
+<h3 id="goreploay介绍"><a href="#goreploay介绍" class="headerlink" title="goreploay介绍"></a>goreploay介绍</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>可用于服务迁移前的全链路测试</li>
+<li>支持http请求录制和重放，可以复制线上请求，在压测环境重放</li>
+<li>支持http层的流量过滤，比如我只复制某一个接口的请求</li>
+<li>支持请求放大，用于性能压测</li>
+<li>……<h4 id="文档地址"><a href="#文档地址" class="headerlink" title="文档地址"></a>文档地址</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">官方git地址：https://github.com/buger/goreplay</span><br><span class="line">官方文档：https://github.com/buger/goreplay/wiki</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="流量捕获"><a href="#流量捕获" class="headerlink" title="流量捕获"></a>流量捕获</h4><ul>
+<li>input-raw 捕获 HTTP 流量，需指定端口号</li>
+<li>input-file 使用 –output-file 记录的文件作为输入</li>
+<li>input-tcp 将多个 Gor 实例获取的流量聚集到一个 Gor 实例</li>
+</ul>
+<h4 id="流量重放"><a href="#流量重放" class="headerlink" title="流量重放"></a>流量重放</h4><ul>
+<li>output-http 将流量重放到URL地址</li>
+<li>output-file 将获取的流量记录如文件</li>
+<li>output-tcp 将获取的流量转移至另外的 Gor 实例，与input-tcp组合使用</li>
+<li>output-stdout debug 工具，将流量信息直接输出</li>
+</ul>
+<h4 id="请求过滤"><a href="#请求过滤" class="headerlink" title="请求过滤"></a>请求过滤</h4><ul>
+<li>http-allow-url 只发送正则匹配的url的请求</li>
+<li>http-disallow-url 不发送正则匹配url的请求</li>
+<li>http-allow-header 只发送指定head的请求</li>
+<li>http-disallow-header 不发送指定head的请求</li>
+<li>http-allow-method 允许的请求方法</li>
+<li>http-set-header 增加http-header</li>
+</ul>
+<h4 id="流量限制"><a href="#流量限制" class="headerlink" title="流量限制"></a>流量限制</h4><ul>
+<li>随机丢弃一部分请求<ul>
+<li>按照准确的qps限制</li>
+<li>按照比例限制（这里的比例，可以实现大于100%，即倍量的压测）</li>
+</ul>
+</li>
+<li>根据Header 或者 URL 参数限制一部分请求</li>
+</ul>
+<h3 id="实战演练"><a href="#实战演练" class="headerlink" title="实战演练"></a>实战演练</h3><h4 id="goreplay安装"><a href="#goreplay安装" class="headerlink" title="goreplay安装"></a>goreplay安装</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">依赖go环境</span><br><span class="line">wget https://github.com/buger/goreplay/releases/download/v1.0.0/gor_1.0.0_x64.tar.gz</span><br><span class="line">tar xvf gor_1.0.0_x64.tar.gz</span><br></pre></td></tr></table></figure>
+<h4 id="抓取流量"><a href="#抓取流量" class="headerlink" title="抓取流量"></a>抓取流量</h4><p>在公司中，我们的流量入口一般是公共代理，比如nginx等。下面例子是我在公司其中一台公共代理上抓取的流量，有以下几个说明：(给的例子是我在使用过程中的，有特殊需求的可以参考官方文档进行相应的修改)</p>
+<ul>
+<li>80端口</li>
+<li>allow header：lb6test.meitu.com，这就是我想要压测的服务域名</li>
+<li>method是get，因为post请求我们不压测，涉及到写数据</li>
+<li>allowurl是我只想要抓取这个域名中a和b这两个接口的流量</li>
+<li>disallow header，我要抓取token为空的，因为不为空的token涉及到登录，会连带压测我们登录的服务</li>
+<li>outputfile：把抓取的流量输出为一个流量包，这样好携带</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./goreplay  --input-raw :80 --http-allow-header 'Host: lb6test.meitu.com' -http-allow-method 'GET' -http-allow-url '/a/a.json' -http-allow-url '/b/b.json' -http-disallow-header 'Access-Token:' -output-file meitu.gor</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="普通输出流量"><a href="#普通输出流量" class="headerlink" title="普通输出流量"></a>普通输出流量</h4><p>这个操作一般我们会放到单独的压测机器上进行，如果你压测的是新部署的测试环境，注意这个域名一定要在这个机器上绑定一个host，防止你压测到生产环境去了。</p>
+<ul>
+<li>loop，循环压测，因为流量包抓取的时间是固定的，如果不循环压测，流量重放结束就会终止压测</li>
+<li>disallowurl，我突然不想压测b接口的流量，那么就关闭掉。</li>
+<li>outputhttp，从该压测机发起对测试环境的请求流量<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./goreplay --input-file-loop --input-file "meitu.gor" --http-disallow-url "/b/b.json" --output-http "http://lb6test.meitu.com"</span><br></pre></td></tr></table></figure>
+<h4 id="压测输出流量"><a href="#压测输出流量" class="headerlink" title="压测输出流量"></a>压测输出流量</h4>当你按照普通输出流量走一遍的时候，并且不过滤任何接口，你就会知道你这个流量包到底有多少流量，是多少 qps，假如我的<code>meitu.gor</code>是100 qps。<h5 id="我想要50qps"><a href="#我想要50qps" class="headerlink" title="我想要50qps"></a>我想要50qps</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./goreplay --input-file-loop --input-file "meitu.gor" --output-http "http://lb6test.meitu.com|50"</span><br></pre></td></tr></table></figure>
+<h5 id="我想要200qps"><a href="#我想要200qps" class="headerlink" title="我想要200qps"></a>我想要200qps</h5>这里一个操作是把流量放到1000%，那么你就可以认为这个qps是无限大的，你可以任意指定你想要的qps了。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./goreplay --input-file-loop --input-file "meitu.gor|1000%" --output-http "http://lb6test.meitu.com|200"</span><br></pre></td></tr></table></figure>
+<h5 id="一次压测太慢，我要快速压测"><a href="#一次压测太慢，我要快速压测" class="headerlink" title="一次压测太慢，我要快速压测"></a>一次压测太慢，我要快速压测</h5>如果你觉得一个进程太慢了，那么就多启动几个进程进行压测吧<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup ./goreplay --input-file-loop --input-file "meitu.gor" --output-http "http://lb6test.meitu.com" &gt; /dev/null 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<h4 id="输出文档"><a href="#输出文档" class="headerlink" title="输出文档"></a>输出文档</h4>我们压测好之后，应该输出哪些东西呢</li>
+<li>基础压测的数据</li>
+<li>极限压测的数据</li>
+<li>不同压力下的数据</li>
+<li>qps，响应时间，成功率</li>
+</ul>
+<p>下面是我当时压测公司某个服务记录的一些信息和描绘的图。<br><img src="/img/Goreplay/result1.png" alt="result1"><br><img src="/img/Goreplay/result2.png" alt="result2"><br><img src="/img/Goreplay/result3.png" alt="result3"></p>
 
       
     </div>
@@ -472,8 +627,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -533,6 +697,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#文章导读"><span class="nav-number">1.</span> <span class="nav-text">文章导读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要压测"><span class="nav-number">2.</span> <span class="nav-text">为什么要压测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压测需要注意哪些点-重点阅读"><span class="nav-number">3.</span> <span class="nav-text">压测需要注意哪些点(重点阅读)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#环境统一"><span class="nav-number">3.1.</span> <span class="nav-text">环境统一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压测机器不能存在瓶颈"><span class="nav-number">3.2.</span> <span class="nav-text">压测机器不能存在瓶颈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压测姿势一致"><span class="nav-number">3.3.</span> <span class="nav-text">压测姿势一致</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多次压测"><span class="nav-number">3.4.</span> <span class="nav-text">多次压测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意写流量"><span class="nav-number">3.5.</span> <span class="nav-text">注意写流量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意三方依赖服务"><span class="nav-number">3.6.</span> <span class="nav-text">注意三方依赖服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#极限压测过程中注意拐点"><span class="nav-number">3.7.</span> <span class="nav-text">极限压测过程中注意拐点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压测前准备"><span class="nav-number">4.</span> <span class="nav-text">压测前准备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#明确整体系统链路情况"><span class="nav-number">4.1.</span> <span class="nav-text">明确整体系统链路情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#依赖资源的容量评估"><span class="nav-number">4.2.</span> <span class="nav-text">依赖资源的容量评估</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压测部分降级方案的确认"><span class="nav-number">4.3.</span> <span class="nav-text">压测部分降级方案的确认</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模型压测-自我理解"><span class="nav-number">5.</span> <span class="nav-text">模型压测(自我理解)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#普通压测工具介绍"><span class="nav-number">6.</span> <span class="nav-text">普通压测工具介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ab"><span class="nav-number">6.1.</span> <span class="nav-text">ab</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wrk"><span class="nav-number">6.2.</span> <span class="nav-text">wrk</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#goreploay介绍"><span class="nav-number">7.</span> <span class="nav-text">goreploay介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优点"><span class="nav-number">7.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文档地址"><span class="nav-number">7.2.</span> <span class="nav-text">文档地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流量捕获"><span class="nav-number">7.3.</span> <span class="nav-text">流量捕获</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流量重放"><span class="nav-number">7.4.</span> <span class="nav-text">流量重放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#请求过滤"><span class="nav-number">7.5.</span> <span class="nav-text">请求过滤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流量限制"><span class="nav-number">7.6.</span> <span class="nav-text">流量限制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实战演练"><span class="nav-number">8.</span> <span class="nav-text">实战演练</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#goreplay安装"><span class="nav-number">8.1.</span> <span class="nav-text">goreplay安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抓取流量"><span class="nav-number">8.2.</span> <span class="nav-text">抓取流量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#普通输出流量"><span class="nav-number">8.3.</span> <span class="nav-text">普通输出流量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压测输出流量"><span class="nav-number">8.4.</span> <span class="nav-text">压测输出流量</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#我想要50qps"><span class="nav-number">8.4.1.</span> <span class="nav-text">我想要50qps</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#我想要200qps"><span class="nav-number">8.4.2.</span> <span class="nav-text">我想要200qps</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#一次压测太慢，我要快速压测"><span class="nav-number">8.4.3.</span> <span class="nav-text">一次压测太慢，我要快速压测</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#输出文档"><span class="nav-number">8.5.</span> <span class="nav-text">输出文档</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
