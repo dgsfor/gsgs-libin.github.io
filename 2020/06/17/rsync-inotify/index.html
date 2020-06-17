@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="rsync,inotify-tools,文件同步," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在日常的运维工作中，发现经常会处理一些迁移工作，在迁移过程中，难免会涉及到一些文件同步工作，今天就来聊聊我经常是怎么去处理这些同步工作的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="inotify-tools如何做文件数据实时同步">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/06/17/rsync-inotify/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="在日常的运维工作中，发现经常会处理一些迁移工作，在迁移过程中，难免会涉及到一些文件同步工作，今天就来聊聊我经常是怎么去处理这些同步工作的">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/rsync_inotify/rsync_1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/rsync_inotify/rsync_2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/rsync_inotify/rsync_3.png">
+<meta property="article:published_time" content="2020-06-17T11:41:32.000Z">
+<meta property="article:modified_time" content="2020-06-17T11:45:09.983Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="rsync">
+<meta property="article:tag" content="inotify-tools">
+<meta property="article:tag" content="文件同步">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/rsync_inotify/rsync_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.itmonkey.icu/2020/06/17/rsync-inotify/"/>
+
+
+
+
+
+  <title>inotify-tools如何做文件数据实时同步 | 猿的野生香蕉</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?654543521de3c3f4ced79d25e84b1abb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">猿的野生香蕉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">野生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/06/17/rsync-inotify/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="野生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="猿的野生香蕉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">inotify-tools如何做文件数据实时同步</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-17T19:41:32+08:00">
+                2020-06-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index">
+                    <span itemprop="name">基础运维</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  在日常的运维工作中，发现经常会处理一些迁移工作，在迁移过程中，难免会涉及到一些文件同步工作，今天就来聊聊我经常是怎么去处理这些同步工作的
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>知识点落成文才是硬道理，欢迎大家读他人博客，写自己博客。</p>
+</blockquote>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在日常的运维工作中，发现经常会处理一些迁移工作，在迁移过程中，难免会涉及到一些文件同步工作，今天这篇chat就来聊聊我经常是怎么去处理这些同步工作的。当然有大佬有其他姿势的都可以留言，欢迎交流。</p>
+<h3 id="知识点补充"><a href="#知识点补充" class="headerlink" title="知识点补充"></a>知识点补充</h3><blockquote>
+<p>你了解过哪些可以来操作同步的工具或者命令呢？</p>
+</blockquote>
+<ul>
+<li>scp，没错scp算是文件拷贝命令，但是这个过程你也可以简单的认为他是同步的过程。</li>
+<li>rsync，大家一定不会陌生，非常好用的一款同步工具，操作简单而且功能强大，至于具体的命令参数我就不做详细介绍了，这种网上一抓一大把，一会做场景说明的时候会举例子。</li>
+<li>inotify-tools，他是linux下监控文件系统事件的工具，尝尝跟rsync来做文件的实时同步。</li>
+</ul>
+<h3 id="同步场景"><a href="#同步场景" class="headerlink" title="同步场景"></a>同步场景</h3><ul>
+<li>单文件同步，点对点。</li>
+<li>多文件同步</li>
+<li>准实时同步</li>
+<li>点对点实时同步</li>
+<li>弹性同步</li>
+<li>增量同步</li>
+</ul>
+<h4 id="单文件同步，点对点"><a href="#单文件同步，点对点" class="headerlink" title="单文件同步，点对点"></a>单文件同步，点对点</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">从本地传输到远端：</span><br><span class="line">scp -P 22 a.txt root@10.13.43.126:~</span><br><span class="line">从远端拉取到本地：</span><br><span class="line">scp -P 22 root@10.13.43.126:~/a.txt ./</span><br></pre></td></tr></table></figure>
+<h4 id="多文件同步"><a href="#多文件同步" class="headerlink" title="多文件同步"></a>多文件同步</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">确保：</span><br><span class="line">1.安装好rsync</span><br><span class="line">2.配置好相应的module</span><br><span class="line">远端配置，我举个简单的例子：</span><br><span class="line">[rsync_test]</span><br><span class="line">path = /www/gitbook/</span><br><span class="line">read only = no</span><br><span class="line">hosts allow = *</span><br><span class="line">在正常的生产使用，hosts allow需要控制到具体的ip或者段，另外加上hosts deny = *来防止rsync类攻击以及漏洞。</span><br><span class="line">3.保证网络以及权限正常</span><br><span class="line">4.rsync进程是否运行(修改配置文件不用重启)</span><br></pre></td></tr></table></figure>
+<p>从本地push文件到远端测试：<br><img src="/img/rsync_inotify/rsync_1.png" alt="rsync-1"></p>
+<h4 id="准实时同步"><a href="#准实时同步" class="headerlink" title="准实时同步"></a>准实时同步</h4><p>我先解释一下这个准实时，其实很简单，新增的文件并不会直接同步到远端，而是周期性的同步，有时间差。这种适用于报表导出等，我规定一个时间去同步文件。</p>
+<p>实现逻辑：rsync做好文件同步，crontab配合在做定时同步，常用<code>* * * * *</code>来做准实时同步，每分钟同步一次。</p>
+<p>举一个简单的例子来看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rsync脚本：</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">/usr/bin/rsync -rt 192.168.1.1::test_moduel/ /www/</span><br><span class="line"></span><br><span class="line">crontab定时任务可以这样写：</span><br><span class="line">* * * * * root /bin/sh rsync.sh &gt; /dev/null 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<p>时间可以自己随意调整，主要是看具体的业务场景。</p>
+<h4 id="点对点实时同步"><a href="#点对点实时同步" class="headerlink" title="点对点实时同步"></a>点对点实时同步</h4><p>这个同步方式简单解释下，其实就是利用inotify+rsync做文件数据的实时同步，废话不多说，直接举例说明：</p>
+<blockquote>
+<p>首先需要安装inotify。检测你的机器是否支持inotify，检测方法</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ll /proc/sys/fs/inotify，是否有一下三条输出，没有表示不支持</span><br><span class="line">total 0</span><br><span class="line">-rw-r--r-- 1 root root 0 May  7 17:01 max_queued_events</span><br><span class="line">-rw-r--r-- 1 root root 0 May  7 17:01 max_user_instances</span><br><span class="line">-rw-r--r-- 1 root root 0 May  7 17:01 max_user_watches</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>安装</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install inotify-tools -y</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>验证本地监听测试</p>
+</blockquote>
+<p>例子：验证我本地/www/abc/的一个目录文件变化，然后做出对应的日志输出。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">/usr/bin/inotifywait -mrq --timefmt '%Y/%m/%d-%H:%M:%S' --format '%T %w %f %e' -e modify,delete,create,move,attrib /www/abc/</span><br></pre></td></tr></table></figure>
+<p>参数说明：<br>|参数|说明<br>|:–|:–<br>|-m|持续监听<br>|-r|使用递归形式监视目录<br>|-q|减少冗余信息，只打印出需要的信息<br>|-e|指定要监视的事件，多个时间使用逗号隔开<br>|–timefmt|时间格式<br>|–format|监听到的文件变化的信息<br>对于的参数-e，他可以随意组合事件，可以看下表：<br>|参数|说明<br>|:–|:–<br>|access|访问，读取文件。<br>|modify|修改，文件内容被修改。<br>|attrib|属性，文件元数据被修改。<br>|move|移动，对文件进行移动操作。<br>|create|创建，生成新文件<br>|open|打开，对文件进行打开操作。<br>|close|关闭，对文件进行关闭操作。<br>|delete|删除，文件被删除。<br>下面是我做实验的结果，具体可以看下日志和对应的操作：<br><img src="/img/rsync_inotify/rsync_2.png" alt="rsync-2"></p>
+<blockquote>
+<p>做了上述验证之后，我们就可以直接进行点对点实时同步验证了。</p>
+</blockquote>
+<p>描述下场景：<br>A机器：10.17.36.122<br>B机器：10.17.41.120<br>A机器的/www/abc/需要跟B机器的/www/abc/进行实时同步<br>准备：<br>① B机器上已经配置好rsync module了，module叫：rsync_test<br>② rsync同步命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/rsync -rt /www/abc/ 10.17.41.120::rsync_test/</span><br></pre></td></tr></table></figure>
+<p>③ 准备好rsync_inotify.sh脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">function inotify_fun()&#123;</span><br><span class="line">    /usr/bin/inotifywait -mrq --timefmt '%Y/%m/%d-%H:%M:%S' --format '%T %w %f %e' -e modify,delete,create,move,attrib /www/abc/ | while read file</span><br><span class="line">    do</span><br><span class="line">        /usr/bin/rsync -rt --progress -v --delete /www/abc/ 10.17.41.120::rsync_test/</span><br><span class="line">    done</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">inotify_fun &gt;&gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+<p>④ 运行测试<br>A机器上运行脚本：sh rsync_inotify.sh，此脚本后台运行。为了能看到传输效果，我把&gt;&gt; /dev/null 2&gt;&amp;1 &amp;去掉了，可以看到具体的日志。<br><img src="/img/rsync_inotify/rsync_3.png" alt="rsync-3"></p>
+<blockquote>
+<p>注意点</p>
+</blockquote>
+<p>① 生产环境如果要使用的话，直接把脚本后台运行。<br>② rsync的参数可以自己定义，我写了一个–delete的参数，这个在生产环境要谨慎使用。</p>
+<h4 id="弹性同步"><a href="#弹性同步" class="headerlink" title="弹性同步"></a>弹性同步</h4><p>这个场景比较特殊，是我在运维过程中遇到的，不一定对其他人都适用，有兴趣可以简单了解下。</p>
+<blockquote>
+<p>背景</p>
+</blockquote>
+<p>目前我们用弹性伸缩这个服务比较多，类似阿里云的ess，华为云的as，aws的autoscaling等。熟悉这个服务的同学都知道弹性出来的机器是按照某个镜像产生的，当产生镜像的这个机器(灰度机)中有一个目录需要实时更新，我们不可能每次更新就去创建一个镜像并且更新现有已经弹性出来的机器，这样不仅费劲还费钱。</p>
+<blockquote>
+<p>处理方法</p>
+</blockquote>
+<p>针对这个问题，其实最简单的做法就是在灰度机上做一个定时向某一台机器同步的任务，而这某一台机器就是灰度机自己。这样弹性出来的机器就会从灰度机拉取最新的文件。</p>
+<blockquote>
+<p>举个例子</p>
+</blockquote>
+<p>灰度机ip：192.168.1.1<br>灰度机上定时任务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* * * * * /usr/bin/rsync -rt /www/abc/ 192.168.1.1::rsync_test/</span><br></pre></td></tr></table></figure>
+<p>这样一来，弹性出来的机器都会带上这个定时任务，当192.168.1.1更新了/www/abc/目录下的文件，弹性机器就会每分钟同步一次。</p>
+<p>如果想要实时同步，那么可以参考<code>实时同步</code>，在灰度机上做配置即可。</p>
+<h4 id="增量同步"><a href="#增量同步" class="headerlink" title="增量同步"></a>增量同步</h4><p>关于增量同步，有两个说法：</p>
+<ol>
+<li>文件的增量同步，比如我有1.txt 2.txt，那么我本地新增了一个3.txt，那么传输的时候只会传输3.txt，而不会重新1.txt和2.txt都传输一遍。</li>
+<li>文件内容的增量同步，比如我在1.txt中追加或者删除内容，那么远端会不会同步删除或者更新。</li>
+</ol>
+<p>针对上述两个问题，我通常采用的方式就是上rsync_inotify.sh的内容，inotify来检测文件变更，其中有一个参数就是modify和attrib，这两个就可以满足第二条说法。对于第一条大家可以简单了解下rsync的–append参数。</p>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>关于同步其实方式很多，选择自己合适的，并且简单的，能满足业务需求的，就够了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/img/wechat/dgsfor-wechat.jpg" alt="野生 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎微信联系我</div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/rsync/" rel="tag"># rsync</a>
+          
+            <a href="/tags/inotify-tools/" rel="tag"># inotify-tools</a>
+          
+            <a href="/tags/%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5/" rel="tag"># 文件同步</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/17/pandora-alert/" rel="next" title="适用于中小型企业自研的监控告警通知系统(附源码)">
+                <i class="fa fa-chevron-left"></i> 适用于中小型企业自研的监控告警通知系统(附源码)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">野生</p>
+              <p class="site-description motion-element" itemprop="description">在运维道路上一路狂飙的老司机</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#知识点补充"><span class="nav-number">2.</span> <span class="nav-text">知识点补充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步场景"><span class="nav-number">3.</span> <span class="nav-text">同步场景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单文件同步，点对点"><span class="nav-number">3.1.</span> <span class="nav-text">单文件同步，点对点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多文件同步"><span class="nav-number">3.2.</span> <span class="nav-text">多文件同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#准实时同步"><span class="nav-number">3.3.</span> <span class="nav-text">准实时同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#点对点实时同步"><span class="nav-number">3.4.</span> <span class="nav-text">点对点实时同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#弹性同步"><span class="nav-number">3.5.</span> <span class="nav-text">弹性同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#增量同步"><span class="nav-number">3.6.</span> <span class="nav-text">增量同步</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后"><span class="nav-number">4.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">野生</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
