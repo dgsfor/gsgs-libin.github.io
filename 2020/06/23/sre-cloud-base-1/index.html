@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="云运维," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="云运维-简单认识各个云常用云服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="云运维-简单认识各个云常用云服务">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/06/23/sre-cloud-base-1/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="云运维-简单认识各个云常用云服务">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-cloud-base-1/img1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-cloud-base-1/img2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-cloud-base-1/img3.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-cloud-base-1/img4.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-cloud-base-1/img5.png">
+<meta property="article:published_time" content="2020-06-23T09:57:42.000Z">
+<meta property="article:modified_time" content="2020-06-23T10:00:48.655Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="云运维">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/sre-cloud-base-1/img1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.itmonkey.icu/2020/06/23/sre-cloud-base-1/"/>
+
+
+
+
+
+  <title>云运维-简单认识各个云常用云服务 | 猿的野生香蕉</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?654543521de3c3f4ced79d25e84b1abb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">猿的野生香蕉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">野生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/06/23/sre-cloud-base-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="野生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="猿的野生香蕉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">云运维-简单认识各个云常用云服务</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-23T17:57:42+08:00">
+                2020-06-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%9A%E4%BA%91%E4%B8%93%E8%BE%91/" itemprop="url" rel="index">
+                    <span itemprop="name">多云专辑</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  云运维-简单认识各个云常用云服务
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><blockquote>
+<p>再多的讲解不如后面的实战课程，概念性的东西本身有点枯燥无味，这篇文章旨在让大家对我们使用的云服务有一个大概的了解，后续补个ppt</p>
+</blockquote>
+<p>在大家了解华为云之后，其实这篇文章相对来说就没这么重要的，我就简单列举下常用的，另外说几个其他云独有的服务。</p>
+<h3 id="华为云-阿里云"><a href="#华为云-阿里云" class="headerlink" title="华为云/阿里云"></a>华为云/阿里云</h3><p>下面这些都是最基本的服务，搭建一套完整的可用生产环境就需要这些，其他可以按需或者按云使用。</p>
+<table>
+<thead>
+<tr>
+<th align="left">云服务名称</th>
+<th align="left">作用</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">ECS</td>
+<td align="left">弹性云服务器</td>
+<td align="left">云基本服务，常用操作：按需初始化、镜像定制、统一登录</td>
+</tr>
+<tr>
+<td align="left">RDS</td>
+<td align="left">Mysql</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">redis</td>
+<td align="left">redis</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">DSN</td>
+<td align="left">云解析</td>
+<td align="left">常用内网dns域，其他一般没用</td>
+</tr>
+<tr>
+<td align="left">ELB/SLB</td>
+<td align="left">负载均衡器</td>
+<td align="left">公网，内网，tcp，http</td>
+</tr>
+<tr>
+<td align="left">VPC</td>
+<td align="left">虚拟网络</td>
+<td align="left">注意子网划分，nat网关是作用在子网上的</td>
+</tr>
+<tr>
+<td align="left">NAT</td>
+<td align="left">nat网关</td>
+<td align="left">云服务访问外部必经之路，建议最早部署</td>
+</tr>
+<tr>
+<td align="left">安全组</td>
+<td align="left">安全组</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">AS/ESS</td>
+<td align="left">弹性伸缩</td>
+<td align="left">虚机部署的弹性伸缩服务，云服务最大特点之一</td>
+</tr>
+<tr>
+<td align="left">OBS/OSS</td>
+<td align="left">对象存储</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">CCE/CS</td>
+<td align="left">容器服务</td>
+<td align="left">创建k8s集群</td>
+</tr>
+<tr>
+<td align="left">SWR</td>
+<td align="left">容器镜像服务</td>
+<td align="left">类似harbor</td>
+</tr>
+</tbody></table>
+<h4 id="【案例讲解】阿里云经验分享"><a href="#【案例讲解】阿里云经验分享" class="headerlink" title="【案例讲解】阿里云经验分享"></a>【案例讲解】阿里云经验分享</h4><p>可以查看之前的博客，有分享过：<a href="https://blog.itmonkey.icu/2020/06/17/meitu-aliyun-use-experience/">https://blog.itmonkey.icu/2020/06/17/meitu-aliyun-use-experience/</a></p>
+<h3 id="AWS"><a href="#AWS" class="headerlink" title="AWS"></a>AWS</h3><p>上面华为云的服务，他该有的都有，下面列举之前用的的特殊的</p>
+<table>
+<thead>
+<tr>
+<th align="left">云服务名称</th>
+<th align="left">作用</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">ECS</td>
+<td align="left">容器服务</td>
+<td align="left">aws自研的容器服务</td>
+</tr>
+<tr>
+<td align="left">EKS</td>
+<td align="left">容器服务</td>
+<td align="left">aws自研的容器服务(k8s版)</td>
+</tr>
+<tr>
+<td align="left">ES</td>
+<td align="left">ES集群</td>
+<td align="left">集日志存储、日志展示一体的，ES+Kibana</td>
+</tr>
+<tr>
+<td align="left">Route53</td>
+<td align="left">dns解析</td>
+<td align="left">对应华为云上的dns服务</td>
+</tr>
+<tr>
+<td align="left">S3</td>
+<td align="left">对象存储</td>
+<td align="left">对应华为云的OBS，对应阿里云的oss</td>
+</tr>
+<tr>
+<td align="left">Lambda</td>
+<td align="left">无服务计算</td>
+<td align="left">简单解释就是：你写好代码，aws帮你运行，常用作触发服务</td>
+</tr>
+<tr>
+<td align="left">Cloudwatch</td>
+<td align="left">云监控</td>
+<td align="left">在这里，你可以看到所有的监控信息，监控指标，自定义告警，自定义监控报表</td>
+</tr>
+<tr>
+<td align="left">CloudFormation</td>
+<td align="left">云服务编排</td>
+<td align="left">他是一个编排工具帮你组合使用各个云产品，最终形态为一个yaml文件，定义了几个云组件之间的关系</td>
+</tr>
+<tr>
+<td align="left">Kinesis</td>
+<td align="left">数据流处理</td>
+<td align="left">集数据采集，处理，分析一体的服务</td>
+</tr>
+<tr>
+<td align="left">IAM</td>
+<td align="left">权限控制</td>
+<td align="left">用户、组、角色都是在这里定义</td>
+</tr>
+<tr>
+<td align="left">SNS</td>
+<td align="left">消息收发服务</td>
+<td align="left">可以收发相应的告警数据等</td>
+</tr>
+<tr>
+<td align="left">AWS Cost Explorer</td>
+<td align="left">成本分析</td>
+<td align="left">成本分析工具</td>
+</tr>
+</tbody></table>
+<h4 id="【案例讲解】EC2-ECS-EKS-ES-kinesis-lambda"><a href="#【案例讲解】EC2-ECS-EKS-ES-kinesis-lambda" class="headerlink" title="【案例讲解】EC2 + ECS/EKS + ES + kinesis + lambda"></a>【案例讲解】EC2 + ECS/EKS + ES + kinesis + lambda</h4><p>从下图中可以简单认识几个组件：</p>
+<table>
+<thead>
+<tr>
+<th align="left">组件名称</th>
+<th align="left">组件作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">EC2</td>
+<td align="left">就是云服务器</td>
+</tr>
+<tr>
+<td align="left">ECS/EKS</td>
+<td align="left">容器服务</td>
+</tr>
+<tr>
+<td align="left">Kinesis</td>
+<td align="left">数据传输流中转站，接收云服务提发来的日志数据，同时push到es集群中</td>
+</tr>
+<tr>
+<td align="left">cloudwatch</td>
+<td align="left">ecs容器服务的日志默认会投放到cloudwath中，从这里就可以看出cloudwatch其实是aws上集日志、告警未一体的服务</td>
+</tr>
+<tr>
+<td align="left">lambda</td>
+<td align="left">当cloudwatch新增一条日志，就会触发一次自定义的lambda函数，这个函数可以自定义，比如我判断这条日志是200的accesslog，那么我就不投放到es，这样lambda就实现了投放和过滤的功能</td>
+</tr>
+<tr>
+<td align="left">es集群</td>
+<td align="left">就是es集群，不过是托管于aws的，顺便提供了kibana可视化界面给你</td>
+</tr>
+</tbody></table>
+<p><img src="/img/sre-cloud-base-1/img1.png" alt="png1"></p>
+<p>后面会有详细教程，请关注：<code>云运维–aws如何处理日志(物理日志+容器日志)kinesis+lambda</code></p>
+<h4 id="【案例讲解】CloudFormation使用"><a href="#【案例讲解】CloudFormation使用" class="headerlink" title="【案例讲解】CloudFormation使用"></a>【案例讲解】CloudFormation使用</h4><p>从下图中可以简单认识几个组件：</p>
+<table>
+<thead>
+<tr>
+<th align="left">组件名称</th>
+<th align="left">组件作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">AutoScaling</td>
+<td align="left">弹性伸缩组，类似华为云的AS，阿里云的ESS</td>
+</tr>
+<tr>
+<td align="left">Load Balancer</td>
+<td align="left">负载均衡器，类似华为云ELB，阿里云的slb，GCP的GLB</td>
+</tr>
+<tr>
+<td align="left">CloudFormation</td>
+<td align="left">简单认为他是一个编排工具，他把ec2、autoscaling、lb组合起来，我创建一个CloudFormation服务，就相当于创建了三个组合服务</td>
+</tr>
+</tbody></table>
+<p>那么CloudFormation有啥作用呢？</p>
+<ol>
+<li>快速编排服务，有一个做图界面，你可以任意组合你的云服务(下图)，最终会生成一个yaml文件，后续拿着yaml文件就可以快速创建一个新的cf服务</li>
+<li>快速更新，比如我服务代码更新了，我创建一个新的镜像，我只需要去cloudformation中填写上新的镜像id，然后他就会自动帮我更新所有的ec2实例</li>
+</ol>
+<p><img src="/img/sre-cloud-base-1/img2.png" alt="png2"><br><img src="/img/sre-cloud-base-1/img3.png" alt="png3"></p>
+<h4 id="【案例讲解】SNS消息服务"><a href="#【案例讲解】SNS消息服务" class="headerlink" title="【案例讲解】SNS消息服务"></a>【案例讲解】SNS消息服务</h4><p>几个概念需要先熟悉下：<br>主题：类似消息模板，比如我定义一个cpu报警主题<br>订阅：创建一个订阅，他里面定义了是采用什么方式发送这个主题消息，比如邮件，短信等。比如当创建好邮件订阅之后，你就会收到一条消息，点击之后你以后就能收到这个主题的消息了。<br><img src="/img/sre-cloud-base-1/img4.png" alt="png4"></p>
+<blockquote>
+<p>用途</p>
+</blockquote>
+<ol>
+<li>sns常常配合cloudwatch进行监控告警信息的发送。</li>
+<li>当然也有其他用途，类似下图：<br><img src="/img/sre-cloud-base-1/img5.png" alt="png5"></li>
+</ol>
+<h3 id="GCP"><a href="#GCP" class="headerlink" title="GCP"></a>GCP</h3><p>使用的也就下面这些，其他的我这边暂时没接触到，其实google真正厉害的感觉并不是下面的服务，也没用到，所以也说不出个所以然。</p>
+<table>
+<thead>
+<tr>
+<th align="left">云服务名称</th>
+<th align="left">作用</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Compute engine</td>
+<td align="left">虚拟机实例</td>
+<td align="left">云服务器</td>
+</tr>
+<tr>
+<td align="left">kubernetes engine</td>
+<td align="left">容器集群</td>
+<td align="left">gke</td>
+</tr>
+<tr>
+<td align="left">Storage</td>
+<td align="left">对象存储</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">logging</td>
+<td align="left">日志中心</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">stackdriver</td>
+<td align="left">监控中心</td>
+<td align="left">可以把logging中的日志在这里做成图表</td>
+</tr>
+<tr>
+<td align="left">网络服务</td>
+<td align="left">网络服务</td>
+<td align="left">包含负载均衡器，nat，dns，cdn等，起初我是没找到负载均衡器也在这里面</td>
+</tr>
+<tr>
+<td align="left">bigquery</td>
+<td align="left">云数据仓库</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h4 id="【案例讲解】最简单的生产环境实现方案"><a href="#【案例讲解】最简单的生产环境实现方案" class="headerlink" title="【案例讲解】最简单的生产环境实现方案"></a>【案例讲解】最简单的生产环境实现方案</h4><ol>
+<li>创建gke集群</li>
+<li>底层compute engine作为node承载</li>
+<li>创建服务、ingress等</li>
+<li>在logging中可以查看到具体的k8s原生日志，业务日志等</li>
+<li>stackdriver中根据loggging的指标作图</li>
+<li>访问外网需求，增加nat</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/img/wechat/dgsfor-wechat.jpg" alt="野生 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎微信联系我</div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E4%BA%91%E8%BF%90%E7%BB%B4/" rel="tag"># 云运维</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/22/sre-cloud-start/" rel="next" title="云运维-开篇随便聊聊自己">
+                <i class="fa fa-chevron-left"></i> 云运维-开篇随便聊聊自己
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">野生</p>
+              <p class="site-description motion-element" itemprop="description">在运维道路上一路狂飙的老司机</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#说明"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#华为云-阿里云"><span class="nav-number">2.</span> <span class="nav-text">华为云&#x2F;阿里云</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#【案例讲解】阿里云经验分享"><span class="nav-number">2.1.</span> <span class="nav-text">【案例讲解】阿里云经验分享</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AWS"><span class="nav-number">3.</span> <span class="nav-text">AWS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#【案例讲解】EC2-ECS-EKS-ES-kinesis-lambda"><span class="nav-number">3.1.</span> <span class="nav-text">【案例讲解】EC2 + ECS&#x2F;EKS + ES + kinesis + lambda</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#【案例讲解】CloudFormation使用"><span class="nav-number">3.2.</span> <span class="nav-text">【案例讲解】CloudFormation使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#【案例讲解】SNS消息服务"><span class="nav-number">3.3.</span> <span class="nav-text">【案例讲解】SNS消息服务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GCP"><span class="nav-number">4.</span> <span class="nav-text">GCP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#【案例讲解】最简单的生产环境实现方案"><span class="nav-number">4.1.</span> <span class="nav-text">【案例讲解】最简单的生产环境实现方案</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">野生</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
