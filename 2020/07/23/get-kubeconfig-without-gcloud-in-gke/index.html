@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="云运维," />
+  <meta name="keywords" content="gcp,gke,k8s," />
 
 
 
@@ -79,17 +79,21 @@
 
 
 
-<meta name="description" content="云运维-开篇随便聊聊自己">
+<meta name="description" content="如何不使用gcloud认证gke集群">
 <meta property="og:type" content="article">
-<meta property="og:title" content="云运维-开篇随便聊聊自己">
-<meta property="og:url" content="https://blog.itmonkey.icu/2020/06/22/sre-cloud-start/index.html">
+<meta property="og:title" content="不使用gcloud认证gke集群">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/07/23/get-kubeconfig-without-gcloud-in-gke/index.html">
 <meta property="og:site_name" content="猿的野生香蕉">
-<meta property="og:description" content="云运维-开篇随便聊聊自己">
-<meta property="article:published_time" content="2020-06-22T08:48:27.000Z">
-<meta property="article:modified_time" content="2020-06-22T08:54:28.838Z">
+<meta property="og:description" content="如何不使用gcloud认证gke集群">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/getkubeconfigwithoutgcloud/1.png">
+<meta property="article:published_time" content="2020-07-23T06:41:02.000Z">
+<meta property="article:modified_time" content="2020-07-23T07:08:08.674Z">
 <meta property="article:author" content="野生">
-<meta property="article:tag" content="云运维">
+<meta property="article:tag" content="gcp">
+<meta property="article:tag" content="gke">
+<meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/getkubeconfigwithoutgcloud/1.png">
 
 
 
@@ -119,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://blog.itmonkey.icu/2020/06/22/sre-cloud-start/"/>
+  <link rel="canonical" href="https://blog.itmonkey.icu/2020/07/23/get-kubeconfig-without-gcloud-in-gke/"/>
 
 
 
 
 
-  <title>云运维-开篇随便聊聊自己 | 猿的野生香蕉</title>
+  <title>不使用gcloud认证gke集群 | 猿的野生香蕉</title>
   
 
 
@@ -272,7 +276,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/06/22/sre-cloud-start/">
+    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/07/23/get-kubeconfig-without-gcloud-in-gke/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="野生">
@@ -289,7 +293,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">云运维-开篇随便聊聊自己</h1>
+          <h1 class="post-title" itemprop="name headline">不使用gcloud认证gke集群</h1>
         
 
         <div class="post-meta">
@@ -301,8 +305,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-22T16:48:27+08:00">
-                2020-06-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-23T14:41:02+08:00">
+                2020-07-23
               </time>
             
 
@@ -353,7 +357,7 @@
 
           
               <div class="post-description">
-                  云运维-开篇随便聊聊自己
+                  如何不使用gcloud认证gke集群
               </div>
           
 
@@ -370,42 +374,33 @@
       
 
       
-        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>写这个系列的目的：</p>
-<ol>
-<li>内部建设，sre组内之间分工明确，不过知识互通和共享目前暂时比较欠缺，通过这个把自己的沉淀分享出去。</li>
-<li>个人总结，其实早就想要总结一下工作的这几年，不过一直没有动手，趁着这个机会，搞一把。</li>
-<li>查漏补缺，每次写文档和总结的时候都是一个非常好的学习机会。</li>
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>正常我们都是通过gcloud切换集群，然后才能正常使用kubectl，这篇文章主要教你如何”不使用”gcloud来进行gke集群的认证。这里的不使用，意思是只要使用一次即可。</p>
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>首先需要一台机器，已经装好gcloud并认证，初始化可参考官方文档：<a href="https://cloud.google.com/sdk/docs/quickstart-macos" target="_blank" rel="noopener" title="点击我">点击我</a></p>
+<h3 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h3><h4 id="1-创建环境变量"><a href="#1-创建环境变量" class="headerlink" title="1.创建环境变量"></a>1.创建环境变量</h4><p>替换下面命令中的<code>GKE_CLUSTER_NAME</code>、<code>ZONE</code>、<code>PROJECT_NAME</code>，运行结果如下图</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET_CMD="gcloud container clusters describe GKE_CLUSTER_NAME --zone=ZONE --project PROJECT_NAME"</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/getkubeconfigwithoutgcloud/1.png" alt="png1"></p>
+<h4 id="2-创建kubeconfig文件"><a href="#2-创建kubeconfig文件" class="headerlink" title="2.创建kubeconfig文件"></a>2.创建kubeconfig文件</h4><p>命令中的my-cluster自行替换</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; kubeconfig.yaml &lt;&lt;EOF</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Config</span><br><span class="line">current-context: my-cluster</span><br><span class="line">contexts: [&#123;name: my-cluster, context: &#123;cluster: cluster-1, user: user-1&#125;&#125;]</span><br><span class="line">users: [&#123;name: user-1, user: &#123;auth-provider: &#123;name: gcp&#125;&#125;&#125;]</span><br><span class="line">clusters:</span><br><span class="line">- name: cluster-1</span><br><span class="line">  cluster:</span><br><span class="line">    server: "https://$(eval "$GET_CMD --format='value(endpoint)'")"</span><br><span class="line">    certificate-authority-data: "$(eval "$GET_CMD --format='value(masterAuth.clusterCaCertificate)'")"</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-得到文件"><a href="#3-得到文件" class="headerlink" title="3.得到文件"></a>3.得到文件</h4><p>最终你会得到文件kubeconfig.yaml</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>我们在上述得到了kubeconfig.yaml文件，那么我们还需要一个文件，就是gcp的iam文件，你需要创建一个serviceaccount，然后得到他的json认证文件。</p>
+<p>最终我们需要有两个文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubeconfig.yaml   k8s的认证文件</span><br><span class="line">serviceaccount.json gcp的iam文件</span><br></pre></td></tr></table></figure>
+
+
+<p>接下来就是需要创建环境变量：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export GOOGLE_APPLICATION_CREDENTIALS=serviceaccount.json</span><br><span class="line">export KUBECONFIG=kubeconfig.yaml</span><br></pre></td></tr></table></figure>
+
+<p>最后，直接执行kubectl命令就可以了：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[root@localhost]#</span><span class="bash"> kubectl get nodes</span></span><br><span class="line">NAME                       STATUS   ROLES    AGE    VERSION</span><br><span class="line">gke-eve-gke-nodepool-111   Ready    &lt;none&gt;   110d   v1.14.10-gke.27</span><br><span class="line">gke-eve-gke-nodepool-222   Ready    &lt;none&gt;   110d   v1.14.10-gke.27</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><ol>
+<li>后续你可以为你的每一个集群都创建一个kubeconfig文件和serviceaccount文件，那么越来越多的集群将如何管理呢，我之前简单写了一个shell脚本来管理，地址：<a href="https://github.com/gsgs-libin/kubeswitch" target="_blank" rel="noopener" title="kubeswtich">kubeSwitch</a></li>
+<li>注意gke集群apiserver是有白名单的，所以需要加上出口地址，不然获取不到数据。</li>
 </ol>
-<h3 id="随便说点"><a href="#随便说点" class="headerlink" title="随便说点"></a>随便说点</h3><h4 id="回忆过去"><a href="#回忆过去" class="headerlink" title="回忆过去"></a>回忆过去</h4><p>17年7月毕业，然后进入了第一家公司，做酒类电商平台的。凭着在大三跟室友一起学了一点linux，会个rm -rf命令，就萌萌东东来到了公司，其实当时算是啥都不会，对运维没有概念，也不懂什么是nginx，不懂什么是jenkins，不会写python…<br>就这样过了在公司慢慢学了半年多，才逐步上道了~</p>
-<p>想想当时跟着部门同学学了非常多，</p>
-<ul>
-<li>zk、dubbo、codis、jenkins、docker、nginx等等</li>
-<li>看着别人的项目学了Django以及Django REST framework，自己写了几个小项目用着，记得写了一个入职流程以及账号开通的项目</li>
-<li>知道啥是发版，每次要等到凌晨才能上线</li>
-<li>接触阿里云，天天在钉钉群里跟他们打交道</li>
-<li>搞容器化，起初用rancher，最后离职了也没搞完</li>
-<li>接触it、弱电等，买网线、交换机、投影仪、电脑、打印机墨粉，自己做网线弄水晶头，修理电脑、打印机、投影仪，教行政财务怎么修复excel、word，跟着搞新办公区装修、拿着产品出去参展</li>
-<li>……</li>
-</ul>
-<h4 id="想想现在"><a href="#想想现在" class="headerlink" title="想想现在"></a>想想现在</h4><ul>
-<li>认识到运维里还分了这么多，业务运维、运维开发、dba、安全、it、大数据、基础运维等等</li>
-<li>认识到了一群大佬，果然强的人还是强</li>
-<li>大的平台自然能接触到更多，美图是一个非常好的平台</li>
-<li>在美图起初压力比较大，因为感觉自己扛不起来这些服务，现在慢慢上手了</li>
-<li>初探sre</li>
-<li>语言到是学了不少，shell、python、java、vue、swift，但是没一个稍微精通的</li>
-<li>公司给了非常好的机会接触到了各种云，阿里云、华为云、aws、gcp</li>
-<li>深入接触到了容器化，k8s牛逼</li>
-<li>上云的忙碌到现在的心里空空，让我开始思考怎么去更好的开展运维工作</li>
-<li>脾气收敛不少，没这么急躁了</li>
-<li>……</li>
-</ul>
-<h3 id="总结下"><a href="#总结下" class="headerlink" title="总结下"></a>总结下</h3><ul>
-<li>知识杂乱，没有章法</li>
-<li>可能都知道点，但是稍微一问就完蛋</li>
-<li>没能好好展示自己，让自己太平庸了</li>
-<li>需要深入学习了，太多的皮毛容易被吹散</li>
-</ul>
 
       
     </div>
@@ -431,7 +426,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/%E4%BA%91%E8%BF%90%E7%BB%B4/" rel="tag"># 云运维</a>
+            <a href="/tags/gcp/" rel="tag"># gcp</a>
+          
+            <a href="/tags/gke/" rel="tag"># gke</a>
+          
+            <a href="/tags/k8s/" rel="tag"># k8s</a>
           
         </div>
       
@@ -444,8 +443,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/22/sre-cloud/" rel="next" title="SRE在多云环境下的生存之道">
-                <i class="fa fa-chevron-left"></i> SRE在多云环境下的生存之道
+              <a href="/2020/06/23/sre-cloud-base-1/" rel="next" title="云运维-简单认识各个云常用云服务">
+                <i class="fa fa-chevron-left"></i> 云运维-简单认识各个云常用云服务
               </a>
             
           </div>
@@ -453,10 +452,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/23/sre-cloud-base-1/" rel="prev" title="云运维-简单认识各个云常用云服务">
-                云运维-简单认识各个云常用云服务 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -588,7 +583,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#随便说点"><span class="nav-number">2.</span> <span class="nav-text">随便说点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#回忆过去"><span class="nav-number">2.1.</span> <span class="nav-text">回忆过去</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#想想现在"><span class="nav-number">2.2.</span> <span class="nav-text">想想现在</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结下"><span class="nav-number">3.</span> <span class="nav-text">总结下</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备"><span class="nav-number">2.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开始"><span class="nav-number">3.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-创建环境变量"><span class="nav-number">3.1.</span> <span class="nav-text">1.创建环境变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-创建kubeconfig文件"><span class="nav-number">3.2.</span> <span class="nav-text">2.创建kubeconfig文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-得到文件"><span class="nav-number">3.3.</span> <span class="nav-text">3.得到文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">4.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#备注"><span class="nav-number">5.</span> <span class="nav-text">备注</span></a></li></ol></div>
             
 
           </div>
