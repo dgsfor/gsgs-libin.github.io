@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.itmonkey.icu/2020/09/17/k8s-AntiAffinity-and-Affinity/</loc>
+    
+    <lastmod>2020-09-17T03:07:30.481Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.itmonkey.icu/2020/07/23/get-kubeconfig-without-gcloud-in-gke/</loc>
     
     <lastmod>2020-07-23T07:08:08.674Z</lastmod>
