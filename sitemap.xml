@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.itmonkey.icu/about/index.html</loc>
+    
+    <lastmod>2020-09-17T11:26:41.809Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.itmonkey.icu/2020/09/17/k8s-AntiAffinity-and-Affinity/</loc>
     
     <lastmod>2020-09-17T03:07:30.481Z</lastmod>
@@ -68,13 +75,6 @@
     <loc>https://blog.itmonkey.icu/2020/06/17/meitu-aliyun-use-experience/</loc>
     
     <lastmod>2020-06-17T08:51:00.701Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/about/index.html</loc>
-    
-    <lastmod>2020-06-17T08:36:07.584Z</lastmod>
     
   </url>
   
