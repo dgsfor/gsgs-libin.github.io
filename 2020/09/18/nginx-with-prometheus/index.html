@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="nginx,prometheus," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="使用prometheus监控nginx，grafana展示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用prometheus监控nginx">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/09/18/nginx-with-prometheus/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="使用prometheus监控nginx，grafana展示">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/nginx-with-prometheus/1.png">
+<meta property="article:published_time" content="2020-09-18T02:54:45.000Z">
+<meta property="article:modified_time" content="2020-09-18T07:36:18.401Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="prometheus">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/nginx-with-prometheus/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.itmonkey.icu/2020/09/18/nginx-with-prometheus/"/>
+
+
+
+
+
+  <title>如何使用prometheus监控nginx | 猿的野生香蕉</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?654543521de3c3f4ced79d25e84b1abb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">猿的野生香蕉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">野生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/09/18/nginx-with-prometheus/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="野生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="猿的野生香蕉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何使用prometheus监控nginx</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-18T10:54:45+08:00">
+                2020-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index">
+                    <span itemprop="name">基础运维</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  使用prometheus监控nginx，grafana展示
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>[toc]</p>
+<h3 id="需求场景"><a href="#需求场景" class="headerlink" title="需求场景"></a>需求场景</h3><p>使用prometheus监控nginx，图表展示使用grafana。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>nginx我们使用<code>tengine</code>(<a href="https://github.com/alibaba/tengine" target="_blank" rel="noopener">https://github.com/alibaba/tengine</a>)</p>
+<p>nginx prometheus模块使用<code>nginx-module-vts</code>(<a href="https://github.com/vozlt/nginx-module-vts" target="_blank" rel="noopener">https://github.com/vozlt/nginx-module-vts</a>)</p>
+<p>exportor使用<code>nginx-vts-exporter</code>(<a href="https://github.com/hnlq715/nginx-vts-exporter" target="_blank" rel="noopener">https://github.com/hnlq715/nginx-vts-exporter</a>)</p>
+<blockquote>
+<p>(其实这个exportor也可以不用，因为默认的vts已经提供了prometheus的metrics地址，这个exportor只是为了生成这个地址)</p>
+</blockquote>
+<h3 id="nginx以及插件部署"><a href="#nginx以及插件部署" class="headerlink" title="nginx以及插件部署"></a>nginx以及插件部署</h3><h4 id="下载文件"><a href="#下载文件" class="headerlink" title="下载文件"></a>下载文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/alibaba/tengine</span><br><span class="line">git clone https://github.com/vozlt/nginx-module-vts</span><br><span class="line">yum -y install zlib* library*</span><br><span class="line">yum -y install openssl openssl-devel</span><br><span class="line">---------</span><br><span class="line">[root@10-17-41-57 software]# ls</span><br><span class="line">nginx-module-vts  tengine</span><br></pre></td></tr></table></figure>
+
+<h4 id="构建tengine，带上vts"><a href="#构建tengine，带上vts" class="headerlink" title="构建tengine，带上vts"></a>构建tengine，带上vts</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@10-17-41-57 software]# cd tengine</span><br><span class="line">[root@10-17-41-57 tengine]# ./configure --add-module=/root/software/nginx-module-vts --prefix=/usr/local/nginx --user=nginx --group=nginx --with-stream --with-http_ssl_module --with-http_stub_status_module --with-http_realip_module --with-http_v2_module --with-http_ssl_module</span><br><span class="line">[root@10-17-41-57 tengine]# make</span><br><span class="line">[root@10-17-41-57 tengine]# make install</span><br><span class="line">[root@10-17-41-57 tengine]# useradd www</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置nginx"><a href="#配置nginx" class="headerlink" title="配置nginx"></a>配置nginx</h4><p>nginx.conf中的http块中加入下面代码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 开启基础监控</span></span><br><span class="line">vhost_traffic_status_zone;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 开启状态码过滤</span></span><br><span class="line">vhost_traffic_status_filter on;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 开启此功能，在Nginx配置有多个server_name的情况下，会根据不同的server_name进行流量的统计，否则默认会把流量全部计算到第一个server_name上</span></span><br><span class="line">vhost_traffic_status_filter_by_host on;</span><br></pre></td></tr></table></figure>
+
+<p>新增nginx-vts-status.conf文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;        </span><br><span class="line">    listen 3389;</span><br><span class="line"></span><br><span class="line">    location /mt_status &#123;</span><br><span class="line">        vhost_traffic_status_display;</span><br><span class="line">        vhost_traffic_status_display_format html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动nginx：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@10-17-41-57 software]# /usr/local/nginx/sbin/nginx -t</span><br><span class="line">[root@10-17-41-57 software]# /usr/local/nginx/sbin/nginx</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看原始nginx输出数据"><a href="#查看原始nginx输出数据" class="headerlink" title="查看原始nginx输出数据"></a>查看原始nginx输出数据</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@10-17-41-57 software]# curl https://localhost:3389/mt_status/format/prometheus</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> HELP nginx_vts_start_time_seconds Nginx start time</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> TYPE nginx_vts_start_time_seconds gauge</span></span><br><span class="line">nginx_vts_start_time_seconds 1600401217.372</span><br><span class="line"><span class="meta">#</span><span class="bash"> HELP nginx_vts_main_connections Nginx connections</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> TYPE nginx_vts_main_connections gauge</span></span><br><span class="line">nginx_vts_main_connections&#123;status="accepted"&#125; 201</span><br><span class="line">nginx_vts_main_connections&#123;status="active"&#125; 98</span><br><span class="line">nginx_vts_main_connections&#123;status="handled"&#125; 201</span><br><span class="line">nginx_vts_main_connections&#123;status="reading"&#125; 0</span><br><span class="line">nginx_vts_main_connections&#123;status="requests"&#125; 10</span><br><span class="line">nginx_vts_main_connections&#123;status="waiting"&#125; 97</span><br><span class="line">nginx_vts_main_connections&#123;status="writing"&#125; 1</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="加一个测试的nginx配置文件"><a href="#加一个测试的nginx配置文件" class="headerlink" title="加一个测试的nginx配置文件"></a>加一个测试的nginx配置文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen  80;</span><br><span class="line">    server_name mtlab-nginx-test.meitu.com;</span><br><span class="line"></span><br><span class="line">    proxy_ignore_client_abort on;</span><br><span class="line">    # 开启详细状态码统计</span><br><span class="line">    vhost_traffic_status_filter_by_set_key $status $server_name;</span><br><span class="line">    # 开启uri统计</span><br><span class="line">    vhost_traffic_status_filter_by_set_key $uri uris::$server_name;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">	return 200;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置好上述的参数，我们可以在输出看到一些更加详细的信息</p>
+<p><img src="/img/nginx-with-prometheus/1.png" alt="png1"></p>
+<h4 id="备注-nginx-conf文件"><a href="#备注-nginx-conf文件" class="headerlink" title="备注(nginx.conf文件)"></a>备注(nginx.conf文件)</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line">user  www www;</span><br><span class="line"></span><br><span class="line">worker_processes auto;</span><br><span class="line"></span><br><span class="line">error_log  /usr/local/nginx/logs/nginx_error.log  error;</span><br><span class="line">pid    /usr/local/nginx/nginx.pid;</span><br><span class="line"></span><br><span class="line">worker_rlimit_nofile 65535;</span><br><span class="line"></span><br><span class="line">events</span><br><span class="line">&#123;</span><br><span class="line">    use epoll;</span><br><span class="line">    worker_connections 65535;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    vhost_traffic_status_zone;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    log_format api '$time_iso8601  $remote_addr  -  $host  "$request"  $status  -  $request_time  $http_x_real_ip  "$http_x_forwarded_for"  $content_length  $request_length  $sent_http_content_length  $body_bytes_sent  $http_cdn  "$http_referer"  "$http_user_agent"  $upstream_addr  $upstream_status  $upstream_response_time  $sent_http_request_id';</span><br><span class="line"></span><br><span class="line">    log_format json '$time_iso8601  $remote_addr  -  $host  "$request"  $status  -  $request_time  $http_x_real_ip  "$http_x_forwarded_for"  $content_length  $request_length  $sent_http_content_length  $body_bytes_sent  $http_cdn  "$http_referer"  "$http_user_agent"  $upstream_addr  $upstream_status  $upstream_response_time  $sent_http_request_id';</span><br><span class="line"></span><br><span class="line">    log_format mtlog '$time_iso8601  $remote_addr  $server_addr  $host  "$request"  $status  -  $request_time  $http_x_real_ip  "$http_x_forwarded_for"  $content_length  $request_length  $sent_http_content_length  $body_bytes_sent  $http_cdn  "$http_referer"  "$http_user_agent"  $upstream_addr  $upstream_status  $upstream_response_time  $sent_http_request_id $http_request_id';</span><br><span class="line"></span><br><span class="line">    log_format toamtlog '$time_iso8601  $server_addr  $host  "$request"  $status  -  $request_time  $http_x_real_ip  "$http_x_forwarded_for"  $content_length  $request_length  $sent_http_content_length  $body_bytes_sent  $http_cdn  "$http_referer"  "$http_user_agent"  $upstream_addr  $upstream_status  $upstream_response_time  $sent_http_request_id $http_request_id';</span><br><span class="line"></span><br><span class="line">    log_format mtlog_noarg '$time_iso8601  $remote_addr  $server_addr  $host  "$request_method $server_protocol"  $status  -  $request_time  $http_x_real_ip  "$http_x_forwarded_for"  $content_length  $request_length  $sent_http_content_length  $body_bytes_sent  $http_cdn  "$http_referer"  "$http_user_agent"  $upstream_addr  $upstream_status  $upstream_response_time  $sent_http_request_id  $http_request_id';</span><br><span class="line"></span><br><span class="line">    log_format post '$time_iso8601  $remote_addr  $server_addr  $host  "$request"  $status  -  $request_time  $http_x_real_ip  "$http_x_forwarded_for"  $content_length  $request_length  $sent_http_content_length  $body_bytes_sent  $http_cdn  "$http_referer"  "$http_user_agent"  $upstream_addr  $upstream_status  $upstream_response_time  $sent_http_request_id  $request_body';</span><br><span class="line"></span><br><span class="line">    server_tokens off;</span><br><span class="line"><span class="meta">#</span><span class="bash">    charset  gb2312;</span></span><br><span class="line"></span><br><span class="line">    server_names_hash_bucket_size 256;</span><br><span class="line">    client_header_buffer_size 32k;</span><br><span class="line">    large_client_header_buffers 4 32k;</span><br><span class="line">    client_max_body_size 100m;</span><br><span class="line">    client_body_buffer_size 10m;</span><br><span class="line"></span><br><span class="line">    sendfile on;</span><br><span class="line">    tcp_nopush     off;</span><br><span class="line"></span><br><span class="line">    keepalive_timeout 600;</span><br><span class="line">    keepalive_requests 10000;</span><br><span class="line"></span><br><span class="line">    tcp_nodelay on;</span><br><span class="line"></span><br><span class="line">    #proxy_connect_timeout 20s;</span><br><span class="line">    #proxy_send_timeout 90s;</span><br><span class="line">    #proxy_read_timeout 90s;</span><br><span class="line">    proxy_connect_timeout 600s;</span><br><span class="line">    proxy_send_timeout 600s;</span><br><span class="line">    proxy_read_timeout 600s;</span><br><span class="line">    proxy_buffer_size 64k;</span><br><span class="line">    proxy_buffers 4 64k;</span><br><span class="line">    proxy_busy_buffers_size 128k;</span><br><span class="line">    proxy_temp_file_write_size 128k;</span><br><span class="line"><span class="meta">#</span><span class="bash">    proxy_buffering off;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    proxy_request_buffering off;</span></span><br><span class="line"></span><br><span class="line">    gzip on;</span><br><span class="line">    gzip_min_length  1k;</span><br><span class="line">    gzip_buffers     4 16k;</span><br><span class="line">    gzip_http_version 1.0;</span><br><span class="line">    gzip_comp_level 4;</span><br><span class="line">    gzip_types       text/plain application/x-javascript text/css application/xml text/xml application/json application/javascript;</span><br><span class="line">    gzip_vary on;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    ssi on;</span><br><span class="line">    ssi_silent_errors on;</span><br><span class="line">    ssi_types text/shtml;</span><br><span class="line">    ssi_last_modified on;</span><br><span class="line"></span><br><span class="line">    underscores_in_headers  on;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # The following is a sneaky way to do "set $the_real_ip $remote_addr"</span><br><span class="line">    # Needed because using set is not allowed outside server blocks.</span><br><span class="line"></span><br><span class="line">    # We can't use $proxy_add_x_forwarded_for because the realip module</span><br><span class="line">    # replaces the remote_addr too soon</span><br><span class="line">    map $http_x_forwarded_for $full_x_forwarded_for &#123;</span><br><span class="line"></span><br><span class="line">            default          "$http_x_forwarded_for, $remote_addr";</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # ws.live.meitu.com</span><br><span class="line">    map $http_upgrade $connection_upgrade &#123;</span><br><span class="line">        default upgrade;</span><br><span class="line">        '' close;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    include upstream/*.conf;</span><br><span class="line">    include vhosts/*.conf;</span><br><span class="line"></span><br><span class="line">    limit_req_status 403;</span><br><span class="line">    limit_req_zone $remote_addr zone=mpstatplayvideo:100m rate=20r/s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="额外补充"><a href="#额外补充" class="headerlink" title="额外补充"></a>额外补充</h3><p>如果你的nginx机器是多台，或者是动态的，那么这个是不能使用域名负载均衡来代理的，因为prometheus每次只能抓一条，即每次都只会获取一台机器的数据。</p>
+<p>所以针对这个情况，两种方式：</p>
+<p>1.如果你是容器化部署，那么他本身就有服务发现的机制，无所谓。</p>
+<p>2.如果你是物理部署的，要嘛你写死prometheus的target配置，要嘛研究一下prometheus动态发现的原理。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/img/wechat/dgsfor-wechat.jpg" alt="野生 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎微信联系我</div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
+          
+            <a href="/tags/prometheus/" rel="tag"># prometheus</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/17/k8s-AntiAffinity-and-Affinity/" rel="next" title="k8s-AntiAffinity-and-Affinity">
+                <i class="fa fa-chevron-left"></i> k8s-AntiAffinity-and-Affinity
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">野生</p>
+              <p class="site-description motion-element" itemprop="description">在运维道路上一路狂飙的老司机</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求场景"><span class="nav-number">1.</span> <span class="nav-text">需求场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx以及插件部署"><span class="nav-number">3.</span> <span class="nav-text">nginx以及插件部署</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载文件"><span class="nav-number">3.1.</span> <span class="nav-text">下载文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构建tengine，带上vts"><span class="nav-number">3.2.</span> <span class="nav-text">构建tengine，带上vts</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置nginx"><span class="nav-number">3.3.</span> <span class="nav-text">配置nginx</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看原始nginx输出数据"><span class="nav-number">3.4.</span> <span class="nav-text">查看原始nginx输出数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#加一个测试的nginx配置文件"><span class="nav-number">3.5.</span> <span class="nav-text">加一个测试的nginx配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#备注-nginx-conf文件"><span class="nav-number">3.6.</span> <span class="nav-text">备注(nginx.conf文件)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#额外补充"><span class="nav-number">4.</span> <span class="nav-text">额外补充</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">野生</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

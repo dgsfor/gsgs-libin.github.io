@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.itmonkey.icu/2020/09/18/nginx-with-prometheus/</loc>
+    <lastmod>2020-09-18</lastmod>
+  </url>  <url>
     <loc>https://blog.itmonkey.icu/2020/09/17/k8s-AntiAffinity-and-Affinity/</loc>
     <lastmod>2020-09-17</lastmod>
   </url>  <url>
