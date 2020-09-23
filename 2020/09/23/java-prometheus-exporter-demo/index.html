@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hello,野生" />
+  <meta name="keywords" content="prometheus,java,cloudnative," />
 
 
 
@@ -79,13 +79,18 @@
 
 
 
-<meta name="description" content="在运维道路上一路狂飙的老司机">
-<meta property="og:type" content="website">
-<meta property="og:title" content="猿的野生香蕉">
-<meta property="og:url" content="https://blog.itmonkey.icu/page/2/index.html">
+<meta name="description" content="用java实现的prometheus exporter模板">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用java简单实现一个prometheus exporter">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/09/23/java-prometheus-exporter-demo/index.html">
 <meta property="og:site_name" content="猿的野生香蕉">
-<meta property="og:description" content="在运维道路上一路狂飙的老司机">
+<meta property="og:description" content="用java实现的prometheus exporter模板">
+<meta property="article:published_time" content="2020-09-23T07:05:53.000Z">
+<meta property="article:modified_time" content="2020-09-23T07:12:53.080Z">
 <meta property="article:author" content="野生">
+<meta property="article:tag" content="prometheus">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="cloudnative">
 <meta name="twitter:card" content="summary">
 
 
@@ -116,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="https://blog.itmonkey.icu/page/2/"/>
+  <link rel="canonical" href="https://blog.itmonkey.icu/2020/09/23/java-prometheus-exporter-demo/"/>
 
 
 
 
 
-  <title>猿的野生香蕉</title>
+  <title>用java简单实现一个prometheus exporter | 猿的野生香蕉</title>
   
 
 
@@ -151,8 +156,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -255,9 +259,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -270,7 +274,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/06/17/how-to-empress/">
+    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/09/23/java-prometheus-exporter-demo/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="野生">
@@ -287,9 +291,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/17/how-to-empress/" itemprop="url">美图实战分享：如何真实模拟生产流量进行服务性能压测</a></h1>
+          <h1 class="post-title" itemprop="name headline">用java简单实现一个prometheus exporter</h1>
         
 
         <div class="post-meta">
@@ -301,8 +303,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-17T16:38:09+08:00">
-                2020-06-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-23T15:05:53+08:00">
+                2020-09-23
               </time>
             
 
@@ -324,8 +326,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/" itemprop="url" rel="index">
-                    <span itemprop="name">运维进阶</span>
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
                   </a>
                 </span>
 
@@ -343,155 +345,18 @@
           
 
           
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          介绍goreplay压测工具的使用
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/17/how-to-empress/">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/06/17/meitu-aliyun-use-experience/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="野生">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="猿的野生香蕉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/17/meitu-aliyun-use-experience/" itemprop="url">美图运维之旅：在阿里云上的经验以及踩过的坑</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-17T15:40:51+08:00">
-                2020-06-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index">
-                    <span itemprop="name">云运维</span>
-                  </a>
-                </span>
-
-                
-                
-              
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
             </span>
           
 
           
-            
-          
 
           
-          
-
-          
-
-          
-
+              <div class="post-description">
+                  用java实现的prometheus exporter模板
+              </div>
           
 
         </div>
@@ -507,22 +372,77 @@
       
 
       
-        
-          文章介绍了美图在使用阿里云过程中遇到的点点滴滴，希望对你有一点点启发或者帮助。
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/06/17/meitu-aliyun-use-experience/">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>塔罗斯(Talus)</p>
+<p>塔罗斯（希腊语：Ταλως；英语：Talos / Talus）是希腊神话中的机械巨人（Automaton）。该名义为“砍伐”或“太阳”。塔罗斯的身世有三种版本。按赫西奥德（Hesiod）的说法，宙斯曾创造了四代人类：黄金、白银、青铜、黑铁。</p>
+<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>后期主要提供给thanos运维数据，提供prometheus接口</p>
+<h3 id="git地址"><a href="#git地址" class="headerlink" title="git地址"></a>git地址</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/gsgs-libin/talus</span><br></pre></td></tr></table></figure>
+
+<h3 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h3><p>输出接口：<code>/talus/metrics/prometheus</code></p>
+<h3 id="访问地址"><a href="#访问地址" class="headerlink" title="访问地址"></a>访问地址</h3><figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:9000/talus/metrics/prometheus</span><br></pre></td></tr></table></figure>
+
+<h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mvn clean package -Dmaven.test.skip=true</span><br><span class="line">docker build -t harbor.xxx.com/talus/talus:release-1.1.1 .</span><br></pre></td></tr></table></figure>
+
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>我这边写了几个例子，分别对应的指标类型为：Counter、Guage、Histogram、Summary，对应的指标定义在：<code>MetricConfig.java</code>中可以看到</p>
+<p>指标说明：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>指标说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Counter</td>
+<td>Counter类型代表一种样本数据单调递增的指标，即只增不减，除非监控系统发生了重置</td>
+</tr>
+<tr>
+<td>Guage</td>
+<td>Guage类型代表一种样本数据可以任意变化的指标，即可增可减</td>
+</tr>
+<tr>
+<td>Histogram</td>
+<td>Histogram 由bucket{le=””}，bucket{le=”+Inf”},sum，count 组成，主要用于表示一段时间范围内对数据进行采样（通常是请求持续时间或响应大小），并能够对其指定区间以及总数进行统计，通常它采集的数据展示为直方图</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>Summary 和 Histogram 类似，由{quantile=”&lt;φ&gt;”}，sum，count 组成，主要用于表示一段时间内数据采样结果（通常是请求持续时间或响应大小），它直接存储了 quantile 数据，而不是根据统计区间计算出来的。</td>
+</tr>
+</tbody></table>
+<p>我简单写了两个例子去实现counter和guage指标：</p>
+<table>
+<thead>
+<tr>
+<th>指标名称</th>
+<th>类名称</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Counter</td>
+<td>NginxIngressRequest</td>
+</tr>
+<tr>
+<td>Guage</td>
+<td>NatGatewayMonitorSnat</td>
+</tr>
+</tbody></table>
+<p>查看exportor的结果可以看到如下内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> HELP processorNatGatewayMonitor_snat processorNatGatewayMonitorSnat：record by gatewayid and nodeip</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> TYPE processorNatGatewayMonitor_snat gauge</span></span><br><span class="line">processorNatGatewayMonitor_snat&#123;natgatewayid="id-123145",nodeip="192.168.1.1",&#125; 123.0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> HELP processorNginxIngress_request processorNginxIngressRequest : domain</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> TYPE processorNginxIngress_request counter</span></span><br><span class="line">processorNginxIngress_request&#123;ingressname="ingress1",domain="ingress.dgsfor.com",&#125; 7.0</span><br></pre></td></tr></table></figure>
       
     </div>
     
     
     
 
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/img/wechat/dgsfor-wechat.jpg" alt="野生 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎微信联系我</div>
+</div>
+
+      </div>
     
 
     
@@ -531,14 +451,40 @@
 
     <footer class="post-footer">
       
-
+        <div class="post-tags">
+          
+            <a href="/tags/prometheus/" rel="tag"># prometheus</a>
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+          
+        </div>
       
 
       
+      
+      
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/18/nginx-with-prometheus/" rel="next" title="如何使用prometheus监控nginx">
+                <i class="fa fa-chevron-left"></i> 如何使用prometheus监控nginx
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
-        <div class="post-eof"></div>
+
+      
       
     </footer>
   </div>
@@ -548,14 +494,11 @@
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -563,6 +506,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -583,8 +530,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -644,6 +600,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#功能"><span class="nav-number">2.</span> <span class="nav-text">功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git地址"><span class="nav-number">3.</span> <span class="nav-text">git地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口"><span class="nav-number">4.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问地址"><span class="nav-number">5.</span> <span class="nav-text">访问地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构建"><span class="nav-number">6.</span> <span class="nav-text">构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子"><span class="nav-number">7.</span> <span class="nav-text">例子</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -799,6 +771,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

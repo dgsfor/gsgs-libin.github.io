@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://blog.itmonkey.icu/2020/09/18/nginx-with-prometheus/</loc>
-    <lastmod>2020-09-18</lastmod>
+    <loc>https://blog.itmonkey.icu/2020/09/23/java-prometheus-exporter-demo/</loc>
+    <lastmod>2020-09-23</lastmod>
   </url>  <url>
     <loc>https://blog.itmonkey.icu/2020/09/17/k8s-AntiAffinity-and-Affinity/</loc>
-    <lastmod>2020-09-17</lastmod>
+    <lastmod>2020-09-23</lastmod>
+  </url>  <url>
+    <loc>https://blog.itmonkey.icu/2020/09/18/nginx-with-prometheus/</loc>
+    <lastmod>2020-09-18</lastmod>
   </url>  <url>
     <loc>https://blog.itmonkey.icu/2020/07/23/get-kubeconfig-without-gcloud-in-gke/</loc>
     <lastmod>2020-07-23</lastmod>
