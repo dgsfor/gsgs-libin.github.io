@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="prometheus,java,cloudnative," />
+  <meta name="keywords" content="gcp,vpn-tunnel," />
 
 
 
@@ -79,19 +79,26 @@
 
 
 
-<meta name="description" content="用java实现的prometheus exporter模板">
+<meta name="description" content="通过vpn隧道打通gcp和华为云网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用java简单实现一个prometheus exporter">
-<meta property="og:url" content="https://blog.itmonkey.icu/2020/09/23/java-prometheus-exporter-demo/index.html">
+<meta property="og:title" content="使用vpn隧道模式打通gcp和华为云内网">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/index.html">
 <meta property="og:site_name" content="猿的野生香蕉">
-<meta property="og:description" content="用java实现的prometheus exporter模板">
-<meta property="article:published_time" content="2020-09-23T07:05:53.000Z">
-<meta property="article:modified_time" content="2020-09-23T07:12:53.080Z">
+<meta property="og:description" content="通过vpn隧道打通gcp和华为云网络">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/create-vpn-tunnel-in-gcp-hwcloud/jiagou.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/create-vpn-tunnel-in-gcp-hwcloud/1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/create-vpn-tunnel-in-gcp-hwcloud/2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/create-vpn-tunnel-in-gcp-hwcloud/3.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/create-vpn-tunnel-in-gcp-hwcloud/4.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/create-vpn-tunnel-in-gcp-hwcloud/5.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/create-vpn-tunnel-in-gcp-hwcloud/6.png">
+<meta property="article:published_time" content="2020-10-10T10:16:45.000Z">
+<meta property="article:modified_time" content="2020-10-12T03:46:45.808Z">
 <meta property="article:author" content="野生">
-<meta property="article:tag" content="prometheus">
-<meta property="article:tag" content="java">
-<meta property="article:tag" content="cloudnative">
+<meta property="article:tag" content="gcp">
+<meta property="article:tag" content="vpn-tunnel">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/create-vpn-tunnel-in-gcp-hwcloud/jiagou.png">
 
 
 
@@ -121,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="https://blog.itmonkey.icu/2020/09/23/java-prometheus-exporter-demo/"/>
+  <link rel="canonical" href="https://blog.itmonkey.icu/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/"/>
 
 
 
 
 
-  <title>用java简单实现一个prometheus exporter | 猿的野生香蕉</title>
+  <title>使用vpn隧道模式打通gcp和华为云内网 | 猿的野生香蕉</title>
   
 
 
@@ -274,7 +281,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/09/23/java-prometheus-exporter-demo/">
+    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="野生">
@@ -291,7 +298,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">用java简单实现一个prometheus exporter</h1>
+          <h1 class="post-title" itemprop="name headline">使用vpn隧道模式打通gcp和华为云内网</h1>
         
 
         <div class="post-meta">
@@ -303,8 +310,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-23T15:05:53+08:00">
-                2020-09-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-10T18:16:45+08:00">
+                2020-10-10
               </time>
             
 
@@ -326,8 +333,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/DevOps/" itemprop="url" rel="index">
-                    <span itemprop="name">DevOps</span>
+                  <a href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index">
+                    <span itemprop="name">云运维</span>
                   </a>
                 </span>
 
@@ -355,7 +362,7 @@
 
           
               <div class="post-description">
-                  用java实现的prometheus exporter模板
+                  通过vpn隧道打通gcp和华为云网络
               </div>
           
 
@@ -372,63 +379,44 @@
       
 
       
-        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>塔罗斯(Talus)</p>
-<p>塔罗斯（希腊语：Ταλως；英语：Talos / Talus）是希腊神话中的机械巨人（Automaton）。该名义为“砍伐”或“太阳”。塔罗斯的身世有三种版本。按赫西奥德（Hesiod）的说法，宙斯曾创造了四代人类：黄金、白银、青铜、黑铁。</p>
-<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>后期主要提供给thanos运维数据，提供prometheus接口</p>
-<h3 id="git地址"><a href="#git地址" class="headerlink" title="git地址"></a>git地址</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/gsgs-libin/talus</span><br></pre></td></tr></table></figure>
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>公司某业务目前有海外和国内服务，需求是国内数据需要实时同步到海外，DBA同事使用mysql主从同步的方式进行，所以建议打通海外和国内网络。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>目前实现这个背景有两种方式：</p>
+<ul>
+<li>专线</li>
+<li>vpn隧道</li>
+</ul>
+<p>由于目前业务量级非常小，数据量不大，所以使用专线方式难免有点贵，所以我们采用vpn隧道的方式打通两方内网。</p>
+<h3 id="技术实现"><a href="#技术实现" class="headerlink" title="技术实现"></a>技术实现</h3><p>想要实现vpn隧道，目前我们使用云服务商的话，可以直接使用云服务商提供的vpn服务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GCP：混合连接-vpn</span><br><span class="line"></span><br><span class="line">华为云：云连接-虚拟专用网络</span><br></pre></td></tr></table></figure>
 
-<h3 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h3><p>输出接口：<code>/talus/metrics/prometheus</code></p>
-<h3 id="访问地址"><a href="#访问地址" class="headerlink" title="访问地址"></a>访问地址</h3><figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:9000/talus/metrics/prometheus</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vpn隧道其实比较简单，你就认为是A和B都有一台公网机器，通过一定协议实现了互联，那么这台机器最终充当的一个角色就是网关路由，当你A地的一台机器访问B地的一台机器，都是需要先通过网关的。</span><br><span class="line">注意：流量都是走公网的，不过传输过程是加密的。</span><br></pre></td></tr></table></figure>
+<p>画了一个简单的架构图，大致是这个样子吧：</p>
+<p><img src="/img/create-vpn-tunnel-in-gcp-hwcloud/jiagou.png" alt="png1"></p>
+<h3 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h3><ol>
+<li>创建gcp网关</li>
+<li>创建华为云网关</li>
+<li>创建gcp隧道</li>
+<li>创建华为云隧道</li>
+<li>检查防火墙、安全组、acl等限制</li>
+<li>测试网络联通性</li>
+</ol>
+<h4 id="1-创建gcp网关"><a href="#1-创建gcp网关" class="headerlink" title="1.创建gcp网关"></a>1.创建gcp网关</h4><p>首先学习下红框中的3个概念：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. Cloud vpn隧道---真实隧道，连接AB两地网关</span><br><span class="line">2. Cloud vpn网关---GCP端网关</span><br><span class="line">3. 对等vpn网关---对方侧网关</span><br></pre></td></tr></table></figure>
+<p>注：由于华为云没有提供高可用类型网关(就是多个ip，防止被封)，所以不必创建对等vpn网关。<br><img src="/img/create-vpn-tunnel-in-gcp-hwcloud/1.png" alt="png1"></p>
+<p>创建传统的vpn网关，可以先不用创建隧道：<br><img src="/img/create-vpn-tunnel-in-gcp-hwcloud/2.png" alt="png1"></p>
+<h4 id="2-创建华为云网关"><a href="#2-创建华为云网关" class="headerlink" title="2.创建华为云网关"></a>2.创建华为云网关</h4><p>几个地方需要注意和填写下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 本端子网---就是你要跟gcp网络互通的网段</span><br><span class="line">2. 远端网关---就是你刚刚创建的gcp的网关ip地址</span><br><span class="line">3. 远端子网---gcp的网段</span><br><span class="line">4. 秘钥---填写一个密码，到时候创建隧道的时候会用到，通过这个来认证建立连接</span><br></pre></td></tr></table></figure>
 
-<h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mvn clean package -Dmaven.test.skip=true</span><br><span class="line">docker build -t harbor.xxx.com/talus/talus:release-1.1.1 .</span><br></pre></td></tr></table></figure>
+<p><img src="/img/create-vpn-tunnel-in-gcp-hwcloud/3.png" alt="png1"></p>
+<h4 id="3-创建gcp隧道"><a href="#3-创建gcp隧道" class="headerlink" title="3.创建gcp隧道"></a>3.创建gcp隧道</h4><p><img src="/img/create-vpn-tunnel-in-gcp-hwcloud/4.png" alt="png1"></p>
+<h4 id="4-创建华为云隧道"><a href="#4-创建华为云隧道" class="headerlink" title="4.创建华为云隧道"></a>4.创建华为云隧道</h4><p>其实第二步的时候已经顺便创建隧道了，可以直接去看看状态</p>
+<h4 id="5-检查状态"><a href="#5-检查状态" class="headerlink" title="5.检查状态"></a>5.检查状态</h4><p>创建好gcp的隧道之后，他们就会默认去尝试建立连接，可以观察gcp和华为云上隧道的状态<br><img src="/img/create-vpn-tunnel-in-gcp-hwcloud/5.png" alt="png1"></p>
+<h4 id="6-检查防火墙、安全组、acl等限制"><a href="#6-检查防火墙、安全组、acl等限制" class="headerlink" title="6.检查防火墙、安全组、acl等限制"></a>6.检查防火墙、安全组、acl等限制</h4><p>检查两边网段的防火墙规则和安全组是否放行了，不论你用ping还是telnet。</p>
+<p>默认创建完隧道之后，都会生成一条新的路由，就是到对端网段的数据包都走隧道过，保证数据能够正常流通。</p>
+<p>注：gcp上mysql是专用的一个网段，这个网段是自动生成的，当你创建隧道新生成了一条路由，他是不会被自动发现的，需要手动去更新mysql的网段路由发现，勾选一下下图即可。</p>
+<p><img src="/img/create-vpn-tunnel-in-gcp-hwcloud/6.png" alt="png1"></p>
+<h4 id="7-测试网络联通性"><a href="#7-测试网络联通性" class="headerlink" title="7.测试网络联通性"></a>7.测试网络联通性</h4><p>在gcp和华为云上各找一台机器测试(注意：找的机器一定是要在你创建隧道的网段内)</p>
 
-<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>我这边写了几个例子，分别对应的指标类型为：Counter、Guage、Histogram、Summary，对应的指标定义在：<code>MetricConfig.java</code>中可以看到</p>
-<p>指标说明：</p>
-<table>
-<thead>
-<tr>
-<th>指标</th>
-<th>指标说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Counter</td>
-<td>Counter类型代表一种样本数据单调递增的指标，即只增不减，除非监控系统发生了重置</td>
-</tr>
-<tr>
-<td>Guage</td>
-<td>Guage类型代表一种样本数据可以任意变化的指标，即可增可减</td>
-</tr>
-<tr>
-<td>Histogram</td>
-<td>Histogram 由bucket{le=””}，bucket{le=”+Inf”},sum，count 组成，主要用于表示一段时间范围内对数据进行采样（通常是请求持续时间或响应大小），并能够对其指定区间以及总数进行统计，通常它采集的数据展示为直方图</td>
-</tr>
-<tr>
-<td>Summary</td>
-<td>Summary 和 Histogram 类似，由{quantile=”&lt;φ&gt;”}，sum，count 组成，主要用于表示一段时间内数据采样结果（通常是请求持续时间或响应大小），它直接存储了 quantile 数据，而不是根据统计区间计算出来的。</td>
-</tr>
-</tbody></table>
-<p>我简单写了两个例子去实现counter和guage指标：</p>
-<table>
-<thead>
-<tr>
-<th>指标名称</th>
-<th>类名称</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Counter</td>
-<td>NginxIngressRequest</td>
-</tr>
-<tr>
-<td>Guage</td>
-<td>NatGatewayMonitorSnat</td>
-</tr>
-</tbody></table>
-<p>查看exportor的结果可以看到如下内容：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> HELP processorNatGatewayMonitor_snat processorNatGatewayMonitorSnat：record by gatewayid and nodeip</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> TYPE processorNatGatewayMonitor_snat gauge</span></span><br><span class="line">processorNatGatewayMonitor_snat&#123;natgatewayid="id-123145",nodeip="192.168.1.1",&#125; 123.0</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> HELP processorNginxIngress_request processorNginxIngressRequest : domain</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> TYPE processorNginxIngress_request counter</span></span><br><span class="line">processorNginxIngress_request&#123;ingressname="ingress1",domain="ingress.dgsfor.com",&#125; 7.0</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -453,11 +441,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/prometheus/" rel="tag"># prometheus</a>
+            <a href="/tags/gcp/" rel="tag"># gcp</a>
           
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+            <a href="/tags/vpn-tunnel/" rel="tag"># vpn-tunnel</a>
           
         </div>
       
@@ -470,8 +456,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/09/18/nginx-with-prometheus/" rel="next" title="如何使用prometheus监控nginx">
-                <i class="fa fa-chevron-left"></i> 如何使用prometheus监控nginx
+              <a href="/2020/09/23/java-prometheus-exporter-demo/" rel="next" title="用java简单实现一个prometheus exporter">
+                <i class="fa fa-chevron-left"></i> 用java简单实现一个prometheus exporter
               </a>
             
           </div>
@@ -479,10 +465,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/" rel="prev" title="使用vpn隧道模式打通gcp和华为云内网">
-                使用vpn隧道模式打通gcp和华为云内网 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -614,7 +596,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#功能"><span class="nav-number">2.</span> <span class="nav-text">功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git地址"><span class="nav-number">3.</span> <span class="nav-text">git地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口"><span class="nav-number">4.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问地址"><span class="nav-number">5.</span> <span class="nav-text">访问地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构建"><span class="nav-number">6.</span> <span class="nav-text">构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子"><span class="nav-number">7.</span> <span class="nav-text">例子</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术实现"><span class="nav-number">3.</span> <span class="nav-text">技术实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体步骤"><span class="nav-number">4.</span> <span class="nav-text">具体步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-创建gcp网关"><span class="nav-number">4.1.</span> <span class="nav-text">1.创建gcp网关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-创建华为云网关"><span class="nav-number">4.2.</span> <span class="nav-text">2.创建华为云网关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-创建gcp隧道"><span class="nav-number">4.3.</span> <span class="nav-text">3.创建gcp隧道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-创建华为云隧道"><span class="nav-number">4.4.</span> <span class="nav-text">4.创建华为云隧道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-检查状态"><span class="nav-number">4.5.</span> <span class="nav-text">5.检查状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-检查防火墙、安全组、acl等限制"><span class="nav-number">4.6.</span> <span class="nav-text">6.检查防火墙、安全组、acl等限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-测试网络联通性"><span class="nav-number">4.7.</span> <span class="nav-text">7.测试网络联通性</span></a></li></ol></li></ol></div>
             
 
           </div>
