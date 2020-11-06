@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.itmonkey.icu/2020/11/06/install-prometheus-operator-in-gcp/</loc>
+    
+    <lastmod>2020-11-06T10:03:30.001Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.itmonkey.icu/2020/10/20/helm-repo-chartmuseum-deploy/</loc>
     
     <lastmod>2020-10-21T02:08:51.079Z</lastmod>
