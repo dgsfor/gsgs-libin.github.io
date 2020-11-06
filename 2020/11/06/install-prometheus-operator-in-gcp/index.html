@@ -88,7 +88,7 @@
 <meta property="og:image" content="https://blog.itmonkey.icu/img/install-prometheus-operator-in-gcp/sc.png">
 <meta property="og:image" content="https://blog.itmonkey.icu/img/install-prometheus-operator-in-gcp/pvc.png">
 <meta property="article:published_time" content="2020-11-06T06:28:00.000Z">
-<meta property="article:modified_time" content="2020-11-06T10:03:30.001Z">
+<meta property="article:modified_time" content="2020-11-06T10:05:20.577Z">
 <meta property="article:author" content="野生">
 <meta property="article:tag" content="gke">
 <meta property="article:tag" content="k8s">
@@ -435,7 +435,7 @@
 
 <h5 id="①-设置自定义ns"><a href="#①-设置自定义ns" class="headerlink" title="① 设置自定义ns"></a>① 设置自定义ns</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">修改values.yaml中的namespaceOverride字段，设置为自己的ns</span><br></pre></td></tr></table></figure>
 
-<h5 id="②-设置svc暴露方式为NodePort"><a href="#②-设置svc暴露方式为NodePort" class="headerlink" title="② 设置svc暴露方式为NodePort"></a>② 设置svc暴露方式为NodePort</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1.修改alertmanager.service.type为NodePort</span><br><span class="line">2.修改prometheus.service.type为NodePort</span><br><span class="line">3.grafana比较特殊，需要在grafana.service下添加以下内容：(端口你自己定,nodePort不要超过30000-32767就行)</span><br><span class="line">port: 9330</span><br><span class="line">targetPort: 9330</span><br><span class="line">nodePort: 32330</span><br><span class="line">type: NodePort</span><br></pre></td></tr></table></figure>
+<h5 id="②-设置svc暴露方式为NodePort"><a href="#②-设置svc暴露方式为NodePort" class="headerlink" title="② 设置svc暴露方式为NodePort"></a>② 设置svc暴露方式为NodePort</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.修改alertmanager.service.type为NodePort</span><br><span class="line">2.修改prometheus.service.type为NodePort</span><br><span class="line">3.grafana比较特殊，需要在grafana.service下添加以下内容：(端口你自己定,nodePort不要超过30000-32767就行)</span><br><span class="line">(grafana还可以修改默认密码：grafana.adminPassword)</span><br><span class="line">port: 9330</span><br><span class="line">targetPort: 9330</span><br><span class="line">nodePort: 32330</span><br><span class="line">type: NodePort</span><br></pre></td></tr></table></figure>
 
 <h5 id="③-自定义ingress"><a href="#③-自定义ingress" class="headerlink" title="③ 自定义ingress"></a>③ 自定义ingress</h5><p>这个不建议了，因为这样默认会创建出三个公网ip，比较麻烦，最好的方式是安装好之后，单独定义一个ingress资源，去代理这三个服务：alertmanager、grafana、prometheus。</p>
 <p>具体方法看上面说的ingress服务暴露。(注意：你前面已经吧grafana的暴露方式修改成NodePort，并且把端口也改了，注意修改ingress文件)</p>
