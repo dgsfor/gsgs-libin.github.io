@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.itmonkey.icu/2020/11/09/prometheus-operator-prometheusrules/</loc>
+    
+    <lastmod>2020-11-09T10:42:50.165Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.itmonkey.icu/2020/11/09/prometheus-operator-servicemanager/</loc>
     
-    <lastmod>2020-11-09T09:15:23.819Z</lastmod>
+    <lastmod>2020-11-09T09:43:06.966Z</lastmod>
     
   </url>
   
