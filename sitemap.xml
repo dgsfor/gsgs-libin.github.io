@@ -2,23 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://blog.itmonkey.icu/2020/11/09/prometheus-operator-prometheusrules/</loc>
+    <loc>https://blog.itmonkey.icu/2020/11/06/install-prometheus-operator-in-gcp/</loc>
     
-    <lastmod>2020-11-09T10:42:50.165Z</lastmod>
+    <lastmod>2020-11-10T06:32:20.029Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://blog.itmonkey.icu/2020/11/09/prometheus-operator-servicemanager/</loc>
     
-    <lastmod>2020-11-09T09:43:06.966Z</lastmod>
+    <lastmod>2020-11-10T02:11:52.425Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.itmonkey.icu/2020/11/06/install-prometheus-operator-in-gcp/</loc>
+    <loc>https://blog.itmonkey.icu/2020/11/09/prometheus-operator-prometheusrules/</loc>
     
-    <lastmod>2020-11-09T02:06:56.238Z</lastmod>
+    <lastmod>2020-11-09T10:42:50.165Z</lastmod>
     
   </url>
   

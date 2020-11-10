@@ -90,7 +90,7 @@
 <meta property="og:image" content="https://blog.itmonkey.icu/img/prometheus-operator-servicemonitor/3.png">
 <meta property="og:image" content="https://blog.itmonkey.icu/img/prometheus-operator-servicemonitor/4.png">
 <meta property="article:published_time" content="2020-11-09T06:50:18.000Z">
-<meta property="article:modified_time" content="2020-11-09T09:43:06.966Z">
+<meta property="article:modified_time" content="2020-11-10T02:11:52.425Z">
 <meta property="article:author" content="野生">
 <meta property="article:tag" content="prometheus">
 <meta property="article:tag" content="prometheus-operator">
@@ -410,6 +410,11 @@
 
 <p>当然下一节讲解的prometheusrules也会涉及到这个，prometheus是怎么发现你自定义的告警规则呢，也是通过这个标签来的</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[root@localhost]#</span><span class="bash"> kubectl get prometheus prometheus-operator-me-prometheus -n monitoring -o yaml</span></span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">ruleNamespaceSelector: &#123;&#125;</span><br><span class="line">  ruleSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: prometheus-operator</span><br><span class="line">      release: eve-prometheus-operator</span><br></pre></td></tr></table></figure>
+
+
+<p>最后，如果你真的想修改这些标签，你觉得这个标签不够明显，想要自定义一些标签，那么针对helm安装的prometheus-operator，我们可以修改values.yaml文件:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1. 修改servicemonitor选择label</span><br><span class="line">serviceMonitorSelector:</span><br><span class="line">      matchLabels:</span><br><span class="line">        serviceMonitorLabelKey: serviceMonitorLabelValue</span><br><span class="line">        </span><br><span class="line">2. 修改prometheusmonitor选择label</span><br><span class="line">ruleSelector:</span><br><span class="line">      matchLabels:</span><br><span class="line">        RuleLabelKey: RuleLabelValue</span><br></pre></td></tr></table></figure>
+
       
     </div>
     
