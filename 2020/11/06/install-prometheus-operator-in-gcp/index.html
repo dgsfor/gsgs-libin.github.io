@@ -87,8 +87,9 @@
 <meta property="og:description" content="本文讲解如何在gke上安装prometheus-operator">
 <meta property="og:image" content="https://blog.itmonkey.icu/img/install-prometheus-operator-in-gcp/sc.png">
 <meta property="og:image" content="https://blog.itmonkey.icu/img/install-prometheus-operator-in-gcp/pvc.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/install-prometheus-operator-in-gcp/storage.png">
 <meta property="article:published_time" content="2020-11-06T06:28:00.000Z">
-<meta property="article:modified_time" content="2020-11-10T06:32:20.029Z">
+<meta property="article:modified_time" content="2020-11-11T02:08:30.606Z">
 <meta property="article:author" content="野生">
 <meta property="article:tag" content="gke">
 <meta property="article:tag" content="k8s">
@@ -463,6 +464,7 @@
 <p>然后修改<code>charts/grafana/values.yaml</code>，使用上面的pvc</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">persistence:</span><br><span class="line">  type: pvc</span><br><span class="line">  enabled: true</span><br><span class="line">  storageClassName: gke-standard-sc</span><br><span class="line">  accessModes:</span><br><span class="line">    - ReadWriteOnce</span><br><span class="line">  size: 10Gi</span><br><span class="line"><span class="meta">  #</span><span class="bash"> annotations: &#123;&#125;</span></span><br><span class="line">  finalizers:</span><br><span class="line">    - kubernetes.io/pvc-protection</span><br><span class="line"><span class="meta">  #</span><span class="bash"> subPath: <span class="string">""</span></span></span><br><span class="line">  existingClaim: gke-grafana-pvc</span><br></pre></td></tr></table></figure>
 
+<p>持久化存储搞定之后，我们可以看看我们的grafana和prometheus运行在哪台机器上，然后登录到机器，就可以看到这台机器挂载了你的存储磁盘。<br><img src="/img/install-prometheus-operator-in-gcp/storage.png" alt="png3"></p>
 <h5 id="⑤-自定义镜像"><a href="#⑤-自定义镜像" class="headerlink" title="⑤ 自定义镜像"></a>⑤ 自定义镜像</h5><p>这里只需要注意，你的镜像如果是私有的，那么请设置全局的<code>global.imagePullSecrets</code></p>
 <h5 id="⑥-修改grafana默认用户密码"><a href="#⑥-修改grafana默认用户密码" class="headerlink" title="⑥ 修改grafana默认用户密码"></a>⑥ 修改grafana默认用户密码</h5><p>注意要注释掉默认values中的grafana.adminPassword配置</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[root@localhost]#</span><span class="bash"> vim charts/grafana/values.yaml</span></span><br><span class="line">adminUser: meitu_sre</span><br><span class="line">adminPassword: Meitu@2020</span><br></pre></td></tr></table></figure>
