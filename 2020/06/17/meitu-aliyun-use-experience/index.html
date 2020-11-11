@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>美图运维之旅：在阿里云上的经验以及踩过的坑 | 猿的野生香蕉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="文章介绍了美图在使用阿里云过程中遇到的点点滴滴，希望对你有一点点启发或者帮助。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="美图运维之旅：在阿里云上的经验以及踩过的坑">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/06/17/meitu-aliyun-use-experience/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="文章介绍了美图在使用阿里云过程中遇到的点点滴滴，希望对你有一点点启发或者帮助。">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/ziwang.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/entry.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/autoscaling.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/aom.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/autoscaling-low.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/peie.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/update-autoscaling.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/entry.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/robot.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/self-notice-1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/self-notice-2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/crontab.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/promotlist.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/promotlist2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/mobile.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/alyexperience/mobile2.png">
+<meta property="article:published_time" content="2020-06-17T07:40:51.000Z">
+<meta property="article:modified_time" content="2020-11-11T05:05:21.757Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="阿里云">
+<meta property="article:tag" content="美图">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/alyexperience/ziwang.png">
+  
+    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">猿的野生香蕉</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">野生</a>
+        </h2>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-meitu-aliyun-use-experience" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/17/meitu-aliyun-use-experience/" class="article-date">
+  <time datetime="2020-06-17T07:40:51.000Z" itemprop="datePublished">2020-06-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      美图运维之旅：在阿里云上的经验以及踩过的坑
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本篇chat可能更多的是文字表述，没啥高深的用词，都是大白话，需要各位朋友有耐性的阅读下去，也希望各位朋友能够提出宝贵建议。</p>
+<a id="more"></a>
+
+<h3 id="美图公司是如何使用阿里云的"><a href="#美图公司是如何使用阿里云的" class="headerlink" title="美图公司是如何使用阿里云的"></a>美图公司是如何使用阿里云的</h3><p>关于使用方面，我想从以下几个点简单叙述一下，</p>
+<ul>
+<li>权限规划</li>
+<li>区域规划</li>
+<li>网络规划</li>
+<li>型号规划</li>
+<li>统一登录规划</li>
+<li>命名规划<h4 id="权限规划"><a href="#权限规划" class="headerlink" title="权限规划"></a>权限规划</h4>权限规划只要是在账号权限规划上，一般是主账号+子账号，然后通过ram来进行对应授权，为什么要做这个，因为主账号一般控制在运维手上，子账号可能会存在其他运维手上以及某些开发手上，那么就需要做严格的权限控制。目前阿里云ram有几个点：用户，群组，角色，策略等功能，目前角色和策略都支持自定义，然后可以应用到用户上，群组上。角色可以附加到ecs上，可以用高权限获取一些云上资源信息。<h4 id="区域规划"><a href="#区域规划" class="headerlink" title="区域规划"></a>区域规划</h4>做区域规划需要考虑几点：</li>
+<li>第一、你的业务架构，比如我有idc机房在北京，那么我们上云的话一般会考虑北京region，又比如我的业务用户主要分布在江浙一带，那么我们一般就考虑上海或者杭州region。</li>
+<li>第二、一定要找阿里云技术问到当前region的最新可用区是哪个，机器储备量级是多少，因为新可用区一般会有新机器，新型号，一般来说带来的好处就是性能高还便宜；另外老可用区机器型号非常少，经常会遇到售馨的问题。</li>
+<li>第三、当我们定好了区域之后，后续再改变会非常麻烦，所以前期的调研准备一定要完善，考虑要全面。<h4 id="网络规划"><a href="#网络规划" class="headerlink" title="网络规划"></a>网络规划</h4>关于网络规划，主要有以下几点需要考虑下：</li>
+<li>第一、vpc规划，可以按照你的业务架构划分vpc，不同vpc之间可以做一些安全组也隔离流量。例如我有大数据业务，普通业务，运维业务，那么我可以简单创建几个vpc：大数据vpc，生产业务vpc，测试业务vpc，运维vpc。</li>
+<li>第二、子网划分，每一个vpc划分多个子网，比如我拿生产业务vpc来举例子，可以划分为：容器子网，mysql子网，redis子网等。(注意：子网在阿里云就是交换机的概念)</li>
+<li>第三、子网的ip数量，这个的定义需要提前规划和统计业务量级，vpc本身是一个大的网段，单个子网的网段要合适，太大浪费，太小扩展麻烦。</li>
+</ul>
+<p>我们内部的子网划分：<br><img src="/img/alyexperience/ziwang.png" alt="ziwang"></p>
+<h4 id="型号规划和命名规划"><a href="#型号规划和命名规划" class="headerlink" title="型号规划和命名规划"></a>型号规划和命名规划</h4><p>把这两个放一起讲，一般来说公司会选择一款型号来作为自己的主力机型，这个配置比较贴近自己的业务形态，另外这个机型也要跟阿里云备案，让他们提供足够大的节点池。<br>命名规划的话，我们可以按照业务提供能力来做不同的命名方式：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">k8s节点: aly-k8snode-10-10-10-1.meitu.com</span><br><span class="line">mysql: aly-mysql-A-10-10-10-2.meitu.com</span><br><span class="line">redis: aly-redis-B-10-10-10-3.meitu.com</span><br></pre></td></tr></table></figure>
+<p>做好这个，第一能更好区分不同节点功能，第二能更好的去做自动化运维工作。</p>
+<h4 id="统一登录规划"><a href="#统一登录规划" class="headerlink" title="统一登录规划"></a>统一登录规划</h4><p>做统一登录就是要做跳板机、做权限管理。有以下几点要考虑：</p>
+<ul>
+<li>第一、用户登录虚机需求，运维测需要做一个公共跳板机，所有的登录操作都需要通过该机器跳转。</li>
+<li>第二、开发用户对于线上的机器不能有永久权限，开放的一般是临时权限，所以我们需要有一套授权，回收权限的平台。</li>
+<li>第三、做好操作追踪，防止一些<code>高危人员</code>做一些非法操作。</li>
+</ul>
+<p>我们内部的工单平台：<br><img src="/img/alyexperience/entry.png" alt="entry"></p>
+<h3 id="我们是如何做成本优化的"><a href="#我们是如何做成本优化的" class="headerlink" title="我们是如何做成本优化的"></a>我们是如何做成本优化的</h3><p>关于成本优化，是一个非常重要并且也非常头疼的一件事情，当服务趋于稳定后，一定要慢慢去优化成本。那么关于成本优化的事项，我们做了这些事情：</p>
+<ul>
+<li>容器化</li>
+<li>弹性伸缩的深入使用</li>
+<li>做好资源开通记录和监控</li>
+<li>架构规划(内网和公网)</li>
+<li>增加混布实例</li>
+<li>定时巡检，删除无用资源</li>
+<li>最低实例实行包年包月</li>
+</ul>
+<h4 id="容器化"><a href="#容器化" class="headerlink" title="容器化"></a>容器化</h4><p>容器化趋势，他也是作为成本优化最好的方案之一，目前我们公司95%的业务已经容器化。我们在云上使用的是托管的k8s集群，另外我们自己有一套自研的k8s管理工具，来做日常的业务发布，迭代等操作。</p>
+<h4 id="弹性伸缩的深入应用"><a href="#弹性伸缩的深入应用" class="headerlink" title="弹性伸缩的深入应用"></a>弹性伸缩的深入应用</h4><p>我认为云服务和自建IDC最大的差距就是弹性伸缩的应用，我个人也是非常喜欢弹性伸缩这一个服务，因为他能很好的提升资源利用率，并且显著的降低成本。<br>我们在以下几个场景用了弹性伸缩服务：</p>
+<ul>
+<li>第一、托管k8s服务的容器节点。</li>
+<li>第二、普通虚机业务开通弹性伸缩。</li>
+<li>第三、容器业务服务开通HPA。</li>
+<li>第四、共享带宽的弹性。</li>
+</ul>
+<p>结合这些弹性伸缩的场景，我们做了一些工具，主要是观察全局的一个情况。<br>阿里云弹性伸缩控制台总览：<br><img src="/img/alyexperience/autoscaling.png" alt="autoscaling"><br>容器单个业务伸缩策略详情：<br><img src="/img/alyexperience/aom.png" alt="aom"></p>
+<h4 id="做好资源开通记录和监控"><a href="#做好资源开通记录和监控" class="headerlink" title="做好资源开通记录和监控"></a>做好资源开通记录和监控</h4><p>这个非常重要，因为我们经常会遇到一个情况是：业务临时有个需求，需要开一台测试机器来做业务验证，我们开通完交付。他们测试完成之后并不会通知你是否需还需要这台机器，导致慢慢被遗忘，所以增加了额外的费用。<br>另外一点我们也可以根据记录去做一些下线工作：当一个业务需要下线时候，我们可以根据他们的资源申请单去下线相关的服务，避免漏下或者错下。</p>
+<h4 id="架构规划-内网和公网"><a href="#架构规划-内网和公网" class="headerlink" title="架构规划(内网和公网)"></a>架构规划(内网和公网)</h4><p>这个点涉及到的一般就是流量费用，公网带宽费用，我们遇到过一些情况是：业务调用能走内网的他不走内网，非要走公网，甚至他根本就不知道有内网地址。所以基于这个我们做了以下几点：</p>
+<ul>
+<li>第一、服务上线评审，新服务上线一定要拉上运维，开发一起做一个评审，因为开发不懂线上网络结构，他们认为只要服务能够正常通就是没问题的，所以他们忽略了非常多的细节，比如内网调用等。</li>
+<li>第二、服务提供内网域名，公司业务越多，那么存在互相依赖的地方就越多，这些内部依赖的动作能通过内网的一定要通过内网，不要从公网绕一圈。比如我在阿里云上下载oss图片，明显有内部的oss地址可用。</li>
+<li>第三、服务部署规划，当有A的子服务B需要上线，且B是完全给A调用的，那么该服务上线的区域一定是A所在区域，不要存在跨可用区，跨region，跨专线等操作，这些都会带来额外的流量费用。<h4 id="增加混布实例"><a href="#增加混布实例" class="headerlink" title="增加混布实例"></a>增加混布实例</h4>混布一般是针对非容器化业务的，虽然混布不建议，但是也是不能缺少的。公司肯定会有类似的业务，并且年代久远，无人维护，像这类业务就可以统一丢到一两台机器上部署即可。<h4 id="定时巡检，删除无用资源"><a href="#定时巡检，删除无用资源" class="headerlink" title="定时巡检，删除无用资源"></a>定时巡检，删除无用资源</h4>这一步也是运维日常，我们会跑一些自动化的脚本去删除一些无用的服务，并且列出一些无主资源去让业务方确认是否释放。</li>
+<li>镜像。阿里云的镜像可以只留最新的几个，删除老的镜像。</li>
+<li>快照。跟镜像类似。</li>
+<li>磁盘。删除无挂载，也无需保留的磁盘。</li>
+<li>OSS。清理oss空间，业务方会保留非常多的静态资源，他们也不会删除，也不会去管，所以需要我们来推动他们来确认清理。</li>
+<li>ECS。删除临时测试机器，删除业务已经下线的机器。</li>
+<li>……</li>
+</ul>
+<p>虽然这些都是比较便宜，不过积少成多，成本优化本身就是一个漫长的过程，所以一点点的优化才是王道。</p>
+<h4 id="最低实例实行包年包月"><a href="#最低实例实行包年包月" class="headerlink" title="最低实例实行包年包月"></a>最低实例实行包年包月</h4><p>这个方案主要是针对弹性伸缩来说的，我们会观察每一个弹性伸缩组一天的监控数据，包括cpu利用率，实例数量。然后观察几周的数据，发现最低的一个实例数量，把这部分实例转成包年包月。</p>
+<p>如下图，我们可以拿2-3台进行转包月操作：<br><img src="/img/alyexperience/autoscaling-low.png" alt="autoscaling-low"></p>
+<h3 id="我们在阿里云上遇到了哪些坑"><a href="#我们在阿里云上遇到了哪些坑" class="headerlink" title="我们在阿里云上遇到了哪些坑"></a>我们在阿里云上遇到了哪些坑</h3><p>其实阿里云在国内市场已经做的非常好了，遇到的坑也大多比较贴近自身业务，有些坑他们也已经做了架构调整规避了。</p>
+<ul>
+<li>区域资源配额问题</li>
+<li>NAT 带宽问题</li>
+<li>实例售馨问题</li>
+<li>可用区交换机网段过大</li>
+</ul>
+<p>其实坑还有很多，只不过有些都是小坑，有些可能我自己也有点忘记了。</p>
+<p>下面简单解释下这些坑：</p>
+<h4 id="区域资源配额问题"><a href="#区域资源配额问题" class="headerlink" title="区域资源配额问题"></a>区域资源配额问题</h4><p>我们在重要节日推广，需要大量的机器储备，某年春节的时候遇到了区域资源配额瓶颈问题，即这个账号默认可以使用多少的vcpu(这个主要是按需的，包年包月的不会计算进来)。当时推广的时候，我们机器完全扩不上来了，最终排查到是资源配额上限了，也是紧急通知阿里云帮忙调整。<br><img src="/img/alyexperience/peie.png" alt="peie"></p>
+<h4 id="NAT-带宽问题"><a href="#NAT-带宽问题" class="headerlink" title="NAT 带宽问题"></a>NAT 带宽问题</h4><p>最早阿里云的 NAT 还是有单独的带宽配置的，当时我们有一个服务推广效果比较好，直接把 NAT 打满了，导致我们整个vpc内的网络都非常慢，严重影响了我们服务质量。<br>目前阿里云刚把 NAT 带宽调整成共享带宽包，带宽和 NAT 实现了分离，另外带宽也可以动态调整，非常的方便。</p>
+<h4 id="实例售馨问题"><a href="#实例售馨问题" class="headerlink" title="实例售馨问题"></a>实例售馨问题</h4><p>如前面所说的，一个企业一般会选用一个主力型号，当时是弹性的机器过多，导致该型号实例售馨，新机器无法创建。<br>针对这个问题，我们做了如下两个解决方式：</p>
+<ul>
+<li>设置多实例弹性，弹性伸缩可以配置弹多个实例型号，并且也有优先级。</li>
+<li>替换大规格机器，简单来说就是用一台大规格实例顶替多台小规格实例。<h4 id="可用区交换机网段过大"><a href="#可用区交换机网段过大" class="headerlink" title="可用区交换机网段过大"></a>可用区交换机网段过大</h4>遇到这个坑的背景也是我们想使用新可用区，因为我们IDC跟阿里云是默认专线打通的，所以会存在网段分配的问题，当初分配给阿里云的网段已经用完了，所以我想开新区，必须释放老的交换机或者拆分它。<br>分配的网段用完了的根本原因还是：当初规划不合理，交换机设置过大，然后根本用不到这么多。<h3 id="我们如何做自动化运维的"><a href="#我们如何做自动化运维的" class="headerlink" title="我们如何做自动化运维的"></a>我们如何做自动化运维的</h3></li>
+<li>弹性伸缩服务更新</li>
+<li>统一登录权限申请</li>
+<li>云上资源数据统计</li>
+<li>自定义资源监控告警</li>
+<li>定时弹性伸缩控制成本</li>
+<li>重要业务推广通知</li>
+<li>移动端运维</li>
+</ul>
+<p>关于自动化运维这一块，其实需要紧密贴近公司的业务来做。只要你平时感觉哪个操作经常做，又非常繁琐，那么他就可以用工具替代，所以下面的东西都是我平时经常操作而抽象出来的。</p>
+<h4 id="弹性伸缩服务更新"><a href="#弹性伸缩服务更新" class="headerlink" title="弹性伸缩服务更新"></a>弹性伸缩服务更新</h4><p>弹性伸缩服务，一个非常重要的操作就是更新，我们每个弹性伸缩组都有上百个实例，不可能去一个一个更新，肯定是创建一个镜像后，然后按照这个镜像进行滚动更新。我们有100个左右的弹性伸缩组，所以这个更新操作是经常需要的，所以我做了自动更新操作，并集成到了移动端和web端。<br><img src="/img/alyexperience/update-autoscaling.png" alt="update-autoscaling"></p>
+<h4 id="统一登录权限申请"><a href="#统一登录权限申请" class="headerlink" title="统一登录权限申请"></a>统一登录权限申请</h4><p>我们有自己的一套权限申请平台，相应的人员可以申请线上的机器，申请可以是临时的，也可以是拥有的。<br><img src="/img/alyexperience/entry.png" alt="entry"></p>
+<h4 id="云上资源数据统计"><a href="#云上资源数据统计" class="headerlink" title="云上资源数据统计"></a>云上资源数据统计</h4><p>这个统计信息会统计我们当前阿里云使用了多少机器，多少cpu，多少内存。这个信息会发给我们老大，同时开发老大也会关注这个，因为涉及到成本。<br><img src="/img/alyexperience/robot.png" alt="entry"></p>
+<h4 id="自定义资源监控告警"><a href="#自定义资源监控告警" class="headerlink" title="自定义资源监控告警"></a>自定义资源监控告警</h4><p>其实阿里云集成的监控告警已经比较全面了，他可以通过邮件、短信、钉钉等方式发送出来。不过涉及到业务层面的，或者更贴合我们自己需求的，一般都会自定义通知，大家可以看我这篇chat，《美图分享：适用于中小型企业自研的监控告警通知系统（附源码）》，我平时自定义告警都是通过这个项目进行发送的，种类繁多。<br><img src="/img/alyexperience/self-notice-1.png" alt="self-notice-1"><br><img src="/img/alyexperience/self-notice-2.png" alt="self-notice-2"></p>
+<h4 id="定时弹性伸缩控制成本"><a href="#定时弹性伸缩控制成本" class="headerlink" title="定时弹性伸缩控制成本"></a>定时弹性伸缩控制成本</h4><p>我们完全按照阿里云弹性伸缩设置默认的伸缩规则有时候可能还不能满足，借此我们可能还会设置一些定时伸缩，比如我晚上2点就让它维持两台机器。这个也是控制服务稳定性的一个操作，因为在某些时刻，服务是1台机器扛不住，两台机器会缩容的状态。<br>我们开发了一个工具展示定时任务的列表(由于业务迁移了，所以这里没数据了，嘿嘿)<br><img src="/img/alyexperience/crontab.png" alt="crontab"></p>
+<h4 id="重要业务推广通知"><a href="#重要业务推广通知" class="headerlink" title="重要业务推广通知"></a>重要业务推广通知</h4><p>一般我们的业务在重要节日中，都会有推广。那么推广前，我们一定需要保障该服务的稳定性，该扩容的扩容，该加配置的加配置，所以我们做了重要推广通知的平台，来重点保障春节，五一，国庆等重要节日业务推广。<br><img src="/img/alyexperience/promotlist.png" alt="promotlist"></p>
+<p><img src="/img/alyexperience/promotlist2.png" alt="promotlist2"></p>
+<h4 id="移动端运维"><a href="#移动端运维" class="headerlink" title="移动端运维"></a>移动端运维</h4><p>移动端运维也是今年我们新引入的，因为我们已经厌烦了天天背着电脑了，能在手机上操作就在手机上操作了。其实上面的很多服务都是移动端的界面。<br>由于自己开发能力有限，所以只开发了 IOS 客户端，后端就是python写的。(有兴趣的朋友，可以一起交流一下！)<br><img src="/img/alyexperience/mobile.png" alt="mobile"><br><img src="/img/alyexperience/mobile2.png" alt="mobile2"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2020/06/17/meitu-aliyun-use-experience/" data-id="ckhd05pxm002haity90x87ptb" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BE%8E%E5%9B%BE/" rel="tag">美图</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag">运维</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" rel="tag">阿里云</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/17/how-to-empress/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          美图实战分享：如何真实模拟生产流量进行服务性能压测
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#美图公司是如何使用阿里云的"><span class="toc-number">2.</span> <span class="toc-text">美图公司是如何使用阿里云的</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#权限规划"><span class="toc-number">2.1.</span> <span class="toc-text">权限规划</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#区域规划"><span class="toc-number">2.2.</span> <span class="toc-text">区域规划</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网络规划"><span class="toc-number">2.3.</span> <span class="toc-text">网络规划</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#型号规划和命名规划"><span class="toc-number">2.4.</span> <span class="toc-text">型号规划和命名规划</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#统一登录规划"><span class="toc-number">2.5.</span> <span class="toc-text">统一登录规划</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#我们是如何做成本优化的"><span class="toc-number">3.</span> <span class="toc-text">我们是如何做成本优化的</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#容器化"><span class="toc-number">3.1.</span> <span class="toc-text">容器化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#弹性伸缩的深入应用"><span class="toc-number">3.2.</span> <span class="toc-text">弹性伸缩的深入应用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#做好资源开通记录和监控"><span class="toc-number">3.3.</span> <span class="toc-text">做好资源开通记录和监控</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#架构规划-内网和公网"><span class="toc-number">3.4.</span> <span class="toc-text">架构规划(内网和公网)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#增加混布实例"><span class="toc-number">3.5.</span> <span class="toc-text">增加混布实例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#定时巡检，删除无用资源"><span class="toc-number">3.6.</span> <span class="toc-text">定时巡检，删除无用资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最低实例实行包年包月"><span class="toc-number">3.7.</span> <span class="toc-text">最低实例实行包年包月</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#我们在阿里云上遇到了哪些坑"><span class="toc-number">4.</span> <span class="toc-text">我们在阿里云上遇到了哪些坑</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#区域资源配额问题"><span class="toc-number">4.1.</span> <span class="toc-text">区域资源配额问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NAT-带宽问题"><span class="toc-number">4.2.</span> <span class="toc-text">NAT 带宽问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实例售馨问题"><span class="toc-number">4.3.</span> <span class="toc-text">实例售馨问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可用区交换机网段过大"><span class="toc-number">4.4.</span> <span class="toc-text">可用区交换机网段过大</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#我们如何做自动化运维的"><span class="toc-number">5.</span> <span class="toc-text">我们如何做自动化运维的</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#弹性伸缩服务更新"><span class="toc-number">5.1.</span> <span class="toc-text">弹性伸缩服务更新</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#统一登录权限申请"><span class="toc-number">5.2.</span> <span class="toc-text">统一登录权限申请</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#云上资源数据统计"><span class="toc-number">5.3.</span> <span class="toc-text">云上资源数据统计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#自定义资源监控告警"><span class="toc-number">5.4.</span> <span class="toc-text">自定义资源监控告警</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#定时弹性伸缩控制成本"><span class="toc-number">5.5.</span> <span class="toc-text">定时弹性伸缩控制成本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重要业务推广通知"><span class="toc-number">5.6.</span> <span class="toc-text">重要业务推广通知</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#移动端运维"><span class="toc-number">5.7.</span> <span class="toc-text">移动端运维</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 野生&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>
