@@ -13,7 +13,7 @@
 <meta property="og:description" content="在gke集群使用k8s社区推出的ingress-nginx">
 <meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller-in-gke/svc.png">
 <meta property="article:published_time" content="2020-11-12T08:45:05.000Z">
-<meta property="article:modified_time" content="2020-11-12T11:35:50.296Z">
+<meta property="article:modified_time" content="2020-11-12T11:37:08.832Z">
 <meta property="article:author" content="野生">
 <meta property="article:tag" content="k8s">
 <meta property="article:tag" content="helm">
@@ -108,6 +108,8 @@
         
         <h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>前两篇文章已经讲解过nginx-ingress，nginx-ingress是由nginx官方推出的，今天讲解一下k8s社区推出的ingress-nginx。<br>另外gke上基础的东西我就不讲了，类似节点池的创建，在之前的文章都已经写过了，不太懂的可以翻看一下。</p>
 <h3 id="前置注意"><a href="#前置注意" class="headerlink" title="前置注意"></a>前置注意</h3><p>k8s集群版本要求<code>&gt;=1.16.0-0</code>，所以如果没达到要求的，建议升级下~</p>
+<a id="more"></a>
+
 <h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
 <li>下载最新的charts</li>
 <li>修改配置</li>
