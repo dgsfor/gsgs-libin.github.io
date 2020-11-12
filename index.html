@@ -73,6 +73,79 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-helm-install-ingress-controller-in-gke" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/12/helm-install-ingress-controller-in-gke/" class="article-date">
+  <time datetime="2020-11-12T08:45:05.000Z" itemprop="datePublished">2020-11-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/k8s/">k8s</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/12/helm-install-ingress-controller-in-gke/">(官方版)使用helm3在gke集群中安装ingress-nginx</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>前两篇文章已经讲解过nginx-ingress，nginx-ingress是由nginx官方推出的，今天讲解一下k8s社区推出的ingress-nginx。<br>另外gke上基础的东西我就不讲了，类似节点池的创建，在之前的文章都已经写过了，不太懂的可以翻看一下。</p>
+<h3 id="前置注意"><a href="#前置注意" class="headerlink" title="前置注意"></a>前置注意</h3><p>k8s集群版本要求<code>&gt;=1.16.0-0</code>，所以如果没达到要求的，建议升级下~</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
+<li>下载最新的charts</li>
+<li>修改配置</li>
+<li>安装验证</li>
+</ul>
+<h4 id="下载最新的charts"><a href="#下载最新的charts" class="headerlink" title="下载最新的charts"></a>下载最新的charts</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> helm pull ingress-nginx/ingress-nginx</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1. image.repository,镜像需要梯子，注意</span><br><span class="line">2. ingressClass这个改一改，设置你的ingress-controller组名</span><br><span class="line">3. hostNetwork如果你用daemonset，请设置为true</span><br><span class="line">4. kind，看你用什么方式了，deployment还是daemonset</span><br><span class="line">5. nodeSelector，最好指定单独的节点池，这样业务和代理不混用</span><br><span class="line">6. healthCheckPath，设置成你想要的健康检查uri</span><br><span class="line">7. autoscaling，增加了hpa设置，可以看下</span><br><span class="line">8. service.enabled默认是true，会生成一个loadbalancer类型的svc</span><br><span class="line">9. internal，是否开启内部负载均衡器，对于云厂商需要设置不同的annotations，才行。对于gke来讲：`cloud.google.com/load-balancer-type: Internal`即可开启内部负载均衡器(注意：这个默认是用gke官方的ingress-controller，而不是我们本次安装的)</span><br><span class="line">10. admissionWebhooks还没研究过是啥，暂时关闭</span><br><span class="line">11. metrics开启，如果在gke上，设置type为NodePort</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装验证"><a href="#安装验证" class="headerlink" title="安装验证"></a>安装验证</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install my-ingress-nginx -n ingress-nginx .</span><br></pre></td></tr></table></figure>
+
+<p>完成上述安装之后，你可以看到会生成三个svc:<br>一个loadbalancer外网，一个loadbalancer内网，一个metrics的svc<br><img src="/img/helm-install-ingress-controller-in-gke/svc.png" alt="png1"></p>
+<p>接下来我们创建一个ingress资源，测试下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  annotations:</span><br><span class="line">    nginx.ingress.kubernetes.io/enable-cors: "true"</span><br><span class="line">    kubernetes.io/ingress.class: mt-ingress-eve-release #注意修改成你自己的ingressclass</span><br><span class="line">  name: test-ingress</span><br><span class="line">  namespace: monitoring</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: test.xx.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - backend:</span><br><span class="line">          serviceName: mt-prometheus-operator-prometheus</span><br><span class="line">          servicePort: 9090</span><br><span class="line">  tls:</span><br><span class="line">  - hosts:</span><br><span class="line">    - test.xx.com</span><br><span class="line">    secretName: x-xx-com-20201112</span><br></pre></td></tr></table></figure>
+
+<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><p>最佳配置：(适用于生产环境)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.ingressClass，内网和公网分开，分别叫：internal-ingree-group,public-ingress-group</span><br><span class="line">2.hostNetwork=true</span><br><span class="line">3.kind=DaemonSet</span><br><span class="line">4.service创建设为false</span><br><span class="line">5.nodeSelector: nodetype=ingress</span><br><span class="line">6.healthCheckPath自定义</span><br><span class="line">7.metrics开启，port默认10254，注意防火墙规则是否打开(curl ip:10254/metrics)</span><br><span class="line">8.defaultBackend最好打开下</span><br></pre></td></tr></table></figure>
+
+<p>安装外网的ingress-controller:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install public-ingress-nginx -n ingress-nginx . --set controller.ingressClass=public-ingress-nginx</span><br></pre></td></tr></table></figure>
+<p>安装内网的ingress-controller:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install inner-ingress-nginx -n ingress-nginx . --set controller.ingressClass=inner-ingress-nginx</span><br></pre></td></tr></table></figure>
+
+<p>安装完之后，创建lb负载均衡器，代理到ingress实例组里，跟这篇文章的最后部分一样了，不讲解了。<a href="https://blog.itmonkey.icu/2020/11/11/helm-install-ingress-in-gke-with-daemonset/#%E5%A2%9E%E5%8A%A0lb%E4%BB%A3%E7%90%86%E5%88%B0ingress-controller">跳转</a></p>
+<p>最后你可以创建一个ingress资源测试下，看看效果。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2020/11/12/helm-install-ingress-controller-in-gke/" data-id="ckherb3mc000024ty8zxl9pe3" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/" rel="tag">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ingress-nginx/" rel="tag">ingress-nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-helm-install-ingress-in-gke-with-deployment" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/12/helm-install-ingress-in-gke-with-deployment/" class="article-date">
@@ -520,55 +593,6 @@
 
 
   
-    <article id="post-k8s-AntiAffinity-and-Affinity" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/09/17/k8s-AntiAffinity-and-Affinity/" class="article-date">
-  <time datetime="2020-09-17T02:40:04.000Z" itemprop="datePublished">2020-09-17</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/">运维进阶</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/17/k8s-AntiAffinity-and-Affinity/">k8s亲和和反亲和相关</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近在测试亲和和反亲和，发现很多知识都遗忘了，准备重新捡起来看看。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/09/17/k8s-AntiAffinity-and-Affinity/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/09/17/k8s-AntiAffinity-and-Affinity/" data-id="ckhd2m7zu000cr5ty4qnz608k" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
 
 
   <nav id="page-nav">
@@ -604,7 +628,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title categories">分类</h3>
     <div class="widget" id="categories">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/DevOps/">DevOps</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/">基础运维</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%9A%E4%BA%91%E4%B8%93%E8%BE%91/">多云专辑</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/">运维进阶</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/DevOps/">DevOps</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/">基础运维</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%9A%E4%BA%91%E4%B8%93%E8%BE%91/">多云专辑</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/">运维进阶</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -614,7 +638,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title tagcloud">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/chartmuseum/" style="font-size: 14px;">chartmuseum</a> <a href="/tags/cloudnative/" style="font-size: 14px;">cloudnative</a> <a href="/tags/gcp/" style="font-size: 16.75px;">gcp</a> <a href="/tags/gke/" style="font-size: 16.75px;">gke</a> <a href="/tags/helm/" style="font-size: 19.5px;">helm</a> <a href="/tags/ingress/" style="font-size: 16.75px;">ingress</a> <a href="/tags/inotify-tools/" style="font-size: 14px;">inotify-tools</a> <a href="/tags/java/" style="font-size: 14px;">java</a> <a href="/tags/k8s/" style="font-size: 25px;">k8s</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/nginx/" style="font-size: 14px;">nginx</a> <a href="/tags/prometheus/" style="font-size: 22.25px;">prometheus</a> <a href="/tags/prometheus-operator/" style="font-size: 19.5px;">prometheus-operator</a> <a href="/tags/prometheusrules/" style="font-size: 14px;">prometheusrules</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rpm/" style="font-size: 14px;">rpm</a> <a href="/tags/rsync/" style="font-size: 14px;">rsync</a> <a href="/tags/serviceMonitor/" style="font-size: 14px;">serviceMonitor</a> <a href="/tags/vpn-tunnel/" style="font-size: 14px;">vpn-tunnel</a> <a href="/tags/yum%E4%BB%93%E5%BA%93/" style="font-size: 14px;">yum仓库</a> <a href="/tags/%E4%BA%91%E8%BF%90%E7%BB%B4/" style="font-size: 19.5px;">云运维</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 14px;">开源</a> <a href="/tags/%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5/" style="font-size: 14px;">文件同步</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%8E%8B%E6%B5%8B/" style="font-size: 14px;">服务压测</a> <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/" style="font-size: 14px;">监控告警</a> <a href="/tags/%E7%BE%8E%E5%9B%BE/" style="font-size: 14px;">美图</a> <a href="/tags/%E8%BF%90%E7%BB%B4/" style="font-size: 14px;">运维</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 14px;">阿里云</a>
+      <a href="/tags/chartmuseum/" style="font-size: 14px;">chartmuseum</a> <a href="/tags/cloudnative/" style="font-size: 14px;">cloudnative</a> <a href="/tags/gcp/" style="font-size: 16.2px;">gcp</a> <a href="/tags/gke/" style="font-size: 16.2px;">gke</a> <a href="/tags/helm/" style="font-size: 20.6px;">helm</a> <a href="/tags/ingress/" style="font-size: 16.2px;">ingress</a> <a href="/tags/ingress-nginx/" style="font-size: 14px;">ingress-nginx</a> <a href="/tags/inotify-tools/" style="font-size: 14px;">inotify-tools</a> <a href="/tags/java/" style="font-size: 14px;">java</a> <a href="/tags/k8s/" style="font-size: 25px;">k8s</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/nginx/" style="font-size: 14px;">nginx</a> <a href="/tags/prometheus/" style="font-size: 22.8px;">prometheus</a> <a href="/tags/prometheus-operator/" style="font-size: 18.4px;">prometheus-operator</a> <a href="/tags/prometheusrules/" style="font-size: 14px;">prometheusrules</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rpm/" style="font-size: 14px;">rpm</a> <a href="/tags/rsync/" style="font-size: 14px;">rsync</a> <a href="/tags/serviceMonitor/" style="font-size: 14px;">serviceMonitor</a> <a href="/tags/vpn-tunnel/" style="font-size: 14px;">vpn-tunnel</a> <a href="/tags/yum%E4%BB%93%E5%BA%93/" style="font-size: 14px;">yum仓库</a> <a href="/tags/%E4%BA%91%E8%BF%90%E7%BB%B4/" style="font-size: 18.4px;">云运维</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 14px;">开源</a> <a href="/tags/%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5/" style="font-size: 14px;">文件同步</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%8E%8B%E6%B5%8B/" style="font-size: 14px;">服务压测</a> <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/" style="font-size: 14px;">监控告警</a> <a href="/tags/%E7%BE%8E%E5%9B%BE/" style="font-size: 14px;">美图</a> <a href="/tags/%E8%BF%90%E7%BB%B4/" style="font-size: 14px;">运维</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 14px;">阿里云</a>
     </div>
   </div>
 
@@ -624,6 +648,10 @@
     <h3 class="widget-title recent-posts">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/11/12/helm-install-ingress-controller-in-gke/">(官方版)使用helm3在gke集群中安装ingress-nginx</a>
+          </li>
         
           <li>
             <a href="/2020/11/12/helm-install-ingress-in-gke-with-deployment/">(deployment篇)使用helm3在gke中安装ingress-controller</a>
@@ -641,10 +669,6 @@
             <a href="/2020/11/09/prometheus-operator-servicemanager/">使用ServiceMonitor自定义暴露指标</a>
           </li>
         
-          <li>
-            <a href="/2020/11/06/install-prometheus-operator-in-gcp/">使用helm3在gke上安装prometheus-operator</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -654,7 +678,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 

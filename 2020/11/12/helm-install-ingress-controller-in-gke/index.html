@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>(官方版)使用helm3在gke集群中安装ingress-nginx | 猿的野生香蕉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在gke集群使用k8s社区推出的ingress-nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(官方版)使用helm3在gke集群中安装ingress-nginx">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/11/12/helm-install-ingress-controller-in-gke/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="在gke集群使用k8s社区推出的ingress-nginx">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller-in-gke/svc.png">
+<meta property="article:published_time" content="2020-11-12T08:45:05.000Z">
+<meta property="article:modified_time" content="2020-11-12T11:35:50.296Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="helm">
+<meta property="article:tag" content="ingress-nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller-in-gke/svc.png">
+  
+    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">猿的野生香蕉</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">野生</a>
+        </h2>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-helm-install-ingress-controller-in-gke" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/12/helm-install-ingress-controller-in-gke/" class="article-date">
+  <time datetime="2020-11-12T08:45:05.000Z" itemprop="datePublished">2020-11-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/k8s/">k8s</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      (官方版)使用helm3在gke集群中安装ingress-nginx
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>前两篇文章已经讲解过nginx-ingress，nginx-ingress是由nginx官方推出的，今天讲解一下k8s社区推出的ingress-nginx。<br>另外gke上基础的东西我就不讲了，类似节点池的创建，在之前的文章都已经写过了，不太懂的可以翻看一下。</p>
+<h3 id="前置注意"><a href="#前置注意" class="headerlink" title="前置注意"></a>前置注意</h3><p>k8s集群版本要求<code>&gt;=1.16.0-0</code>，所以如果没达到要求的，建议升级下~</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
+<li>下载最新的charts</li>
+<li>修改配置</li>
+<li>安装验证</li>
+</ul>
+<h4 id="下载最新的charts"><a href="#下载最新的charts" class="headerlink" title="下载最新的charts"></a>下载最新的charts</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> helm pull ingress-nginx/ingress-nginx</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1. image.repository,镜像需要梯子，注意</span><br><span class="line">2. ingressClass这个改一改，设置你的ingress-controller组名</span><br><span class="line">3. hostNetwork如果你用daemonset，请设置为true</span><br><span class="line">4. kind，看你用什么方式了，deployment还是daemonset</span><br><span class="line">5. nodeSelector，最好指定单独的节点池，这样业务和代理不混用</span><br><span class="line">6. healthCheckPath，设置成你想要的健康检查uri</span><br><span class="line">7. autoscaling，增加了hpa设置，可以看下</span><br><span class="line">8. service.enabled默认是true，会生成一个loadbalancer类型的svc</span><br><span class="line">9. internal，是否开启内部负载均衡器，对于云厂商需要设置不同的annotations，才行。对于gke来讲：`cloud.google.com/load-balancer-type: Internal`即可开启内部负载均衡器(注意：这个默认是用gke官方的ingress-controller，而不是我们本次安装的)</span><br><span class="line">10. admissionWebhooks还没研究过是啥，暂时关闭</span><br><span class="line">11. metrics开启，如果在gke上，设置type为NodePort</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装验证"><a href="#安装验证" class="headerlink" title="安装验证"></a>安装验证</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install my-ingress-nginx -n ingress-nginx .</span><br></pre></td></tr></table></figure>
+
+<p>完成上述安装之后，你可以看到会生成三个svc:<br>一个loadbalancer外网，一个loadbalancer内网，一个metrics的svc<br><img src="/img/helm-install-ingress-controller-in-gke/svc.png" alt="png1"></p>
+<p>接下来我们创建一个ingress资源，测试下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  annotations:</span><br><span class="line">    nginx.ingress.kubernetes.io/enable-cors: "true"</span><br><span class="line">    kubernetes.io/ingress.class: mt-ingress-eve-release #注意修改成你自己的ingressclass</span><br><span class="line">  name: test-ingress</span><br><span class="line">  namespace: monitoring</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: test.xx.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - backend:</span><br><span class="line">          serviceName: mt-prometheus-operator-prometheus</span><br><span class="line">          servicePort: 9090</span><br><span class="line">  tls:</span><br><span class="line">  - hosts:</span><br><span class="line">    - test.xx.com</span><br><span class="line">    secretName: x-xx-com-20201112</span><br></pre></td></tr></table></figure>
+
+<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><p>最佳配置：(适用于生产环境)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.ingressClass，内网和公网分开，分别叫：internal-ingree-group,public-ingress-group</span><br><span class="line">2.hostNetwork=true</span><br><span class="line">3.kind=DaemonSet</span><br><span class="line">4.service创建设为false</span><br><span class="line">5.nodeSelector: nodetype=ingress</span><br><span class="line">6.healthCheckPath自定义</span><br><span class="line">7.metrics开启，port默认10254，注意防火墙规则是否打开(curl ip:10254/metrics)</span><br><span class="line">8.defaultBackend最好打开下</span><br></pre></td></tr></table></figure>
+
+<p>安装外网的ingress-controller:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install public-ingress-nginx -n ingress-nginx . --set controller.ingressClass=public-ingress-nginx</span><br></pre></td></tr></table></figure>
+<p>安装内网的ingress-controller:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install inner-ingress-nginx -n ingress-nginx . --set controller.ingressClass=inner-ingress-nginx</span><br></pre></td></tr></table></figure>
+
+<p>安装完之后，创建lb负载均衡器，代理到ingress实例组里，跟这篇文章的最后部分一样了，不讲解了。<a href="https://blog.itmonkey.icu/2020/11/11/helm-install-ingress-in-gke-with-daemonset/#%E5%A2%9E%E5%8A%A0lb%E4%BB%A3%E7%90%86%E5%88%B0ingress-controller">跳转</a></p>
+<p>最后你可以创建一个ingress资源测试下，看看效果。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2020/11/12/helm-install-ingress-controller-in-gke/" data-id="ckherb3mc000024ty8zxl9pe3" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/" rel="tag">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ingress-nginx/" rel="tag">ingress-nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/12/helm-install-ingress-in-gke-with-deployment/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">(deployment篇)使用helm3在gke中安装ingress-controller</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#说明"><span class="toc-number">1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前置注意"><span class="toc-number">2.</span> <span class="toc-text">前置注意</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤"><span class="toc-number">3.</span> <span class="toc-text">步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#下载最新的charts"><span class="toc-number">3.1.</span> <span class="toc-text">下载最新的charts</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改配置"><span class="toc-number">3.2.</span> <span class="toc-text">修改配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装验证"><span class="toc-number">3.3.</span> <span class="toc-text">安装验证</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最佳实践"><span class="toc-number">4.</span> <span class="toc-text">最佳实践</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 野生&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>

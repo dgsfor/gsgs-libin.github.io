@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.itmonkey.icu/2020/11/12/helm-install-ingress-controller-in-gke/</loc>
+    
+    <lastmod>2020-11-12T11:35:50.296Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.itmonkey.icu/about/index.html</loc>
     
     <lastmod>2020-11-12T07:24:58.556Z</lastmod>
