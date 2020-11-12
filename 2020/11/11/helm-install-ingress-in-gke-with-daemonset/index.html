@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/liuliangceshi.png">
 <meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/ingress-metrics.png">
 <meta property="article:published_time" content="2020-11-11T08:32:38.000Z">
-<meta property="article:modified_time" content="2020-11-12T06:53:20.774Z">
+<meta property="article:modified_time" content="2020-11-12T06:54:07.699Z">
 <meta property="article:author" content="野生">
 <meta property="article:tag" content="k8s">
 <meta property="article:tag" content="helm">
@@ -157,7 +157,7 @@
 <p>然后本地绑定一个host先测试下是否能够访问到。<br>通过ingress-controller的日志可以看到是没问题的：<br><img src="/img/helm-install-ingress-controller/liuliangceshi.png" alt="png8"></p>
 <h3 id="额外讲一句"><a href="#额外讲一句" class="headerlink" title="额外讲一句"></a>额外讲一句</h3><p>由于gke的机器是不允许的登录的，所以通过这种方式创建的ingress-controller，你是没有办法日志落盘的，所以搞不定。</p>
 <h3 id="在额外讲一句"><a href="#在额外讲一句" class="headerlink" title="在额外讲一句"></a>在额外讲一句</h3><p>安装好之后默认是打开了metrics的，所以你就可以创建一个servicemonitor，把数据收集到你prometheus中，如果你不懂这个是啥，请欣赏之前的文章，在gke中安装prometheus-operaotor。<br>或者也可以配置prometheus自动收集集群中的metrics数据</p>
-<p>可以看看他默认提供了什么信息，默认的端口是9113。</p>
+<p>可以看看他默认提供了什么信息，默认的端口是9113。<br>(注意：需要打开防火墙规则，放开9113端口，默认是不行的)</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl 10.10.182.28:9113/metrics</span><br></pre></td></tr></table></figure>
 <p><img src="/img/helm-install-ingress-controller/ingress-metrics.png" alt="png9"></p>
 
