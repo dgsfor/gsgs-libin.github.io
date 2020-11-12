@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>(daemonset篇)使用helm3在gke中安装ingress-controller | 猿的野生香蕉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="教你如何在gke中使用helm安装ingress-controller">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(daemonset篇)使用helm3在gke中安装ingress-controller">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/11/11/helm-install-ingress-in-gke-with-daemonset/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="教你如何在gke中使用helm安装ingress-controller">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/nodepool.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/telnet.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/healthcheck.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/ingress-create-1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/ingress-create-2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/ingress-create-3.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/ingress-create-4.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/liuliangceshi.png">
+<meta property="article:published_time" content="2020-11-11T08:32:38.000Z">
+<meta property="article:modified_time" content="2020-11-12T06:24:50.938Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="helm">
+<meta property="article:tag" content="ingress">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/nodepool.png">
+  
+    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">猿的野生香蕉</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">野生</a>
+        </h2>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-helm-install-ingress-in-gke-with-daemonset" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/11/helm-install-ingress-in-gke-with-daemonset/" class="article-date">
+  <time datetime="2020-11-11T08:32:38.000Z" itemprop="datePublished">2020-11-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/k8s/">k8s</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      (daemonset篇)使用helm3在gke中安装ingress-controller
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>我们的业务目前在gke上是使用的自带的ingress服务，直接对接他们的loadbalancer服务，上几篇文章写的是安装prometheus，发现获取不到代理层的一些数据，所以想直接自己撸ingress-controller来实现。<br>备注：gke上的stackdriver虽然可以看到比较多的数据，但是关于loadbalancer，他没有具体的域名数据，所以比较不直观。</p>
+<a id="more"></a>
+
+<h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p>我们使用ingress-controller的姿势其实有很多，一般有：</p>
+<ul>
+<li>deployment + loadbalancer模式的service</li>
+<li>daemonset + hostnetwork + nodeselector</li>
+</ul>
+<p>具体可以参考这篇博客，我一个朋友写的：<a href="https://segmentfault.com/a/1190000019908991?utm_source=tag-newest" target="_blank" rel="noopener">跳转</a></p>
+<p>我分成两篇文章写吧！</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul>
+<li>创建gke ingress 节点池</li>
+<li>下载最新的helm charts</li>
+<li>修改配置文件</li>
+<li>安装验证</li>
+<li>增加lb代理到ingress-controller机器</li>
+<li>验证流量</li>
+</ul>
+<h4 id="创建节点池"><a href="#创建节点池" class="headerlink" title="创建节点池"></a>创建节点池</h4><p>目前测试，在控制台创建ingress节点池，默认是不会打开防火墙的http和https规则，所以会影响你后续的流量访问。<br>那么通过查看文档发现，可以直接使用gcloud来创建节点池，并指定打开http和https防火墙规则。<br>gcloud命令参考：<br>重要的就是<code>--tags=http-server,https-server</code>这个参数<br>(其中–cluster，–zone，–node-labels，–machine-type这些你都可以自定义，具体的参数请参考：<a href="https://cloud.google.com/sdk/gcloud/reference/container/node-pools/create" target="_blank" rel="noopener">官方文档</a>)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud container node-pools create nodepool-ingress  --cluster=gke-cluster-name --zone us-central1-c --tags=http-server,https-server --num-nodes=1 --node-labels=nodetype=ingress --enable-autoscaling --max-nodes=3 --min-nodes=1 --disk-size=50 --machine-type=n2-custom-2-4096</span><br></pre></td></tr></table></figure>
+<p><img src="/img/helm-install-ingress-controller/nodepool.png" alt="png1"></p>
+<h4 id="下载charts"><a href="#下载charts" class="headerlink" title="下载charts"></a>下载charts</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> helm repo add nginx-stable https://helm.nginx.com/stable</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> helm repo update</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> helm pull nginx-stable/nginx-ingress</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> tar xvf nginx-ingress-0.7.0.tgz</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h4><p>既然我们选择了deamonset+hostnetwork+nodeselector的方式来部署，那么我们主要修改以下内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vim values.yaml</span></span><br><span class="line"></span><br><span class="line">1. kind: daemonset  默认是deployment，修改成daemonset</span><br><span class="line">2. hostNetwork: true  默认是false</span><br><span class="line">3. nodeSelector:</span><br><span class="line">     nodetype: ingress</span><br><span class="line">4. 如果你有自定义镜像，也可以把image.repository和image.tag修改掉，注意修改下imagePullSecrets</span><br><span class="line">5. 如果你有日志落盘的需求，那么可以设置volumeMounts来挂载宿主机目录到容器</span><br><span class="line">6. service.create 设置为false，不然会默认创建一个类型为loadbalancer的svc</span><br><span class="line">7. 打开健康检查healthStatus=true,healthStatusURL="/devops/status"，另外自定义健康检查路径</span><br><span class="line">8. 修改ingressClass为自定义组：mt-ingress-eve-release(后面会说有啥用)</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装验证"><a href="#安装验证" class="headerlink" title="安装验证"></a>安装验证</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> helm install nginx-ingress -n ingress-controller .</span></span><br><span class="line">NAME: nginx-ingress</span><br><span class="line">LAST DEPLOYED: Wed Nov 11 16:26:25 2020</span><br><span class="line">NAMESPACE: ingress-controller</span><br><span class="line">STATUS: deployed</span><br><span class="line">REVISION: 1</span><br><span class="line">TEST SUITE: None</span><br><span class="line">NOTES:</span><br><span class="line">The NGINX Ingress Controller has been installed.</span><br></pre></td></tr></table></figure>
+
+<p>由于是daemonset方式部署，所以当你扩容ingress节点池，他pod也会自动伸缩的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl get daemonset -n ingress-controller</span></span><br><span class="line">NAME                                DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR      AGE</span><br><span class="line">nginx-ingress-nginx-ingress   1         1         1       1            1           nodetype=ingress   44m</span><br><span class="line"><span class="meta">$</span><span class="bash"> kubectl get pods -n ingress-controller</span></span><br><span class="line">NAME                                      READY   STATUS    RESTARTS   AGE</span><br><span class="line">nginx-ingress-nginx-ingress-xxx8z   1/1     Running   0          40m</span><br></pre></td></tr></table></figure>
+
+<p>通过hostnetwork的方式，就是把容器暴露的端口映射到宿主机上，容器目前是暴露80和443端口，所以你在宿主机也能看到这两个端口，由于gke的节点是不允许登录的，所以我们直接telnet验证下就行了。<br><img src="/img/helm-install-ingress-controller/telnet.png" alt="png2"></p>
+<p>另外也可以看看健康检查是否正常：<br><img src="/img/helm-install-ingress-controller/healthcheck.png" alt="png3"></p>
+<h4 id="增加lb代理到ingress-controller"><a href="#增加lb代理到ingress-controller" class="headerlink" title="增加lb代理到ingress-controller"></a>增加lb代理到ingress-controller</h4><p>1.创建<code>tcp</code>负载均衡器，然后选择后端实例组，也就是你创建nodepool的时候自动创建的实例组<br><img src="/img/helm-install-ingress-controller/ingress-create-1.png" alt="png4"><br>2.创建健康检查，就是你上面在values.yaml中定义的<br><img src="/img/helm-install-ingress-controller/ingress-create-2.png" alt="png5"><br>3.创建前端转发配置，分别是80和443<br><img src="/img/helm-install-ingress-controller/ingress-create-3.png" alt="png6"><br>4.最后查看下glb创建的结果以及健康检查的状态<br><img src="/img/helm-install-ingress-controller/ingress-create-4.png" alt="png7"></p>
+<h4 id="验证流量"><a href="#验证流量" class="headerlink" title="验证流量"></a>验证流量</h4><p>拿到glb的ip之后，添加一个ingress资源，添加的ingress资源需要设置<code>kubernetes.io/ingress.class:</code>这个annotations，在前面已经定义了ingressClass为mt-ingress-eve-release，这个能解决你一个集群中有多个ingress-controller，可以通过这个标签来判断你的ingress资源应该被哪个ingress-controller接管。<br>(注意：secret要在这个ns下创建好)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  annotations:</span><br><span class="line">    nginx.ingress.kubernetes.io/enable-cors: "true"</span><br><span class="line">    kubernetes.io/ingress.class: mt-eve-ingress-release</span><br><span class="line">  name: ingress-xx-com</span><br><span class="line">  namespace: monitoring</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: test.xx.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - backend:</span><br><span class="line">          serviceName: mt-prometheus-operator-prometheus</span><br><span class="line">          servicePort: 9090</span><br><span class="line">  tls:</span><br><span class="line">  - hosts:</span><br><span class="line">    - test.xx.com</span><br><span class="line">    secretName: x-xx-com-20201112</span><br></pre></td></tr></table></figure>
+
+<p>然后本地绑定一个host先测试下是否能够访问到。<br>通过ingress-controller的日志可以看到是没问题的：<br><img src="/img/helm-install-ingress-controller/liuliangceshi.png" alt="png8"></p>
+<h3 id="额外讲一句"><a href="#额外讲一句" class="headerlink" title="额外讲一句"></a>额外讲一句</h3><p>由于gke的机器是不允许的登录的，所以通过这种方式创建的ingress-controller，你是没有办法日志落盘的，所以搞不定。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2020/11/11/helm-install-ingress-in-gke-with-daemonset/" data-id="ckhd661se0000sftyhhfca8vx" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/" rel="tag">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ingress/" rel="tag">ingress</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+    <a href="/2020/11/12/helm-install-ingress-in-gke-with-deployment/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          (deployment篇)使用helm3在gke中安装ingress-controller
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/11/09/prometheus-operator-prometheusrules/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">使用prometheusrules自定义创建告警规则</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#描述"><span class="toc-number">2.</span> <span class="toc-text">描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤"><span class="toc-number">3.</span> <span class="toc-text">步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#创建节点池"><span class="toc-number">3.1.</span> <span class="toc-text">创建节点池</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#下载charts"><span class="toc-number">3.2.</span> <span class="toc-text">下载charts</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改配置文件"><span class="toc-number">3.3.</span> <span class="toc-text">修改配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装验证"><span class="toc-number">3.4.</span> <span class="toc-text">安装验证</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#增加lb代理到ingress-controller"><span class="toc-number">3.5.</span> <span class="toc-text">增加lb代理到ingress-controller</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#验证流量"><span class="toc-number">3.6.</span> <span class="toc-text">验证流量</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#额外讲一句"><span class="toc-number">4.</span> <span class="toc-text">额外讲一句</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 野生&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>
