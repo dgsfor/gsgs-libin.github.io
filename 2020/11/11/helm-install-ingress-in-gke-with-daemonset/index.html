@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/liuliangceshi.png">
 <meta property="og:image" content="https://blog.itmonkey.icu/img/helm-install-ingress-controller/ingress-metrics.png">
 <meta property="article:published_time" content="2020-11-11T08:32:38.000Z">
-<meta property="article:modified_time" content="2020-11-12T07:16:10.167Z">
+<meta property="article:modified_time" content="2020-11-13T06:42:19.652Z">
 <meta property="article:author" content="野生">
 <meta property="article:tag" content="k8s">
 <meta property="article:tag" content="helm">
@@ -134,7 +134,7 @@
 <li>验证流量</li>
 </ul>
 <h4 id="创建节点池"><a href="#创建节点池" class="headerlink" title="创建节点池"></a>创建节点池</h4><p>目前测试，在控制台创建ingress节点池，默认是不会打开防火墙的http和https规则，所以会影响你后续的流量访问。<br>那么通过查看文档发现，可以直接使用gcloud来创建节点池，并指定打开http和https防火墙规则。<br>gcloud命令参考：<br>重要的就是<code>--tags=http-server,https-server</code>这个参数<br>(其中–cluster，–zone，–node-labels，–machine-type这些你都可以自定义，具体的参数请参考：<a href="https://cloud.google.com/sdk/gcloud/reference/container/node-pools/create" target="_blank" rel="noopener">官方文档</a>)</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud container node-pools create nodepool-ingress  --cluster=gke-cluster-name --zone us-central1-c --tags=http-server,https-server --num-nodes=1 --node-labels=nodetype=ingress --enable-autoscaling --max-nodes=3 --min-nodes=1 --disk-size=50 --machine-type=n2-custom-2-4096</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud container node-pools create nodepool-ingress  --cluster=gke-cluster-name --zone us-central1-c --tags=http-server,https-server --num-nodes=1 --node-labels=nodetype=ingress --enable-autoscaling --max-nodes=3 --min-nodes=1 --disk-size=50 --machine-type=n2-custom-2-4096 --project projectName</span><br></pre></td></tr></table></figure>
 <p><img src="/img/helm-install-ingress-controller/nodepool.png" alt="png1"></p>
 <h4 id="下载charts"><a href="#下载charts" class="headerlink" title="下载charts"></a>下载charts</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> helm repo add nginx-stable https://helm.nginx.com/stable</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> helm repo update</span></span><br></pre></td></tr></table></figure>
 
