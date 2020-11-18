@@ -1,85 +1,11 @@
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html>
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <meta charset="utf-8">
   
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="rpm,yum仓库," />
-
-
-
-
-
-
-
-
-
-
-<meta name="description" content="如何打包构建私有yum仓库并打属于自己的第一个rpm包">
+  <title>搭建企业私有yum仓库并打自己第一个rpm包 | 猿的野生香蕉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="如何打包构建私有yum仓库并打属于自己的第一个rpm包">
 <meta property="og:type" content="article">
 <meta property="og:title" content="搭建企业私有yum仓库并打自己第一个rpm包">
 <meta property="og:url" content="https://blog.itmonkey.icu/2020/06/17/build-rpmrepo-and-first-rpm/index.html">
@@ -96,286 +22,92 @@
 <meta property="article:tag" content="yum仓库">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://blog.itmonkey.icu/img/yumStore/rpmlist.png">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="https://blog.itmonkey.icu/2020/06/17/build-rpmrepo-and-first-rpm/"/>
-
-
-
-
-
-  <title>搭建企业私有yum仓库并打自己第一个rpm包 | 猿的野生香蕉</title>
   
+    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  
+<link rel="stylesheet" href="/css/style.css">
 
-
-
-
-
-  <script type="text/javascript">
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?654543521de3c3f4ced79d25e84b1abb";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
-
-
-
+  
 
 <meta name="generator" content="Hexo 4.2.1"></head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  
-  
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
     
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">猿的野生香蕉</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
     </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">猿的野生香蕉</a>
+      </h1>
       
-        <p class="site-subtitle">野生</p>
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">野生</a>
+        </h2>
       
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-build-rpmrepo-and-first-rpm" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/17/build-rpmrepo-and-first-rpm/" class="article-date">
+  <time datetime="2020-06-17T11:27:21.000Z" itemprop="datePublished">2020-06-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/">基础运维</a>
   </div>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
   </div>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
-            
-            关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
-</nav>
-
-
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
+  <div class="article-inner">
     
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/06/17/build-rpmrepo-and-first-rpm/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="野生">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="猿的野生香蕉">
-    </span>
-
     
-      <header class="post-header">
-
+      <header class="article-header">
         
-        
-          <h1 class="post-title" itemprop="name headline">搭建企业私有yum仓库并打自己第一个rpm包</h1>
-        
+  
+    <h1 class="article-title" itemprop="name">
+      搭建企业私有yum仓库并打自己第一个rpm包
+    </h1>
+  
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-17T19:27:21+08:00">
-                2020-06-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index">
-                    <span itemprop="name">基础运维</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="page-pv"><i class="fa fa-file-o"></i>
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
-
-          
-
-          
-              <div class="post-description">
-                  如何打包构建私有yum仓库并打属于自己的第一个rpm包
-              </div>
-          
-
-        </div>
       </header>
     
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="article-entry" itemprop="articleBody">
       
-      
-
-      
+        <!-- Table of Contents -->
+        
         <h3 id="私有yum仓库的好处"><a href="#私有yum仓库的好处" class="headerlink" title="私有yum仓库的好处"></a>私有yum仓库的好处</h3><ul>
 <li>减少rpm包下载网络开销</li>
 <li>加速下载rpm包</li>
@@ -430,290 +162,185 @@
 
       
     </div>
-    
-    
-    
-
-    
-      <div>
-        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="/img/wechat/dgsfor-wechat.jpg" alt="野生 wechat" style="width: 200px; max-width: 100%;"/>
-    <div>欢迎微信联系我</div>
-</div>
-
-      </div>
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/rpm/" rel="tag"># rpm</a>
-          
-            <a href="/tags/yum%E4%BB%93%E5%BA%93/" rel="tag"># yum仓库</a>
-          
-        </div>
-      
-
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2020/06/17/build-rpmrepo-and-first-rpm/" data-id="ckhd2m7zd0000r5ty4267atce" class="article-share-link">分享</a>
       
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rpm/" rel="tag">rpm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yum%E4%BB%93%E5%BA%93/" rel="tag">yum仓库</a></li></ul>
 
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/06/17/how-to-empress/" rel="next" title="美图实战分享：如何真实模拟生产流量进行服务性能压测">
-                <i class="fa fa-chevron-left"></i> 美图实战分享：如何真实模拟生产流量进行服务性能压测
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/17/pandora-alert/" rel="prev" title="适用于中小型企业自研的监控告警通知系统(附源码)">
-                适用于中小型企业自研的监控告警通知系统(附源码) <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
     </footer>
   </div>
   
-  
-  
-  </article>
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
 
-
-
-    <div class="post-spread">
-      
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
     </div>
   </div>
 
-
-          </div>
-          
-
-
-          
-
+    
+<nav id="article-nav">
   
-
-
-
-        </div>
+    <a href="/2020/06/17/pandora-alert/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
         
-          
+          适用于中小型企业自研的监控告警通知系统(附源码)
+        
+      </div>
+    </a>
   
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+  
+    <a href="/2020/06/17/how-to-empress/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">美图实战分享：如何真实模拟生产流量进行服务性能压测</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#私有yum仓库的好处"><span class="toc-number">1.</span> <span class="toc-text">私有yum仓库的好处</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何搭建私有yum仓库"><span class="toc-number">2.</span> <span class="toc-text">如何搭建私有yum仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#创建自己yum仓库路径"><span class="toc-number">2.0.1.</span> <span class="toc-text">创建自己yum仓库路径</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#安装createrepo工具"><span class="toc-number">2.0.2.</span> <span class="toc-text">安装createrepo工具</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#生成repodata索引"><span class="toc-number">2.0.3.</span> <span class="toc-text">生成repodata索引</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#为你的仓库提供web访问能力"><span class="toc-number">2.0.4.</span> <span class="toc-text">为你的仓库提供web访问能力</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#配置yum源，repo文件-暂无配置签名"><span class="toc-number">2.0.5.</span> <span class="toc-text">配置yum源，repo文件(暂无配置签名)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#刷新yum源，查看私有仓库配置是否成功"><span class="toc-number">2.0.6.</span> <span class="toc-text">刷新yum源，查看私有仓库配置是否成功</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查看自己yum仓库中的rpm包有哪些"><span class="toc-number">2.0.7.</span> <span class="toc-text">查看自己yum仓库中的rpm包有哪些</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#安装其中一个软件测试"><span class="toc-number">2.0.8.</span> <span class="toc-text">安装其中一个软件测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何打自己第一个rpm包"><span class="toc-number">3.</span> <span class="toc-text">如何打自己第一个rpm包</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#整体流程"><span class="toc-number">3.1.</span> <span class="toc-text">整体流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装打包工具"><span class="toc-number">3.2.</span> <span class="toc-text">安装打包工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#制作helloworld软件"><span class="toc-number">3.3.</span> <span class="toc-text">制作helloworld软件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#整体的一个目录结构"><span class="toc-number">3.4.</span> <span class="toc-text">整体的一个目录结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#开始构建"><span class="toc-number">3.5.</span> <span class="toc-text">开始构建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看rpm包信息"><span class="toc-number">3.6.</span> <span class="toc-text">查看rpm包信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装测试"><span class="toc-number">3.7.</span> <span class="toc-text">安装测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#卸载"><span class="toc-number">3.8.</span> <span class="toc-text">卸载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#把这个包加到我们的私有yum仓库"><span class="toc-number">3.9.</span> <span class="toc-text">把这个包加到我们的私有yum仓库</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 野生&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
     </div>
   </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <p class="site-author-name" itemprop="name">野生</p>
-              <p class="site-description motion-element" itemprop="description">在运维道路上一路狂飙的老司机</p>
-          </div>
-
-          <nav class="site-state motion-element">
-
-            
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/">
-              
-                  <span class="site-state-item-count">22</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
-                  <span class="site-state-item-name">分类</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">30</span>
-                  <span class="site-state-item-name">标签</span>
-                </a>
-              </div>
-            
-
-          </nav>
-
-          
-
-          
-
-          
-          
-
-          
-          
-
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#私有yum仓库的好处"><span class="nav-number">1.</span> <span class="nav-text">私有yum仓库的好处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何搭建私有yum仓库"><span class="nav-number">2.</span> <span class="nav-text">如何搭建私有yum仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建自己yum仓库路径"><span class="nav-number">2.0.1.</span> <span class="nav-text">创建自己yum仓库路径</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#安装createrepo工具"><span class="nav-number">2.0.2.</span> <span class="nav-text">安装createrepo工具</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#生成repodata索引"><span class="nav-number">2.0.3.</span> <span class="nav-text">生成repodata索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#为你的仓库提供web访问能力"><span class="nav-number">2.0.4.</span> <span class="nav-text">为你的仓库提供web访问能力</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置yum源，repo文件-暂无配置签名"><span class="nav-number">2.0.5.</span> <span class="nav-text">配置yum源，repo文件(暂无配置签名)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#刷新yum源，查看私有仓库配置是否成功"><span class="nav-number">2.0.6.</span> <span class="nav-text">刷新yum源，查看私有仓库配置是否成功</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看自己yum仓库中的rpm包有哪些"><span class="nav-number">2.0.7.</span> <span class="nav-text">查看自己yum仓库中的rpm包有哪些</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#安装其中一个软件测试"><span class="nav-number">2.0.8.</span> <span class="nav-text">安装其中一个软件测试</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何打自己第一个rpm包"><span class="nav-number">3.</span> <span class="nav-text">如何打自己第一个rpm包</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#整体流程"><span class="nav-number">3.1.</span> <span class="nav-text">整体流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装打包工具"><span class="nav-number">3.2.</span> <span class="nav-text">安装打包工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#制作helloworld软件"><span class="nav-number">3.3.</span> <span class="nav-text">制作helloworld软件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#整体的一个目录结构"><span class="nav-number">3.4.</span> <span class="nav-text">整体的一个目录结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开始构建"><span class="nav-number">3.5.</span> <span class="nav-text">开始构建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看rpm包信息"><span class="nav-number">3.6.</span> <span class="nav-text">查看rpm包信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装测试"><span class="nav-number">3.7.</span> <span class="nav-text">安装测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#卸载"><span class="nav-number">3.8.</span> <span class="nav-text">卸载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#把这个包加到我们的私有yum仓库"><span class="nav-number">3.9.</span> <span class="nav-text">把这个包加到我们的私有yum仓库</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
 
     </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">野生</span>
-
+    <nav id="mobile-nav">
   
-</div>
-
-
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
-
-
-
-
-
-
-        
-<div class="busuanzi-count">
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <span class="site-uv">
-      <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-      
-    </span>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
-
+    <a href="/about" class="mobile-nav-link">关于</a>
   
-    <span class="site-pv">
-      <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-      
-    </span>
-  
-</div>
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
 </script>
+      
 
-
-
-
-
-
-
-
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
 
   
 
@@ -723,120 +350,56 @@
 
 
 
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
 
 
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
 
 
 
   
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
 
   
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
 
 
 
 
-	
+<script src="/js/script.js"></script>
 
 
+<script src="/js/elevator.js"></script>
 
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
+  </div>
 </body>
 </html>
