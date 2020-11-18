@@ -1,11 +1,85 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
+
+
+
   
-  <title>美图实战分享：如何真实模拟生产流量进行服务性能压测 | 猿的野生香蕉</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="介绍goreplay压测工具的使用">
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="linux,服务压测," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="介绍goreplay压测工具的使用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="美图实战分享：如何真实模拟生产流量进行服务性能压测">
 <meta property="og:url" content="https://blog.itmonkey.icu/2020/06/17/how-to-empress/index.html">
@@ -23,92 +97,286 @@
 <meta property="article:tag" content="服务压测">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://blog.itmonkey.icu/img/Goreplay/guaidian.png">
-  
-    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    
-  
-  
-<link rel="stylesheet" href="/css/style.css">
 
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.itmonkey.icu/2020/06/17/how-to-empress/"/>
+
+
+
+
+
+  <title>美图实战分享：如何真实模拟生产流量进行服务性能压测 | 猿的野生香蕉</title>
   
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?654543521de3c3f4ced79d25e84b1abb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
 
 <meta name="generator" content="Hexo 4.2.1"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    
-    <div id="header-inner" class="inner">
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
-      </div>
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">首页</a>
-        
-          <a class="main-nav-link" href="/archives">归档</a>
-        
-          <a class="main-nav-link" href="/about">关于</a>
-        
-      </nav>
-      
-    </div>
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">猿的野生香蕉</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">野生</a>
-        </h2>
-      
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-how-to-empress" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/17/how-to-empress/" class="article-date">
-  <time datetime="2020-06-17T08:38:09.000Z" itemprop="datePublished">2020-06-17</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/">运维进阶</a>
-  </div>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 class="article-title" itemprop="name">
-      美图实战分享：如何真实模拟生产流量进行服务性能压测
-    </h1>
+  
+    
   
 
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">猿的野生香蕉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">野生</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.itmonkey.icu/2020/06/17/how-to-empress/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="野生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="猿的野生香蕉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">美图实战分享：如何真实模拟生产流量进行服务性能压测</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-17T16:38:09+08:00">
+                2020-06-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/" itemprop="url" rel="index">
+                    <span itemprop="name">运维进阶</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  介绍goreplay压测工具的使用
+              </div>
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
-        <!-- Table of Contents -->
-        
+      
+
+      
         <h3 id="文章导读"><a href="#文章导读" class="headerlink" title="文章导读"></a>文章导读</h3><p>服务压力测试，是评估一个服务是否优秀的过程，他不仅能让你找到你的服务哪些地方存在性能瓶颈，而且还能让你准确的去做容量评估，防止容量不足，也规避了资源浪费。<br>本文会带你了解以下几点内容：</p>
 <ul>
 <li>压测的意义</li>
@@ -264,244 +532,413 @@
 
       
     </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/06/17/how-to-empress/" data-id="ckhd2m80x002gr5ty1nfb66bw" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E5%8E%8B%E6%B5%8B/" rel="tag">服务压测</a></li></ul>
+    
+    
+    
 
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/img/wechat/dgsfor-wechat.jpg" alt="野生 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎微信联系我</div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%8E%8B%E6%B5%8B/" rel="tag"># 服务压测</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/17/meitu-aliyun-use-experience/" rel="next" title="美图运维之旅：在阿里云上的经验以及踩过的坑">
+                <i class="fa fa-chevron-left"></i> 美图运维之旅：在阿里云上的经验以及踩过的坑
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/17/build-rpmrepo-and-first-rpm/" rel="prev" title="搭建企业私有yum仓库并打自己第一个rpm包">
+                搭建企业私有yum仓库并打自己第一个rpm包 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
     </footer>
   </div>
   
-    
- 
-<script src="/jquery/jquery.min.js"></script>
+  
+  
+  </article>
 
-  <div id="random_posts">
-    <h2>推荐文章</h2>
-    <div class="random_posts_ul">
-      <script>
-          var random_count =4
-          var site = {BASE_URI:'/'};
-          function load_random_posts(obj) {
-              var arr=site.posts;
-              if (!obj) return;
-              // var count = $(obj).attr('data-count') || 6;
-              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
-              arr = arr.slice(0, random_count);
-              var html = '<ul>';
-            
-              for(var j=0;j<arr.length;j++){
-                var item=arr[j];
-                html += '<li><strong>' + 
-                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
-                (item.title || item.uri) + '</a></strong>';
-                if(item.excerpt){
-                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
-                }
-                html +='</li>';
-                
-              }
-              $(obj).html(html + '</ul>');
-          }
-          $('.random_posts_ul').each(function () {
-              var c = this;
-              if (!site.posts || !site.posts.length){
-                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
-              } 
-               else{
-                load_random_posts(c);
-              }
-          });
-      </script>
+
+
+    <div class="post-spread">
+      
     </div>
   </div>
 
-    
-<nav id="article-nav">
-  
-    <a href="/2020/06/17/build-rpmrepo-and-first-rpm/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">
-        
-          搭建企业私有yum仓库并打自己第一个rpm包
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/06/17/meitu-aliyun-use-experience/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">美图运维之旅：在阿里云上的经验以及踩过的坑</div>
-    </a>
-  
-</nav>
 
-  
-</article>
- 
-     
-  <div class="comments" id="comments">
-    
-     
-       
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
-    
-       
-      
-      
-  </div>
- 
-  
-
-</section>
-           
-    <aside id="sidebar">
-  
-    
-
-  
-    
-    <div class="widget-wrap">
-    
-      <div class="widget" id="toc-widget-fixed">
-      
-        <strong class="toc-title">文章目录</strong>
-        <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#文章导读"><span class="toc-number">1.</span> <span class="toc-text">文章导读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要压测"><span class="toc-number">2.</span> <span class="toc-text">为什么要压测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#压测需要注意哪些点-重点阅读"><span class="toc-number">3.</span> <span class="toc-text">压测需要注意哪些点(重点阅读)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#环境统一"><span class="toc-number">3.1.</span> <span class="toc-text">环境统一</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#压测机器不能存在瓶颈"><span class="toc-number">3.2.</span> <span class="toc-text">压测机器不能存在瓶颈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#压测姿势一致"><span class="toc-number">3.3.</span> <span class="toc-text">压测姿势一致</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多次压测"><span class="toc-number">3.4.</span> <span class="toc-text">多次压测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#注意写流量"><span class="toc-number">3.5.</span> <span class="toc-text">注意写流量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#注意三方依赖服务"><span class="toc-number">3.6.</span> <span class="toc-text">注意三方依赖服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#极限压测过程中注意拐点"><span class="toc-number">3.7.</span> <span class="toc-text">极限压测过程中注意拐点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#压测前准备"><span class="toc-number">4.</span> <span class="toc-text">压测前准备</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#明确整体系统链路情况"><span class="toc-number">4.1.</span> <span class="toc-text">明确整体系统链路情况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#依赖资源的容量评估"><span class="toc-number">4.2.</span> <span class="toc-text">依赖资源的容量评估</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#压测部分降级方案的确认"><span class="toc-number">4.3.</span> <span class="toc-text">压测部分降级方案的确认</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模型压测-自我理解"><span class="toc-number">5.</span> <span class="toc-text">模型压测(自我理解)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#普通压测工具介绍"><span class="toc-number">6.</span> <span class="toc-text">普通压测工具介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ab"><span class="toc-number">6.1.</span> <span class="toc-text">ab</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#wrk"><span class="toc-number">6.2.</span> <span class="toc-text">wrk</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#goreploay介绍"><span class="toc-number">7.</span> <span class="toc-text">goreploay介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#优点"><span class="toc-number">7.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#文档地址"><span class="toc-number">7.2.</span> <span class="toc-text">文档地址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#流量捕获"><span class="toc-number">7.3.</span> <span class="toc-text">流量捕获</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#流量重放"><span class="toc-number">7.4.</span> <span class="toc-text">流量重放</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#请求过滤"><span class="toc-number">7.5.</span> <span class="toc-text">请求过滤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#流量限制"><span class="toc-number">7.6.</span> <span class="toc-text">流量限制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实战演练"><span class="toc-number">8.</span> <span class="toc-text">实战演练</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#goreplay安装"><span class="toc-number">8.1.</span> <span class="toc-text">goreplay安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#抓取流量"><span class="toc-number">8.2.</span> <span class="toc-text">抓取流量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#普通输出流量"><span class="toc-number">8.3.</span> <span class="toc-text">普通输出流量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#压测输出流量"><span class="toc-number">8.4.</span> <span class="toc-text">压测输出流量</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#我想要50qps"><span class="toc-number">8.4.1.</span> <span class="toc-text">我想要50qps</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#我想要200qps"><span class="toc-number">8.4.2.</span> <span class="toc-text">我想要200qps</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#一次压测太慢，我要快速压测"><span class="toc-number">8.4.3.</span> <span class="toc-text">一次压测太慢，我要快速压测</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#输出文档"><span class="toc-number">8.5.</span> <span class="toc-text">输出文档</span></a></li></ol></li></ol>
           </div>
-      </div>
-    </div>
-
-  
-    
-
-  
-    
-  
-    
-  
-    
-
-  
-    
-  
-    <!--微信公众号二维码-->
+          
 
 
-  
-</aside>
+          
 
-      </div>
-      <footer id="footer">
   
-  <div class="outer">
-    <div id="footer-left">
-      &copy; 2014 - 2020 野生&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
-    </div>
-     <div id="footer-right">
-      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
-</footer>
- 
-<script src="/jquery/jquery.min.js"></script>
 
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">首页</a>
-  
-    <a href="/archives" class="mobile-nav-link">归档</a>
-  
-    <a href="/about" class="mobile-nav-link">关于</a>
-  
-</nav>
-    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
-<script>
-// Elevator script included on the page, already.
-window.onload = function() {
-  var elevator = new Elevator({
-    selector:'.back-to-top-btn',
-    element: document.querySelector('.back-to-top-btn'),
-    duration: 1000 // milliseconds
-  });
-}
-</script>
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
       
 
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">野生</p>
+              <p class="site-description motion-element" itemprop="description">在运维道路上一路狂飙的老司机</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#文章导读"><span class="nav-number">1.</span> <span class="nav-text">文章导读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要压测"><span class="nav-number">2.</span> <span class="nav-text">为什么要压测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压测需要注意哪些点-重点阅读"><span class="nav-number">3.</span> <span class="nav-text">压测需要注意哪些点(重点阅读)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#环境统一"><span class="nav-number">3.1.</span> <span class="nav-text">环境统一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压测机器不能存在瓶颈"><span class="nav-number">3.2.</span> <span class="nav-text">压测机器不能存在瓶颈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压测姿势一致"><span class="nav-number">3.3.</span> <span class="nav-text">压测姿势一致</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多次压测"><span class="nav-number">3.4.</span> <span class="nav-text">多次压测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意写流量"><span class="nav-number">3.5.</span> <span class="nav-text">注意写流量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意三方依赖服务"><span class="nav-number">3.6.</span> <span class="nav-text">注意三方依赖服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#极限压测过程中注意拐点"><span class="nav-number">3.7.</span> <span class="nav-text">极限压测过程中注意拐点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压测前准备"><span class="nav-number">4.</span> <span class="nav-text">压测前准备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#明确整体系统链路情况"><span class="nav-number">4.1.</span> <span class="nav-text">明确整体系统链路情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#依赖资源的容量评估"><span class="nav-number">4.2.</span> <span class="nav-text">依赖资源的容量评估</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压测部分降级方案的确认"><span class="nav-number">4.3.</span> <span class="nav-text">压测部分降级方案的确认</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模型压测-自我理解"><span class="nav-number">5.</span> <span class="nav-text">模型压测(自我理解)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#普通压测工具介绍"><span class="nav-number">6.</span> <span class="nav-text">普通压测工具介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ab"><span class="nav-number">6.1.</span> <span class="nav-text">ab</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wrk"><span class="nav-number">6.2.</span> <span class="nav-text">wrk</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#goreploay介绍"><span class="nav-number">7.</span> <span class="nav-text">goreploay介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优点"><span class="nav-number">7.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文档地址"><span class="nav-number">7.2.</span> <span class="nav-text">文档地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流量捕获"><span class="nav-number">7.3.</span> <span class="nav-text">流量捕获</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流量重放"><span class="nav-number">7.4.</span> <span class="nav-text">流量重放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#请求过滤"><span class="nav-number">7.5.</span> <span class="nav-text">请求过滤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流量限制"><span class="nav-number">7.6.</span> <span class="nav-text">流量限制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实战演练"><span class="nav-number">8.</span> <span class="nav-text">实战演练</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#goreplay安装"><span class="nav-number">8.1.</span> <span class="nav-text">goreplay安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抓取流量"><span class="nav-number">8.2.</span> <span class="nav-text">抓取流量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#普通输出流量"><span class="nav-number">8.3.</span> <span class="nav-text">普通输出流量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压测输出流量"><span class="nav-number">8.4.</span> <span class="nav-text">压测输出流量</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#我想要50qps"><span class="nav-number">8.4.1.</span> <span class="nav-text">我想要50qps</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#我想要200qps"><span class="nav-number">8.4.2.</span> <span class="nav-text">我想要200qps</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#一次压测太慢，我要快速压测"><span class="nav-number">8.4.3.</span> <span class="nav-text">一次压测太慢，我要快速压测</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#输出文档"><span class="nav-number">8.5.</span> <span class="nav-text">输出文档</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">野生</span>
+
   
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "e2fb4051c49842688ce669e634bc983f",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
     
 
-  
-
-
-
-
-
-
-
-<!-- author:forvoid begin -->
-<!-- author:forvoid begin -->
-
-<!-- author:forvoid end -->
-
-<!-- author:forvoid end -->
-
-
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      })
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      })
-    </script>
-    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
- 
-<script src="/js/is.js"></script>
-
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-<script src="/js/elevator.js"></script>
+    
 
   </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>
