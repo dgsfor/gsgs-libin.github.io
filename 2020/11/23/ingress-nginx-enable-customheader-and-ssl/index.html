@@ -3,19 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>https证书cer转pem或者crt | 猿的野生香蕉</title>
+  <title>helm安装ingress-nginx开启自定义header以及关闭强制https跳转 | 猿的野生香蕉</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="本文主要讲解cer格式的https证书如何转成pem或者crt格式">
+  <meta name="description" content="开启ingress-nginx中自定义header，以及关闭默认强制跳转https">
 <meta property="og:type" content="article">
-<meta property="og:title" content="https证书cer转pem或者crt">
-<meta property="og:url" content="https://blog.itmonkey.icu/2020/11/16/ssl-cert-cer-to-pem-or-crt/index.html">
+<meta property="og:title" content="helm安装ingress-nginx开启自定义header以及关闭强制https跳转">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/11/23/ingress-nginx-enable-customheader-and-ssl/index.html">
 <meta property="og:site_name" content="猿的野生香蕉">
-<meta property="og:description" content="本文主要讲解cer格式的https证书如何转成pem或者crt格式">
-<meta property="article:published_time" content="2020-11-16T05:46:14.000Z">
-<meta property="article:modified_time" content="2020-11-16T06:02:42.340Z">
+<meta property="og:description" content="开启ingress-nginx中自定义header，以及关闭默认强制跳转https">
+<meta property="article:published_time" content="2020-11-23T02:51:17.000Z">
+<meta property="article:modified_time" content="2020-11-23T03:11:58.267Z">
 <meta property="article:author" content="野生">
-<meta property="article:tag" content="运维">
-<meta property="article:tag" content="https">
+<meta property="article:tag" content="ingress-nginx">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
@@ -75,14 +74,14 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-ssl-cert-cer-to-pem-or-crt" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-ingress-nginx-enable-customheader-and-ssl" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/11/16/ssl-cert-cer-to-pem-or-crt/" class="article-date">
-  <time datetime="2020-11-16T05:46:14.000Z" itemprop="datePublished">2020-11-16</time>
+    <a href="/2020/11/23/ingress-nginx-enable-customheader-and-ssl/" class="article-date">
+  <time datetime="2020-11-23T02:51:17.000Z" itemprop="datePublished">2020-11-23</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/">基础运维</a>
+    <a class="article-category-link" href="/categories/k8s/">k8s</a>
   </div>
 
   </div>
@@ -93,7 +92,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      https证书cer转pem或者crt
+      helm安装ingress-nginx开启自定义header以及关闭强制https跳转
     </h1>
   
 
@@ -103,21 +102,31 @@
       
         <!-- Table of Contents -->
         
-        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>在对接各个cdn厂商的过程中，会遇到上传https证书的需求，不过不同的厂商导入https的姿势或者格式是不同的，证书签发商一般给的都是cer+key，所以需要我们做一下格式转换等操作。</p>
+        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>默认安装的ingress-nginx，是没有开启用户自定义header的，以及强制跳转https是开启的，所以我们可以选择关闭。</p>
 <a id="more"></a>
 
-<h3 id="cer转pem"><a href="#cer转pem" class="headerlink" title="cer转pem"></a>cer转pem</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openssl x509 -inform PEM -<span class="keyword">in</span> xx-xx-com.cer -out xx-xx-com.pem</span></span><br></pre></td></tr></table></figure>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>修改values.yaml文件，配置如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">config:</span><br><span class="line">  allow-backend-server-header: "true"</span><br><span class="line">  enable-underscores-in-headers: "true"</span><br><span class="line">  hsts-include-subdomains: "false"</span><br><span class="line">  ssl-redirect: "false"</span><br></pre></td></tr></table></figure>
 
-<h3 id="cer转crt"><a href="#cer转crt" class="headerlink" title="cer转crt"></a>cer转crt</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openssl x509 -inform PEM -<span class="keyword">in</span> xx-xx-com.cer -out xx-xx-com.crt</span></span><br></pre></td></tr></table></figure>
+<p>修改完成后升级ingress-nginx，查看默认ingress-controller启动配置的configmap，配置中多了一些自定义内容。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[root@locahost]#</span><span class="bash"> kubectl get configmap -n ingress</span></span><br><span class="line">NAME                                            DATA   AGE</span><br><span class="line">ingress-controller-leader-ingress-public-eve    0      9d</span><br><span class="line">ingress-nginx-controller                        1      9d</span><br></pre></td></tr></table></figure>
+
+
+<p>查看ingress-nginx-controller可以获取到自定义的配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">data:</span><br><span class="line">  allow-backend-server-header: "true"</span><br><span class="line">  enable-underscores-in-headers: "true"</span><br><span class="line">  hsts-include-subdomains: "false"</span><br><span class="line">  ssl-redirect: "false"</span><br><span class="line">kind: ConfigMap</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="另外说一句"><a href="#另外说一句" class="headerlink" title="另外说一句"></a>另外说一句</h3><p>因为上述我们关闭了全局的默认强制跳转https，如果有需要强制跳转，我们可以单独配置在ingress资源上，如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  annotations:</span><br><span class="line">    kubernetes.io/ingress.class: ingress-public</span><br><span class="line">    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"</span><br><span class="line">  name: ingress-prexx-xx-com</span><br><span class="line">  namespace: eve</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: prexx.xx.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - backend:</span><br><span class="line">          serviceName: php-global-svc-pre</span><br><span class="line">          servicePort: 80</span><br><span class="line">  tls:</span><br><span class="line">  - hosts:</span><br><span class="line">    - prexx.xx.com</span><br><span class="line">    secretName: x-xx-com-20200728</span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/11/16/ssl-cert-cer-to-pem-or-crt/" data-id="ckhk55olw000004ty7rni0ohk" class="article-share-link">分享</a>
+      <a data-url="https://blog.itmonkey.icu/2020/11/23/ingress-nginx-enable-customheader-and-ssl/" data-id="ckhvkh5ml0001l4tybzcfctme" class="article-share-link">分享</a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/https/" rel="tag">https</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag">运维</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ingress-nginx/" rel="tag">ingress-nginx</a></li></ul>
 
     </footer>
   </div>
@@ -169,19 +178,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/11/23/ingress-nginx-enable-customheader-and-ssl/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">
-        
-          helm安装ingress-nginx开启自定义header以及关闭强制https跳转
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/11/12/helm-install-ingress-controller-in-gke/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/11/16/ssl-cert-cer-to-pem-or-crt/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">(官方版)使用helm3在gke集群中安装ingress-nginx</div>
+      <div class="article-nav-title">https证书cer转pem或者crt</div>
     </a>
   
 </nav>
@@ -217,7 +217,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cer转pem"><span class="toc-number">2.</span> <span class="toc-text">cer转pem</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cer转crt"><span class="toc-number">3.</span> <span class="toc-text">cer转crt</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置"><span class="toc-number">2.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#另外说一句"><span class="toc-number">3.</span> <span class="toc-text">另外说一句</span></a></li></ol>
           </div>
       </div>
     </div>

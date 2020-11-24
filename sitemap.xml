@@ -2,7 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://blog.itmonkey.icu/2020/11/16/blog-to-csdn/</loc>
+    <loc>https://blog.itmonkey.icu/2020/11/23/ingress-nginx-enable-customheader-and-ssl/</loc>
+    
+    <lastmod>2020-11-23T03:11:58.267Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/blog-to-csdn.html</loc>
     
     <lastmod>2020-11-16T06:25:09.037Z</lastmod>
     
