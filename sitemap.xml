@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.itmonkey.icu/2020/12/01/go-module-speedup/</loc>
+    
+    <lastmod>2020-12-01T12:48:15.698Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.itmonkey.icu/2020/12/01/def-custom-crd/</loc>
     
     <lastmod>2020-12-01T12:35:02.986Z</lastmod>
