@@ -73,6 +73,61 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-def-custom-crd" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/01/def-custom-crd/" class="article-date">
+  <time datetime="2020-12-01T10:12:27.000Z" itemprop="datePublished">2020-12-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/k8s/">k8s</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/01/def-custom-crd/">例子：自定义crd</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="写一个crd资源"><a href="#写一个crd资源" class="headerlink" title="写一个crd资源"></a>写一个crd资源</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat custom-res-def.yaml</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: libin.meitu.k8s.io</span><br><span class="line">spec:</span><br><span class="line">  group: meitu.k8s.io</span><br><span class="line">  versions:</span><br><span class="line">    - name: v1</span><br><span class="line">      served: true</span><br><span class="line">      storage: true</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  names:</span><br><span class="line">    plural: libin</span><br><span class="line">    singular: libin</span><br><span class="line">    kind: Libin</span><br><span class="line">    shortNames:</span><br><span class="line">    - lib</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl apply -f custom-res-def.yaml</span></span><br><span class="line">customresourcedefinition.apiextensions.k8s.io/libin.meitu.k8s.io created</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="查看crd定义"><a href="#查看crd定义" class="headerlink" title="查看crd定义"></a>查看crd定义</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> kubectl get crd | grep libin</span></span><br><span class="line">NAME                                             CREATED AT</span><br><span class="line">libin.meitu.k8s.io                               2020-12-01T09:11:32Z</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="创建crd资源对象"><a href="#创建crd资源对象" class="headerlink" title="创建crd资源对象"></a>创建crd资源对象</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat custom-res-object.yaml</span></span><br><span class="line">apiVersion: meitu.k8s.io/v1</span><br><span class="line">kind: Libin</span><br><span class="line">metadata:</span><br><span class="line">  name: object-libin</span><br><span class="line">  namespace: ops</span><br><span class="line">spec:</span><br><span class="line">  name: "李彬"</span><br><span class="line">  func: "SRE"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl apply -f custom-res-object.yaml</span></span><br><span class="line">libin.meitu.k8s.io/object-libin created</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看创建的对象"><a href="#查看创建的对象" class="headerlink" title="查看创建的对象"></a>查看创建的对象</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> kubectl get libin -n ops</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl get lib -n ops</span></span><br><span class="line">NAME           AGE</span><br><span class="line">object-libin   1h</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2020/12/01/def-custom-crd/" data-id="cki5yokvy0000arty5yh1831c" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-ingress-nginx-enable-customheader-and-ssl" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/23/ingress-nginx-enable-customheader-and-ssl/" class="article-date">
@@ -519,55 +574,6 @@
 
 
   
-    <article id="post-create-vpn-tunnel-in-gcp-hwcloud" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/" class="article-date">
-  <time datetime="2020-10-10T10:16:45.000Z" itemprop="datePublished">2020-10-10</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/">使用vpn隧道模式打通gcp和华为云内网</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>公司某业务目前有海外和国内服务，需求是国内数据需要实时同步到海外，DBA同事使用mysql主从同步的方式进行，所以建议打通海外和国内网络。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/" data-id="ckhd2m7zq0006r5tyho5u0b5r" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gcp/" rel="tag">gcp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vpn-tunnel/" rel="tag">vpn-tunnel</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
 
 
   <nav id="page-nav">
@@ -603,7 +609,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title categories">分类</h3>
     <div class="widget" id="categories">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/DevOps/">DevOps</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/">基础运维</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%9A%E4%BA%91%E4%B8%93%E8%BE%91/">多云专辑</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/">运维进阶</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/DevOps/">DevOps</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/">基础运维</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%9A%E4%BA%91%E4%B8%93%E8%BE%91/">多云专辑</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/">运维进阶</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -625,6 +631,10 @@
       <ul>
         
           <li>
+            <a href="/2020/12/01/def-custom-crd/">例子：自定义crd</a>
+          </li>
+        
+          <li>
             <a href="/2020/11/23/ingress-nginx-enable-customheader-and-ssl/">helm安装ingress-nginx开启自定义header以及关闭强制https跳转</a>
           </li>
         
@@ -640,10 +650,6 @@
             <a href="/2020/11/12/helm-install-ingress-in-gke-with-deployment/">(deployment篇)使用helm3在gke中安装ingress-controller</a>
           </li>
         
-          <li>
-            <a href="/2020/11/11/helm-install-ingress-in-gke-with-daemonset/">(daemonset篇)使用helm3在gke中安装ingress-controller</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -653,7 +659,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -661,7 +667,7 @@
   
     
 <div class="widget-wrap">
-    <h3 class="widget-title">友情链接</h3>
+    <h3 class="widget-title">Links</h3>
     <div class="widget">
         <ul>
             
@@ -685,7 +691,7 @@
     <!--微信公众号二维码-->
 
   <div class="widget-wrap">
-    <h3 class="follow-title ">微信公众号</h3>
+    <h3 class="follow-title ">WeChat</h3>
     <div class="widget wechat-widget">
         <img src="/img/wechat/qrcode.jpg" alt="扫码关注" width="250"/>
     </div>
