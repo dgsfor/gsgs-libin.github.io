@@ -3,19 +3,22 @@
 <head>
   <meta charset="utf-8">
   
-  <title>go get国内加速 | 猿的野生香蕉</title>
+  <title>pod异常无法启动的排查过程 | 猿的野生香蕉</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="go module国内加速">
+  <meta name="description" content="记录一次pod异常无法启动的排查过程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="go get国内加速">
-<meta property="og:url" content="https://blog.itmonkey.icu/2020/12/01/go-module-speedup/index.html">
+<meta property="og:title" content="pod异常无法启动的排查过程">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/12/22/get-some-mesg-in-k8s-event/index.html">
 <meta property="og:site_name" content="猿的野生香蕉">
-<meta property="og:description" content="go module国内加速">
-<meta property="article:published_time" content="2020-12-01T12:42:21.000Z">
-<meta property="article:modified_time" content="2020-12-01T12:48:15.698Z">
+<meta property="og:description" content="记录一次pod异常无法启动的排查过程">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/get-some-mesg-in-k8s-event/1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/get-some-mesg-in-k8s-event/2.png">
+<meta property="article:published_time" content="2020-12-22T02:27:17.000Z">
+<meta property="article:modified_time" content="2020-12-22T02:52:43.444Z">
 <meta property="article:author" content="野生">
-<meta property="article:tag" content="go">
+<meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/get-some-mesg-in-k8s-event/1.png">
   
     <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
   
@@ -74,14 +77,14 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-go-module-speedup" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-get-some-mesg-in-k8s-event" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/12/01/go-module-speedup/" class="article-date">
-  <time datetime="2020-12-01T12:42:21.000Z" itemprop="datePublished">2020-12-01</time>
+    <a href="/2020/12/22/get-some-mesg-in-k8s-event/" class="article-date">
+  <time datetime="2020-12-22T02:27:17.000Z" itemprop="datePublished">2020-12-22</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/go/">go</a>
+    <a class="article-category-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a>
   </div>
 
   </div>
@@ -92,7 +95,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      go get国内加速
+      pod异常无法启动的排查过程
     </h1>
   
 
@@ -102,34 +105,35 @@
       
         <!-- Table of Contents -->
         
-        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>go开发过程中，国内下载依赖包太慢了，怎么办？</p>
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>一大早收到业务方说自己的服务挂了，一直起不来，然后就开始了排查之路。</p>
 <a id="more"></a>
 
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><ol>
-<li>开启go module</li>
+<h3 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h3><p>pod无法启动，然后查看pod的event也正常，没看到什么异常信息，就卡在create pod.<br><img src="/img/get-some-mesg-in-k8s-event/1.png" alt="png1"></p>
+<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><ol>
+<li>查看当前这个pod调度到的机器，发现基础监控异常，怀疑机器初始化有问题。</li>
 </ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export GO111MODULE=on</span><br></pre></td></tr></table></figure>
-
+<p>我们登录到机器上查看docker初始化日志：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">journalctl -n 100查看最新的100条日志</span><br></pre></td></tr></table></figure>
+<p>最终看到机器的磁盘挂载有问题。</p>
 <ol start="2">
-<li>配置代理</li>
+<li>然后临时把pod调度到其他正常的机器上，发现问题还是存在。</li>
 </ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export GOPROXY=https://goproxy.io</span><br></pre></td></tr></table></figure>
+<p>只能接着看event日志了，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get events -n my-namespace</span><br></pre></td></tr></table></figure>
 
-<ol start="3">
-<li>下载，可以试用go get 体验极速</li>
-</ol>
-<h3 id="额外说一句"><a href="#额外说一句" class="headerlink" title="额外说一句"></a>额外说一句</h3><p>有很多都是配置阿里云的<code>export GOPROXY=https://mirrors.aliyun.com/goproxy/</code>，不过我发现很多包都找不到，所以干脆不用了。</p>
-<h3 id="全局配置"><a href="#全局配置" class="headerlink" title="全局配置"></a>全局配置</h3><p>你可以配置到<code>/etc/profile</code>或者个人用户下<code>~/.bash_profile</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export GO111MODULE=on</span><br><span class="line">export GOPROXY=https://goproxy.io</span><br></pre></td></tr></table></figure>
+<p>最终看到如下信息：<br><img src="/img/get-some-mesg-in-k8s-event/2.png" alt="png2"></p>
+<p>从日志中看到，失败是在<code>FailedPostStartHook</code>这一步，也就是服务的<code>poststart</code>脚本启动有问题。<br>其实也可以在日志里看到更详细的报错：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redis::connect(): php_network_getaddresses: getaddrinfo failed: Name or service not known</span><br></pre></td></tr></table></figure>
+<p>字面上错误是跟redis相关，我们看了配置文件，发现redis其实正常，只不过读取了错误的redis配置文件，最终是在环境变量上发现了突破口，我们是根据环境变量来读取不同环境的配置文件，环境变量丢失了，最终读取到了dev环境的配置文件，导致服务一直无法启动。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/12/01/go-module-speedup/" data-id="cki5z90m40000c9tyhu0t8mrq" class="article-share-link">分享</a>
+      <a data-url="https://blog.itmonkey.icu/2020/12/22/get-some-mesg-in-k8s-event/" data-id="ckize6srs0000l7ty374001uf" class="article-share-link">分享</a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/" rel="tag">go</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
 
     </footer>
   </div>
@@ -181,19 +185,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/12/22/get-some-mesg-in-k8s-event/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">
-        
-          pod异常无法启动的排查过程
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/12/01/def-custom-crd/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/12/01/go-module-speedup/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">例子：自定义crd</div>
+      <div class="article-nav-title">go get国内加速</div>
     </a>
   
 </nav>
@@ -229,7 +224,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置"><span class="toc-number">2.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#额外说一句"><span class="toc-number">3.</span> <span class="toc-text">额外说一句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全局配置"><span class="toc-number">4.</span> <span class="toc-text">全局配置</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#现象"><span class="toc-number">2.</span> <span class="toc-text">现象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#操作"><span class="toc-number">3.</span> <span class="toc-text">操作</span></a></li></ol>
           </div>
       </div>
     </div>

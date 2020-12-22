@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.itmonkey.icu/2020/12/22/get-some-mesg-in-k8s-event/</loc>
+    
+    <lastmod>2020-12-22T02:52:43.444Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.itmonkey.icu/2020/12/01/go-module-speedup/</loc>
     
     <lastmod>2020-12-01T12:48:15.698Z</lastmod>
