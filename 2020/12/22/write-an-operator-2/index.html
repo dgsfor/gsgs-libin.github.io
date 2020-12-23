@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>《2》动手写一个operator | 猿的野生香蕉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="动手写一个operator，第二天">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《2》动手写一个operator">
+<meta property="og:url" content="https://blog.itmonkey.icu/2020/12/22/write-an-operator-2/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="动手写一个operator，第二天">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/write-an-operator/2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/write-an-operator/3.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/write-an-operator/4.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/write-an-operator/5.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/write-an-operator/6.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/write-an-operator/7.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/write-an-operator/8.png">
+<meta property="article:published_time" content="2020-12-22T03:05:26.000Z">
+<meta property="article:modified_time" content="2020-12-23T08:09:14.661Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="operator">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/write-an-operator/2.png">
+  
+    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">猿的野生香蕉</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">野生</a>
+        </h2>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-write-an-operator-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/22/write-an-operator-2/" class="article-date">
+  <time datetime="2020-12-22T03:05:26.000Z" itemprop="datePublished">2020-12-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/k8s/">k8s</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      《2》动手写一个operator
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>我们昨天已经明确项目以及创建好基础代码框架了并运行起来了。今天我们主要探讨下这个项目想要做成什么样，以及一些crd的设计。</p>
+<a id="more"></a>
+
+<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>首先我们熟悉下代码目录，我这边只讲你会用到的，其他的我不一定能讲的明白。<br><img src="/img/write-an-operator/2.png" alt="png2"><br>图中1、2两个文件，是我们需要修改和主要编写的文件。</p>
+<ol>
+<li>第一个文件主要是定义你的crd文件的参数，包括<code>spec</code>和<code>status</code>参数.</li>
+<li>第二个文件主要是写你controller的逻辑，比如你监听到了合适的事件消息，如何去相应，不论是调用三方接口或者去创建你的cr资源，都是响应的一种形式。</li>
+</ol>
+<h3 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h3><p>针对我们这个项目，我们是想要实现自定义cr资源能够管理我们的定时任务，并触发我们的deployment滚动更新。<br>所以我们的cr资源字段应该这样设计：</p>
+<ol>
+<li>spec，我们涉及3个字段，一个是这个cr资源绑定的deployment，另一个是定时任务表达式，最后一个是是否启动这个定时任务</li>
+<li>status，我们涉及到的字段包含状态和条件，而条件是一个array，每一条都记录着当前的状态信息。</li>
+</ol>
+<p><img src="/img/write-an-operator/3.png" alt="png3"></p>
+<h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><ol>
+<li>首先确定我们要监听的资源</li>
+</ol>
+<p>修改<code>pkg/controller/eru/eru_controller.go</code>文件,在这里可以看到我们监听两个资源，一个你自定义的cr资源，一个是deployment资源</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(mgr manager.Manager, r reconcile.Reconciler)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	c, err := controller.New(<span class="string">"eru-controller"</span>, mgr, controller.Options&#123;Reconciler: r&#125;)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	err = c.Watch(&amp;source.Kind&#123;Type: &amp;mtsrev1.Eru&#123;&#125;&#125;, &amp;handler.EnqueueRequestForObject&#123;&#125;)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	err = c.Watch(&amp;source.Kind&#123;Type: &amp;appsv1.Deployment&#123;&#125;&#125;, &amp;handler.EnqueueRequestForObject&#123;&#125;)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>判断deployment和eru自定义资源是否存在，我们的逻辑是，如果deployment不存在了，那么我们就删除与其绑定的eru资源.</li>
+</ol>
+<p>修改<code>pkg/controller/eru/eru_controller.go</code>文件，<code>Reconcile</code>这个作为主函数</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// deployment 和 eru 实例</span></span><br><span class="line">deployment_instance := &amp;appsv1.Deployment&#123;&#125;</span><br><span class="line">eru_instance := &amp;mtsrev1.Eru&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// deploymentExist 和 eruExist 实例</span></span><br><span class="line">deploymentExist := r.client.Get(context.TODO(), request.NamespacedName, deployment_instance)</span><br><span class="line">eruExist := r.client.Get(context.TODO(),request.NamespacedName,eru_instance)</span><br><span class="line"></span><br><span class="line"><span class="comment">// *****判断deployment是否存在*****</span></span><br><span class="line"><span class="comment">//如果不存在，那么就要一同删除绑定的eru cr资源</span></span><br><span class="line"><span class="keyword">if</span> deploymentExist != <span class="literal">nil</span> &amp;&amp; errors.IsNotFound(deploymentExist) &#123;</span><br><span class="line">	<span class="keyword">if</span> eruExist == <span class="literal">nil</span> &#123;</span><br><span class="line">		erulog.Warningf(<span class="string">"this deployment : %v not found,maybe deleted,so eru cr need to deleted"</span>,request.String())</span><br><span class="line">		<span class="keyword">if</span> deletestatus ,err := r.DeleteEruCr(eru_instance); deletestatus &#123;</span><br><span class="line">			<span class="keyword">return</span> reconcile.Result&#123;&#125;,<span class="literal">nil</span></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> reconcile.Result&#123;&#125;, err</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>删除自定义cr资源代码：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 删除eru cr资源</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(r *ReconcileEru)</span> <span class="title">DeleteEruCr</span><span class="params">(eru *mtsrev1.Eru)</span> <span class="params">(<span class="keyword">bool</span>, error)</span></span> &#123;</span><br><span class="line">	<span class="comment">// 删除aom 策略</span></span><br><span class="line">	<span class="comment">// 华为云目前观测到有定时去清理aom规则，如果deployment被删除的话。</span></span><br><span class="line">	retryError := retry.RetryOnConflict(retry.DefaultRetry, <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">		<span class="keyword">return</span> r.client.Delete(context.TODO(), eru)</span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="comment">// 判断删除cr资源是否成功</span></span><br><span class="line">	<span class="keyword">if</span> retryError != <span class="literal">nil</span> &#123;</span><br><span class="line">		erulog.Errorf(<span class="string">"eru delete failure, %v/%v"</span>, eru.Namespace, eru.Name)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>, retryError</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		erulog.Infof(<span class="string">"eru delete success,  %v/%v"</span>, eru.Namespace, eru.Name)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>, <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>当我们的deployment存在，我们需要去判断他是否含有对应的annotations,约定的是<code>mtsre.meitu.com/eru: &quot;true&quot;</code></li>
+</ol>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//如果存在，请继续</span></span><br><span class="line"><span class="comment">// 我们继续检查deployment是否有设置符合条件的annotations，我们约定是否含有`mtsre.meitu.com/eru: "true"`，就添加</span></span><br><span class="line">deploymentAnnotation := deployment_instance.Annotations</span><br><span class="line"><span class="keyword">if</span> _,ok := deploymentAnnotation[<span class="string">"mtsre.meitu.com/eru"</span>]; ok &#123;</span><br><span class="line">	fmt.Println(<span class="string">"yes have"</span>)</span><br><span class="line">	<span class="comment">// 判断eru资源是否存在，如果不存在，那么就创建</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="comment">// 该deployment没有设置对应的annotations，所以我们不做处理，进行下一次循环</span></span><br><span class="line">	<span class="keyword">return</span> reconcile.Result&#123;&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>创建cr资源，我们主要做3个事情，第一创建cr资源，第二更新cr资源的annotation，第三更新cr资源的status</li>
+</ol>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建eru cr资源</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(r *ReconcileEru)</span> <span class="title">CreateEruCr</span><span class="params">(deployment *appsv1.Deployment)</span> <span class="params">(<span class="keyword">bool</span>,error)</span></span> &#123;</span><br><span class="line">	<span class="comment">// 如果创建失败，那么就更新status，说失败了</span></span><br><span class="line">	eru := eru_res.NewEru(deployment)</span><br><span class="line">	<span class="keyword">if</span> err := r.client.Create(context.TODO(),eru); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		erulog.Errorf(<span class="string">"create eru cr failure,reason: %v"</span>,err)</span><br><span class="line">		failureCondition := mtsrev1.EruCondition&#123;</span><br><span class="line">			Ready:                 <span class="literal">false</span>,</span><br><span class="line">			Reason:                <span class="string">"create eru cr failure"</span>,</span><br><span class="line">			Message:               <span class="string">"create eru cr failure"</span>,</span><br><span class="line">			LastedTranslationTime: v1.Now(),</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> updateerror := r.updateStatus(eru,failureCondition,mtsrev1.EruFailure); updateerror != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span>,updateerror</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>,err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 如果创建cr成功，我们需要更新annotation、更新status，默认cr的定时任务是停止的，我们需要用户手动去触发是否启动，并修改对应的定时任务表达式</span></span><br><span class="line">	<span class="comment">// 这里是更新annotation</span></span><br><span class="line">	deploymentData,enabledData,scheduleData := toString(eru)</span><br><span class="line">	eru.Annotations = <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>&#123;</span><br><span class="line">		<span class="string">"mtsre.meitu.com/deploymentName"</span>: deploymentData,</span><br><span class="line">		<span class="string">"mtsre.meitu.com/enabled"</span>: enabledData,</span><br><span class="line">		<span class="string">"mtsre.meitu.com/schedule"</span>: scheduleData,</span><br><span class="line">	&#125;</span><br><span class="line">	r.UpdateAnnotations(eru)</span><br><span class="line">	<span class="comment">// 这里是更新status</span></span><br><span class="line">	stopCondition := mtsrev1.EruCondition&#123;</span><br><span class="line">		Ready:                 <span class="literal">true</span>,</span><br><span class="line">		Reason:                <span class="string">"create eru cr success,wait to start"</span>,</span><br><span class="line">		Message:               <span class="string">"create eru cr success,wait to start"</span>,</span><br><span class="line">		LastedTranslationTime: v1.Time&#123;&#125;,</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> updateerror := r.updateStatus(eru,stopCondition,mtsrev1.EruStoping); updateerror != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>,updateerror</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>,<span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>eru_res.NewEru这个方法很简单，初始化了一个cr对象,并给这个cr对象设置一些初始值:</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewEru</span><span class="params">(deployment *appsv1.Deployment)</span> *<span class="title">mtsrev1</span>.<span class="title">Eru</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;mtsrev1.Eru&#123;</span><br><span class="line">		TypeMeta:   v1.TypeMeta&#123;</span><br><span class="line">			Kind:       <span class="string">"Eru"</span>,</span><br><span class="line">			APIVersion: <span class="string">"v1"</span>,</span><br><span class="line">		&#125;,</span><br><span class="line">		ObjectMeta: v1.ObjectMeta&#123;</span><br><span class="line">			Name:                       deployment.Name,</span><br><span class="line">			Namespace:                  deployment.Namespace,</span><br><span class="line">		&#125;,</span><br><span class="line">		Spec:       mtsrev1.EruSpec&#123;</span><br><span class="line">			DeploymentName: deployment.Name,</span><br><span class="line">			Enabled:        <span class="literal">false</span>,</span><br><span class="line">			Schedule:       <span class="string">"0 0 * * *"</span>, <span class="comment">// 默认每天凌晨执行一次</span></span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>更新status和更新annotation都单独抽离了方法，如下：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//更新cr的status函数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(r *ReconcileEru)</span> <span class="title">updateStatus</span><span class="params">(eru *mtsrev1.Eru, condition mtsrev1.EruCondition, phase mtsrev1.EruPhase)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	eru.Status.Phase = phase</span><br><span class="line">	eru.Status.Conditions = <span class="built_in">append</span>(eru.Status.Conditions, condition)</span><br><span class="line">	<span class="keyword">return</span> retry.RetryOnConflict(retry.DefaultRetry, <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">		<span class="keyword">return</span> r.client.Status().Update(context.TODO(), eru)</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 更新cr的annotation函数，更新一般不会失败，所以不做判断处理</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(r *ReconcileEru)</span> <span class="title">UpdateAnnotations</span><span class="params">(eru *mtsrev1.Eru)</span></span>  &#123;</span><br><span class="line">	_ = retry.RetryOnConflict(retry.DefaultRetry, <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">		<span class="keyword">return</span> r.client.Update(context.TODO(), eru)</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="测试运行"><a href="#测试运行" class="headerlink" title="测试运行"></a>测试运行</h3><p>因为我们修改了types.go这个文件，所以需要执行如下代码去生成代码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> operator-sdk generate k8s</span></span><br></pre></td></tr></table></figure>
+
+<p>最后我们就可以运行试下了：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">operator-sdk run --local  --namespace your-namespace</span><br></pre></td></tr></table></figure>
+
+<p>可以看到输出如下：<br><img src="/img/write-an-operator/4.png" alt="png4"></p>
+<p>我们创建一个deployment试试，然后我们先不带annotation，看看有什么效果<br>测试发现，只会监听到你这个deployment的信息，由于没有任何配置，所以不会创建cr资源等。<br><img src="/img/write-an-operator/5.png" alt="png5"></p>
+<p>我们删除deployment，创建一个带正确annotation的deployment测试，看看效果<br><img src="/img/write-an-operator/6.png" alt="png6"><br><img src="/img/write-an-operator/7.png" alt="png7"><br>可以看到，我们首先是检测到了annotation，然后就开始创建cr资源</p>
+<p>接下来我们看下创建的cr资源是否正常</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">➜  kubectl get eru -n lb6</span><br><span class="line">NAME               AGE</span><br><span class="line">opsnatmonitor-v1   5m</span><br><span class="line">➜  kubectl get eru opsnatmonitor-v1 -n lb6 -o yaml</span><br><span class="line">apiVersion: mtsre.meitu.com/v1</span><br><span class="line">kind: Eru</span><br><span class="line">metadata:</span><br><span class="line">  annotations:</span><br><span class="line">    mtsre.meitu.com/deploymentName: '"opsnatmonitor-v1"'</span><br><span class="line">    mtsre.meitu.com/enabled: "false"</span><br><span class="line">    mtsre.meitu.com/schedule: '"0 0 * * *"'</span><br><span class="line">  creationTimestamp: "2020-12-23T07:54:43Z"</span><br><span class="line">  generation: 1</span><br><span class="line">  name: opsnatmonitor-v1</span><br><span class="line">  namespace: lb6</span><br><span class="line">  resourceVersion: "147596357"</span><br><span class="line">  selfLink: /apis/mtsre.meitu.com/v1/namespaces/lb6/erus/opsnatmonitor-v1</span><br><span class="line">  uid: 1e4a28d9-44f4-11eb-89e4-fa163ebf9460</span><br><span class="line">spec:</span><br><span class="line">  deploymentname: opsnatmonitor-v1</span><br><span class="line">  enabled: false</span><br><span class="line">  schedule: 0 0 * * *</span><br><span class="line">status:</span><br><span class="line">  conditions:</span><br><span class="line">  - lastedTranslationTime: null</span><br><span class="line">    message: create eru cr success,wait to start</span><br><span class="line">    ready: true</span><br><span class="line">    reason: create eru cr success,wait to start</span><br><span class="line">  phase: Stoping</span><br></pre></td></tr></table></figure>
+
+
+<p>最后我们可以测试下删除deployment，会不会一起删除我们的cr资源</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜ kubectl delete deployment *** -n ***</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/write-an-operator/8.png" alt="png8"></p>
+<h3 id="计划"><a href="#计划" class="headerlink" title="计划"></a>计划</h3><p>下一篇我们主要实现更新cr资源的逻辑，如何让这个定时任务run起来以及修改定时任务表达式之后，怎么生效。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2020/12/22/write-an-operator-2/" data-id="ckizeq29i00045vtyd6t13ksb" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/operator/" rel="tag">operator</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/12/22/write-an-operator-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">《1》动手写一个operator</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#说明"><span class="toc-number">1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#介绍"><span class="toc-number">2.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设计"><span class="toc-number">3.</span> <span class="toc-text">设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开发"><span class="toc-number">4.</span> <span class="toc-text">开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试运行"><span class="toc-number">5.</span> <span class="toc-text">测试运行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计划"><span class="toc-number">6.</span> <span class="toc-text">计划</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 野生&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>

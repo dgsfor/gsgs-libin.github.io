@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.itmonkey.icu/2020/12/22/write-an-operator-2/</loc>
+    <lastmod>2020-12-23</lastmod>
+  </url>  <url>
+    <loc>https://blog.itmonkey.icu/2020/12/22/write-an-operator-1/</loc>
+    <lastmod>2020-12-22</lastmod>
+  </url>  <url>
     <loc>https://blog.itmonkey.icu/2020/12/22/get-some-mesg-in-k8s-event/</loc>
     <lastmod>2020-12-22</lastmod>
   </url>  <url>
