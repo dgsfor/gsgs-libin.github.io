@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>修改gcp默认的cloudsql网段 | 猿的野生香蕉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在gcp中，修改默认自动创建出来的cloudsql网段">
+<meta property="og:type" content="article">
+<meta property="og:title" content="修改gcp默认的cloudsql网段">
+<meta property="og:url" content="https://blog.itmonkey.icu/2021/01/18/gcp-modify-default-cloudsql-iprange/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="在gcp中，修改默认自动创建出来的cloudsql网段">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/gcp-modify-default-cloudsql-iprange/1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/gcp-modify-default-cloudsql-iprange/2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/gcp-modify-default-cloudsql-iprange/3.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/gcp-modify-default-cloudsql-iprange/4.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/gcp-modify-default-cloudsql-iprange/5.png">
+<meta property="article:published_time" content="2021-01-18T07:40:38.000Z">
+<meta property="article:modified_time" content="2021-01-18T07:58:53.668Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="gcp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/gcp-modify-default-cloudsql-iprange/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">猿的野生香蕉</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">野生</a>
+        </h2>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-gcp-modify-default-cloudsql-iprange" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/18/gcp-modify-default-cloudsql-iprange/" class="article-date">
+  <time datetime="2021-01-18T07:40:38.000Z" itemprop="datePublished">2021-01-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      修改gcp默认的cloudsql网段
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>由于gcp和国内是有专线的，所以各个网络是互通，这样也就是需要保证每一个网段不能有冲突。<br>但是gcp中，创建mysql的时候会默认自动分配一段网段，这个默认是没法指定的，所以这样就会有网段冲突的风险。</p>
+<a id="more"></a>
+
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>当我们创建了mysql后，会默认生成两个private service connection(专有服务连接，可以在vpc下面看到)，这个的本质就是做vpc peering。如下是两个专有服务连接，一个是连接到cloud sql的project，一个是连接到其他公共服务的project。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">servicenetworking-googleapis-com</span><br><span class="line">cloudsql-mysql-googleapis-com</span><br></pre></td></tr></table></figure>
+
+<p>其实你在vpc peering中也可以看到，默认会有两个：<br><img src="/img/gcp-modify-default-cloudsql-iprange/1.png" alt="png1"></p>
+<p>之后你就会看到默认会给你这两个专有服务连接分配了一段地址，这个名字叫<code>google-managed-services-+vpc名字</code>，这个地址段是随机分配的,并且也绑定上了两个专有连接。<br><img src="/img/gcp-modify-default-cloudsql-iprange/2.png" alt="png2"><br><img src="/img/gcp-modify-default-cloudsql-iprange/3.png" alt="png3"></p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>思路很简单了，自定义创建一个ip range地址段，然后手动绑定到两个专有连接上。</p>
+<h4 id="1-创建ip-range-地址段"><a href="#1-创建ip-range-地址段" class="headerlink" title="1.创建ip range 地址段"></a>1.创建ip range 地址段</h4><p><img src="/img/gcp-modify-default-cloudsql-iprange/4.png" alt="png4"></p>
+<h4 id="2-使用gcloud更新"><a href="#2-使用gcloud更新" class="headerlink" title="2.使用gcloud更新"></a>2.使用gcloud更新</h4><p>翻看官网文档，这个需要使用gcloud命令行来更新，不然只能对专有连接的ip段进行<code>叠加</code>。<br>我们只需要更新<code>servicenetworking-googleapis-com</code>这个专有连接即可，不用更新cloudsql。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gcloud services vpc-peerings update \</span><br><span class="line">    --service=servicenetworking.googleapis.com \</span><br><span class="line">    --ranges=test \</span><br><span class="line">    --network=xxxx \</span><br><span class="line">    --force</span><br></pre></td></tr></table></figure>
+
+<p>注意：range就是你刚自定义创建的地址段名称，network就是你vpc的名称。</p>
+<h4 id="3-验证"><a href="#3-验证" class="headerlink" title="3.验证"></a>3.验证</h4><p>最终你会发现你的自定义地址段就生效了<br><img src="/img/gcp-modify-default-cloudsql-iprange/5.png" alt="png5"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2021/01/18/gcp-modify-default-cloudsql-iprange/" data-id="ckk29zltc0000ektyd8z3ddpb" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gcp/" rel="tag">gcp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2021/01/14/tcp-short-port-exhausted/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">端口被短连接耗尽了怎么办</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#概念"><span class="toc-number">2.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路"><span class="toc-number">3.</span> <span class="toc-text">思路</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-创建ip-range-地址段"><span class="toc-number">3.1.</span> <span class="toc-text">1.创建ip range 地址段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-使用gcloud更新"><span class="toc-number">3.2.</span> <span class="toc-text">2.使用gcloud更新</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-验证"><span class="toc-number">3.3.</span> <span class="toc-text">3.验证</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2021 野生&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>
