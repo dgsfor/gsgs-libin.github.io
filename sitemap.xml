@@ -2,16 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://blog.itmonkey.icu/2021/02/02/ingress-self-define-403/</loc>
+    <loc>https://blog.itmonkey.icu/2021/03/08/auto-refresh-cdn/</loc>
     
-    <lastmod>2021-02-02T07:16:08.196Z</lastmod>
+    <lastmod>2021-03-08T09:20:44.982Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://blog.itmonkey.icu/2021/01/18/gcp-modify-default-cloudsql-iprange/</loc>
     
-    <lastmod>2021-01-21T02:19:15.610Z</lastmod>
+    <lastmod>2021-02-26T08:18:50.327Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/2021/02/24/baofengyu-is-comming/</loc>
+    
+    <lastmod>2021-02-24T08:44:40.456Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/2021/02/02/ingress-self-define-403/</loc>
+    
+    <lastmod>2021-02-02T07:16:08.196Z</lastmod>
     
   </url>
   

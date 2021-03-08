@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://blog.itmonkey.icu/img/gcp-modify-default-cloudsql-iprange/8.png">
 <meta property="og:image" content="https://blog.itmonkey.icu/img/gcp-modify-default-cloudsql-iprange/9.png">
 <meta property="article:published_time" content="2021-01-18T07:40:38.000Z">
-<meta property="article:modified_time" content="2021-01-21T02:19:15.610Z">
+<meta property="article:modified_time" content="2021-02-26T08:18:50.327Z">
 <meta property="article:author" content="野生">
 <meta property="article:tag" content="gcp">
 <meta name="twitter:card" content="summary">
@@ -127,7 +127,7 @@
 
 <p>注意：range就是你刚自定义创建的地址段名称，network就是你vpc的名称。</p>
 <h4 id="3-验证"><a href="#3-验证" class="headerlink" title="3.验证"></a>3.验证</h4><p>最终你会发现你的自定义地址段就生效了<br><img src="/img/gcp-modify-default-cloudsql-iprange/5.png" alt="png5"></p>
-<h3 id="温馨提示"><a href="#温馨提示" class="headerlink" title="温馨提示"></a>温馨提示</h3><p>1.自定义ip range必须是24位的<br>2.mysql、redis需要一个单独的ip range<br>3.mc和redis可以共用一个ip range</p>
+<h3 id="温馨提示"><a href="#温馨提示" class="headerlink" title="温馨提示"></a>温馨提示</h3><p>1.自定义ip range必须是24位的<br>2.mysql、redis需要一个单独的ip range<br>3.mc和redis可以共用一个ip range<br>4.cloudsql-ip-range是vpc级别的，不是region级别，多个ip-range，只有当一个用完了，才会用下一个<br>5.private dns zone也是vpc级别的，不是region级别，一个vpc下不同region是走的一个dns zone</p>
 <p>如果你只分配了一个ip range，那么创建云服务的时候会报这个错：<br><img src="/img/gcp-modify-default-cloudsql-iprange/6.png" alt="png6"></p>
 <p>参考链接：<a href="https://cloud.google.com/vpc/docs/configure-private-services-access#allocating-range" target="_blank" rel="noopener">https://cloud.google.com/vpc/docs/configure-private-services-access#allocating-range</a></p>
 <h3 id="温馨提示2"><a href="#温馨提示2" class="headerlink" title="温馨提示2"></a>温馨提示2</h3><p>如果你跟国内有bgp专线，那么有两种情况：</p>
