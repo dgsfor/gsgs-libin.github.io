@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何梳理我负责的业务(SRE) | 猿的野生香蕉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="如何有效和规范的梳理我所负责的业务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何梳理我负责的业务(SRE)">
+<meta property="og:url" content="https://blog.itmonkey.icu/2021/03/19/how-to-comb-my-business/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="如何有效和规范的梳理我所负责的业务">
+<meta property="article:published_time" content="2021-03-19T06:18:35.000Z">
+<meta property="article:modified_time" content="2021-03-19T06:26:01.482Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="梳理">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">猿的野生香蕉</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">野生</a>
+        </h2>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-how-to-comb-my-business" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/19/how-to-comb-my-business/" class="article-date">
+  <time datetime="2021-03-19T06:18:35.000Z" itemprop="datePublished">2021-03-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/">运维进阶</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      如何梳理我负责的业务(SRE)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>业务一多，我们就需要针对性的梳理负责的业务，不能一个业务一个样子。有效的梳理业务能带来以下好处：</p>
+<a id="more"></a>
+
+<p>1.更加深入了解业务<br>2.能从不同的业务中抽象出相同规则，做一些标准化自动化工作<br>3.业务之间运维工作可以有参考<br>4.业务故障能帮助快速定位问题点<br>5.让ab岗，轮值更进一步</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>当你梳理了业务文档，以下点是需要你注意的：<br>1.定期/及时更新业务文档<br>2.要覆盖全面，不仅包含业务文档，也要有运维所做的配套设置(告警、监控、cicd等)<br>3.有一个总表记录业务变更</p>
+<h3 id="梳理条目"><a href="#梳理条目" class="headerlink" title="梳理条目"></a>梳理条目</h3><p>那一个业务，我们需要梳理哪些基础的信息呢？</p>
+<ul>
+<li>基础平台信息</li>
+<li>业务部署架构</li>
+<li>后端资源信息</li>
+<li>CI/CD</li>
+<li>监控、日志、告警、自动化</li>
+<li>灾备、预案信息</li>
+<li>变更记录</li>
+<li>日常问题排查记录</li>
+<li>优化</li>
+<li>总结</li>
+<li>注意事项</li>
+</ul>
+<h3 id="具体说明"><a href="#具体说明" class="headerlink" title="具体说明"></a>具体说明</h3><table>
+<thead>
+<tr>
+<th align="left">梳理条目</th>
+<th align="left">梳理细节</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">基础平台信息</td>
+<td align="left">部署在哪里<br>如果是新环境，我怎么进入环境<br>平台的权限相关备注<br>如果是新平台，基础环境要备注好，vpc、子网、nat等</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">业务部署架构</td>
+<td align="left">一个架构图还是要的<br>服务有哪些，服务名称、服务作用、资源占用<br>域名有哪些、以及解析地址<br>cdn配置等</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">后端资源信息</td>
+<td align="left">实例列表<br>实例规格<br>资源同步相关文档</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">CI/CD</td>
+<td align="left">cicd流程用什么<br>是否有自建cicd工具</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">监控、日志、告警、自动化</td>
+<td align="left">监控地址(基础监控，业务监控)<br>日志地址<br>告警发送人、告警发送规则<br>其他自动化配置</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">灾备、预案信息</td>
+<td align="left">灾备文档梳理<br>预案文档梳理<br>日常演练记录<br>压测文档记录</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">变更记录</td>
+<td align="left">业务侧：业务变更、人员变更<br>运维侧：配置变更、支撑变更</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">日常问题排查记录</td>
+<td align="left">故障记录<br>日常问题记录</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">优化</td>
+<td align="left">性能优化<br>支撑优化(支撑工具开发等)<br>成本优化</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">总结</td>
+<td align="left">稳定性运营周报<br>月报<br>年报<br>重要节日报</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">注意事项</td>
+<td align="left">证书更新<br>特殊配置</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2021/03/19/how-to-comb-my-business/" data-id="ckmfx5fxt00003xty5nki0g3i" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A2%B3%E7%90%86/" rel="tag">梳理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag">运维</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2021/03/08/auto-refresh-cdn/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">关于前端自动刷新cdn相关想法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注意"><span class="toc-number">2.</span> <span class="toc-text">注意</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#梳理条目"><span class="toc-number">3.</span> <span class="toc-text">梳理条目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#具体说明"><span class="toc-number">4.</span> <span class="toc-text">具体说明</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2021 野生&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>
