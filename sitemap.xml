@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.itmonkey.icu/2020/11/06/install-prometheus-operator-in-gcp/</loc>
+    
+    <lastmod>2021-03-19T08:27:48.756Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/2021/03/19/sre-portal-website-start/</loc>
+    
+    <lastmod>2021-03-19T08:14:27.013Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.itmonkey.icu/2021/03/19/how-to-comb-my-business/</loc>
     
     <lastmod>2021-03-19T06:26:01.482Z</lastmod>
@@ -124,13 +138,6 @@
     <loc>https://blog.itmonkey.icu/2020/11/09/prometheus-operator-prometheusrules/</loc>
     
     <lastmod>2020-11-11T05:06:49.586Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/2020/11/06/install-prometheus-operator-in-gcp/</loc>
-    
-    <lastmod>2020-11-11T05:06:38.630Z</lastmod>
     
   </url>
   
