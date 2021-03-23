@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>上手GCP Anthos之多集群管理 | 猿的野生香蕉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简单介绍anthos以及一些应用场景">
+<meta property="og:type" content="article">
+<meta property="og:title" content="上手GCP Anthos之多集群管理">
+<meta property="og:url" content="https://blog.itmonkey.icu/2021/03/23/gcp-anthos-multi-cluster-mgt/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="简单介绍anthos以及一些应用场景">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/anthos/anthos.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/anthos/add-new-cluster.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/anthos/add-new-out-cluster.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/anthos/nodepool-1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/anthos/nodepool-2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/anthos/create-registry.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/anthos/config-set-01.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/anthos/config-set-02.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/anthos/config-status-03.png">
+<meta property="article:published_time" content="2021-03-23T11:52:18.000Z">
+<meta property="article:modified_time" content="2021-03-23T15:49:15.199Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="gcp">
+<meta property="article:tag" content="gke">
+<meta property="article:tag" content="anthos">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/anthos/anthos.png">
+  
+    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">猿的野生香蕉</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">野生</a>
+        </h2>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-gcp-anthos-multi-cluster-mgt" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/23/gcp-anthos-multi-cluster-mgt/" class="article-date">
+  <time datetime="2021-03-23T11:52:18.000Z" itemprop="datePublished">2021-03-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/anthos/">anthos</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      上手GCP Anthos之多集群管理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="提前说明"><a href="#提前说明" class="headerlink" title="提前说明"></a>提前说明</h3><p>1.上手anthos时日不多，有解释或者说明不对的地方，请指正！<br>2.细节还是比较多的，有什么问题可以直接联系我，相互讨论！</p>
+<a id="more"></a>
+
+<h3 id="了解"><a href="#了解" class="headerlink" title="了解"></a>了解</h3><p>Anthos 是一个现代应用管理平台，官方解释：<a href="https://cloud.google.com/anthos/docs/concepts/overview" target="_blank" rel="noopener">官方文档</a></p>
+<p>对于这几天上手了解后，发现非常多功能还是很有意思和借鉴意义的。目前来说，我们主要用到了<code>多集群管理(Environ)</code>、<code>配置管理(ACM)</code>、<code>服务管理(ASM)</code>，以及其他暂时还没有用到的。</p>
+<p><img src="/img/anthos/anthos.png" alt="png"></p>
+<h4 id="多集群管理"><a href="#多集群管理" class="headerlink" title="多集群管理"></a>多集群管理</h4><p>字面意思理解即可，不过特别说明的是，他可以纳管其他云商k8s集群以及自建k8s集群。</p>
+<h4 id="配置管理"><a href="#配置管理" class="headerlink" title="配置管理"></a>配置管理</h4><p>我比较喜欢称它为<code>gitops</code>，一切皆文件。<br>简单描述下：你的服务部署所需要的所有yaml文件(默认在k8s里)，放在这个git里，任何改动的提交，都会同步到所有的集群(默认同步所有)，比如：证书更新管理，证书更新了，提交一下，发布到所有集群，不用一个一个去更新了(如果你有其他自动化，当我没有说)</p>
+<p>注：这个是我比较喜欢的一个功能，很实用。</p>
+<h4 id="服务管理"><a href="#服务管理" class="headerlink" title="服务管理"></a>服务管理</h4><p>对于anthos管理的工作负载，asm会管理这些服务的网格环境，提供众多功能以及istio的所有功能，可以认为是一个<code>增强改良版istio</code>。</p>
+<p>注：当前我还没有使用上，以后使用上了，再更新一篇文章。</p>
+<h3 id="额外提示"><a href="#额外提示" class="headerlink" title="额外提示"></a>额外提示</h3><p>初次使用anthos，gcp会提供一个900刀的试用金，可以尽情的享受了。</p>
+<p>温馨提示：注意他的计费方式，不算太便宜。</p>
+<h3 id="开始吧"><a href="#开始吧" class="headerlink" title="开始吧"></a>开始吧</h3><p>试用anthos已经两三天了，基本的模型和框架都已经搭建完毕，以及简单的测试都已经ok。大致可以分为以下几个点：</p>
+<ul>
+<li>注册集群</li>
+<li>创建git中心</li>
+<li>抽象配置文件</li>
+<li>开启配置同步</li>
+<li>测试批量管理</li>
+</ul>
+<h4 id="注册集群"><a href="#注册集群" class="headerlink" title="注册集群"></a>注册集群</h4><p>目前有两种途径来接入anthos</p>
+<p>① 通过anthos直接创建集群(当然这个直接创建的是gke集群)<br>② 纳管现有集群 – 纳管gke集群、纳管三方集群</p>
+<h5 id="纳管gke集群"><a href="#纳管gke集群" class="headerlink" title="纳管gke集群"></a>纳管gke集群</h5><p>我当前都是已经有现成的gke集群，所以直接选择第二种途径纳管gke集群即可。<br><img src="/img/anthos/add-new-cluster.png" alt="png1"></p>
+<h5 id="纳管三方集群"><a href="#纳管三方集群" class="headerlink" title="纳管三方集群"></a>纳管三方集群</h5><p>可以选择添加外部集群，填写好你集群的标签，最终会生成一条注册命令，扔到你的集群中执行即可。<br><img src="/img/anthos/add-new-out-cluster.png" alt="png2"></p>
+<h5 id="效果和验证"><a href="#效果和验证" class="headerlink" title="效果和验证"></a>效果和验证</h5><p>当你纳管好集群后，可以看看是否纳管成功以及如何判断纳管成功。</p>
+<p>① 执行gcloud命令，查看当前纳管的集群和状态：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# gcloud container hub memberships list</span><br><span class="line">NAME           EXTERNAL_ID</span><br><span class="line">cluster1  xxxxxx-xxxxxxxxxx-xxxxxxxxxxxx</span><br><span class="line">cluster2  xxxxxx-xxxxxxxxxx-xxxxxxxxxxxx</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# gcloud container hub memberships describe cluster1 </span><br><span class="line">createTime: '2021-03-17T06:41:47.422321701Z'</span><br><span class="line">endpoint:</span><br><span class="line">  gkeCluster:</span><br><span class="line">    resourceLink: //container.googleapis.com/projects/******</span><br><span class="line">  kubernetesMetadata:</span><br><span class="line">    kubernetesApiServerVersion: v1.17.15-gke.800</span><br><span class="line">    memoryMb: 8282</span><br><span class="line">    nodeCount: 2</span><br><span class="line">    nodeProviderId: gce</span><br><span class="line">    updateTime: '2021-03-23T12:46:37.348171277Z'</span><br><span class="line">    vcpuCount: 8</span><br><span class="line">externalId: xxxxxx-xxxxxxxxxx-xxxxxxxxxxxx</span><br><span class="line">lastConnectionTime: '2021-03-23T12:42:31.571643848Z'</span><br><span class="line">name: projects/***********</span><br><span class="line">state:</span><br><span class="line">  code: READY</span><br><span class="line">uniqueId: xxxxxx-xxxxxxxxxx-xxxxxxxxxxxx</span><br><span class="line">updateTime: '2021-03-23T12:46:37.689233201Z'</span><br></pre></td></tr></table></figure>
+<p>② 使用kubectl查看到底安装了什么(其实跟绝大多数集群管理平台一样，就安装了一个agent的服务，参考rancher)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# kubectl get pods -n gke-connect</span><br><span class="line">NAME                                                READY   STATUS    RESTARTS   AGE</span><br><span class="line">gke-connect-agent-20210305-01-00-54f7dcc455-l5x2f   1/1     Running   0          31h</span><br></pre></td></tr></table></figure>
+
+<h5 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h5><ul>
+<li>集群需要有足够的资源</li>
+<li>节点需要有拉取git的权限</li>
+</ul>
+<p>关于git的权限，你就简单认为他拿着你的配置文件然后做应用即可。<br>在gke中，我们需要对节点池进行配置权限：(节点池权限Cloud Source Repositories开放read only即可)<br><img src="/img/anthos/nodepool-1.png" alt="png3"><br><img src="/img/anthos/nodepool-2.png" alt="png4"></p>
+<p>如果你是命令行创建的nodepool，可以参考这个：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud container node-pools create my-nodepool  --cluster=*** --zone ***  --num-nodes=2  --disk-size=40 --machine-type=custom-4-4096 --project *** --scopes=cloud-source-repos-ro</span><br></pre></td></tr></table></figure>
+<p>scopes这个是权限列表，你可以按需添加，官方文档：<a href="https://cloud.google.com/sdk/gcloud/reference/container/node-pools/create#--scopes" target="_blank" rel="noopener">scopes说明</a></p>
+<h4 id="创建git中心"><a href="#创建git中心" class="headerlink" title="创建git中心"></a>创建git中心</h4><p>顾名思义，把我们所有的配置和服务都抽象出yaml文件来，然后放到这个git里(正常anthos就是一个kubectl工具，你提交一个yaml文件，他apply一个)。<br>这个git仓库可以有很多中类型：github、gitlab、gcp仓库，这里我直接使用gcp的仓库服务，其他的你可以自己研究，还是比较简单的。</p>
+<p><img src="/img/anthos/create-registry.png" alt="png5"></p>
+<h4 id="抽象配置文件"><a href="#抽象配置文件" class="headerlink" title="抽象配置文件"></a>抽象配置文件</h4><p>在一步，我们首先要了解两个概念，<code>层级结构(hierarchy)</code>和<code>非结构化模式(unstructured)</code>。</p>
+<p><code>层级结构</code>是gcp提供的一种具有约束力的文件目录结构，比如目录下有cluster和namespace两个目录，那么在这两个目录里就分别存放集群级别的配置和namespace级别的配置。<br><code>非结构化模式</code>是用户自己定义的一种文件模式，有点类似于helm、kustomize,不过值得注意的是，在这种模式下，我们每一个文件都需要标准的yaml文件。</p>
+<h5 id="nomos"><a href="#nomos" class="headerlink" title="nomos"></a>nomos</h5><p>在整体操作之前，我们先了解一个工具<code>nomos</code>,这个工具能让我们快速创建<code>Config Sync</code>代码库，包括初始化以及语法校验。<a href="https://cloud.google.com/kubernetes-engine/docs/add-on/config-sync/how-to/nomos-command" target="_blank" rel="noopener">官方文档</a></p>
+<p>安装一下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.下载对应系统版本的二进制文件</span><br><span class="line">2.chmod +x nomos</span><br><span class="line">3.加入到环境变量中</span><br></pre></td></tr></table></figure>
+
+<h5 id="层级结构"><a href="#层级结构" class="headerlink" title="层级结构"></a>层级结构</h5><h6 id="1-初始化层级结构目录"><a href="#1-初始化层级结构目录" class="headerlink" title="1.初始化层级结构目录"></a>1.初始化层级结构目录</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> my-repo/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> nomos init</span></span><br></pre></td></tr></table></figure>
+
+<p>这时候你就可以看到一个完整层级目录的结构：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> tree</span></span><br><span class="line">.</span><br><span class="line">├── cluster # 集群级别的配置文件，role、rolebinding等</span><br><span class="line">├── clusterregistry # 集群注册配置文件，比如我在这里定义了集群A的标签，在下面可以使用这个标签A表示只在A集群中安装，在其他集群不安装</span><br><span class="line">├── namespaces # namespace级别的一些配置文件，如：svc、ingress、configmap、secret等</span><br><span class="line">├── README.md</span><br><span class="line">└── system</span><br><span class="line">    ├── README.md</span><br><span class="line">    └── repo.yaml</span><br></pre></td></tr></table></figure>
+
+<h6 id="2-编写一下集群注册的文件"><a href="#2-编写一下集群注册的文件" class="headerlink" title="2.编写一下集群注册的文件"></a>2.编写一下集群注册的文件</h6><p>加入我们有两个集群，cluster1和cluster2，那么我们需要在<code>clusterregistry</code>这个目录加入一下文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat cluster1.yaml</span></span><br><span class="line">kind: Cluster</span><br><span class="line">apiVersion: clusterregistry.k8s.io/v1alpha1</span><br><span class="line">metadata:</span><br><span class="line">  name: cluster1</span><br><span class="line">  labels:</span><br><span class="line">    cluster: cluster1</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat selector-cluster1.yaml</span></span><br><span class="line">kind: ClusterSelector</span><br><span class="line">apiVersion: configmanagement.gke.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: selector-cluster1</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      cluster: cluster1</span><br></pre></td></tr></table></figure>
+<p>上述文件表示：首先我们有一个cluster1.yaml表示我当前anthos管理的cluster1这个集群，selector-cluster1.yaml表示定义一个标签，当你满足我这个标签，就表示你选择了我这个集群。<br>这个标签就是我们后续会用到的<code>configmanagement.gke.io/cluster-selector: selector-cluster1</code>,这个需要写在我们的annotations中。</p>
+<h6 id="3-编写namespace相关"><a href="#3-编写namespace相关" class="headerlink" title="3.编写namespace相关"></a>3.编写namespace相关</h6><p>比如我们在namespace目录下创建一个test文件夹，那么表示我所管理的集群都会创建出一个名称为test的namespace(当然前提是你没有加cluster-selector)。<br>然后你就可以在这个文件夹下创建一系列的yaml文件了，比如你的deployment、service、ingress、configmap、secret、hpa等，如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ll -lh <span class="built_in">test</span>/</span></span><br><span class="line">total 36K</span><br><span class="line">-rw-r--r-- 1 root root 2.9K Mar 22 15:52 deployment.yaml</span><br><span class="line">-rw-r--r-- 1 root root  359 Mar 22 15:52 image-pull-secret.yaml</span><br><span class="line">-rw-r--r-- 1 root root  276 Mar 22 15:52 hpa-cpu.yaml</span><br><span class="line">-rw-r--r-- 1 root root  461 Mar 22 15:52 ingress.yaml</span><br><span class="line">-rw-r--r-- 1 root root 9.4K Mar 22 15:52 ssl-tls.yaml</span><br><span class="line">-rw-r--r-- 1 root root  264 Mar 22 15:52 service.yaml</span><br></pre></td></tr></table></figure>
+
+<p>刚刚说的集群选择标签，当前我们有两个集群cluster1和cluster2，那么假如我只想让hpa创建在cluster1怎么做呢，可以看如下配置(重点关注annotations)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat hpa-cpu.yaml</span></span><br><span class="line">apiVersion: autoscaling/v1</span><br><span class="line">kind: HorizontalPodAutoscaler</span><br><span class="line">metadata:</span><br><span class="line">  name: test-hpa</span><br><span class="line">  annotations:</span><br><span class="line">    configmanagement.gke.io/cluster-selector: cluster1</span><br><span class="line">spec:</span><br><span class="line">  scaleTargetRef:</span><br><span class="line">    apiVersion: extensions/v1beta1</span><br><span class="line">    kind: Deployment</span><br><span class="line">    name: test-deployment</span><br><span class="line">  minReplicas: 1</span><br><span class="line">  maxReplicas: 5</span><br><span class="line">  targetCPUUtilizationPercentage: 30</span><br></pre></td></tr></table></figure>
+
+<h6 id="4-验证语法"><a href="#4-验证语法" class="headerlink" title="4.验证语法"></a>4.验证语法</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> nomos vet</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="非结构化模式"><a href="#非结构化模式" class="headerlink" title="非结构化模式"></a>非结构化模式</h5><p>在非结构化模式中，我们采用的是helm的模式(需要对helm有一定基础，不熟悉的同学可以暂时跳过)。<br>注：他有一个特殊之处，就是我前面提到anthos只认标准的k8s yaml文件，像helm chart中的values这种他就不认，那么我们怎么去把这种应用到anthos呢？</p>
+<p>带着问题，经过实践，我们得到如下结论：<br>① 首先我们还是需要初始化一个标准的helm chart模板 – <code>helm init</code><br>② 我们需要打包出chart包 – <code>helm package ChartName --debug</code><br>③ 生成yaml模板 – <code>helm template ChartName ChartName-Version.tgz</code><br>④ 最终复制输出的结果到一个yaml文件中，上传到git仓库中</p>
+<p>以下是我写的最简单的一个helm Chart，为了演示作用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mychart]# tree</span><br><span class="line">.</span><br><span class="line">├── Chart.yaml</span><br><span class="line">├── templates</span><br><span class="line">│   └── namespace.yaml</span><br><span class="line">└── values.yaml</span><br><span class="line"></span><br><span class="line">1 directory, 3 files</span><br><span class="line"></span><br><span class="line">[root@localhost mychart]# cat values.yaml</span><br><span class="line">version: 0.0.1</span><br><span class="line">namespace: "mynamespace"</span><br><span class="line"></span><br><span class="line">[root@localhost mychart]# cat templates/namespace.yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Namespace</span><br><span class="line">metadata:</span><br><span class="line">  name: &#123;&#123; .Values.namespace &#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">[root@localhost]#</span><span class="bash"> helm package mychart --debug</span></span><br><span class="line">Successfully packaged chart and saved it to: /www/anthos/repohelm/mychart-0.1.0.tgz</span><br><span class="line"></span><br><span class="line"><span class="meta">[root@localhost]#</span><span class="bash"> helm template mychart mychart-0.1.0.tgz</span></span><br><span class="line">---</span><br><span class="line"><span class="meta">#</span><span class="bash"> Source: mychart/templates/namespace.yaml</span></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Namespace</span><br><span class="line">metadata:</span><br><span class="line">  name: mynamespace</span><br><span class="line"></span><br><span class="line"><span class="meta">[root@localhost]#</span><span class="bash"> 然后把输出的内容另存到一个init.yaml中，丢到git仓库里</span></span><br></pre></td></tr></table></figure>
+
+
+<p>当然，采用非结构化模式，我们也需要校验一下语法是否正确：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> nomos vet --<span class="built_in">source</span>-format=unstructured</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="开启配置同步"><a href="#开启配置同步" class="headerlink" title="开启配置同步"></a>开启配置同步</h4><p>当我们编写好以上的文件，我们就可以配置acm了。</p>
+<h5 id="选择合适的git仓库类型"><a href="#选择合适的git仓库类型" class="headerlink" title="选择合适的git仓库类型"></a>选择合适的git仓库类型</h5><p><img src="/img/anthos/config-set-01.png" alt="png6"></p>
+<h5 id="填写git地址等信息"><a href="#填写git地址等信息" class="headerlink" title="填写git地址等信息"></a>填写git地址等信息</h5><p>这一步填写好git地址，分支，同步间隔时间(多久从git同步一次)，源格式(层级或非结构化)<br><img src="/img/anthos/config-set-02.png" alt="png7"></p>
+<h5 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h5><p>在这里我们也可以直接看看他到底安装了什么东西，可以从下面看出他也是类似安装了一个服务，来定时同步我们的git文件到集群中。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[root@localhost]#</span><span class="bash"> kubectl get pods -n config-management-system</span></span><br><span class="line">NAME                            READY   STATUS    RESTARTS   AGE</span><br><span class="line">git-importer-69699fd8b7-jzkhm   4/4     Running   1          31h</span><br><span class="line">monitor-65b649fbd4-7wvps        1/1     Running   0          34h</span><br></pre></td></tr></table></figure>
+<h5 id="查看状态"><a href="#查看状态" class="headerlink" title="查看状态"></a>查看状态</h5><p>当我们安装好之后，可以从控制台查看当前的一个状态，也可以使用nomos来查看当前同步的状态：</p>
+<p><img src="/img/anthos/config-status-03.png" alt="png8"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[root@localhost]#</span><span class="bash"> nomos status</span></span><br><span class="line">Connecting to clusters...</span><br><span class="line"></span><br><span class="line">*cluster1</span><br><span class="line">  --------------------</span><br><span class="line">  &lt;root&gt;   https://source.developers.google.com/p/******@master</span><br><span class="line">  SYNCED   e160b119</span><br><span class="line"></span><br><span class="line">cluster2</span><br><span class="line">  --------------------</span><br><span class="line">  &lt;root&gt;   https://source.developers.google.com/p/******@master</span><br><span class="line">  SYNCED   e160b119</span><br></pre></td></tr></table></figure>
+
+<h4 id="测试批量管理"><a href="#测试批量管理" class="headerlink" title="测试批量管理"></a>测试批量管理</h4><p>当我们一切就绪之后，可以测试下同步功能，修改任意一个文件，等待一会(取决于你配置的同步时间)，然后直接去集群中验证即可。</p>
+<h3 id="注意事项-1"><a href="#注意事项-1" class="headerlink" title="注意事项"></a>注意事项</h3><p>① 层级结构中，namespace目录下每一个文件夹都代表着你对应集群下的namespace，你加了这个目录则表示我要通过acm管理这个namespace了；当然没加的，但是集群又存在的，不会影响。<br>② 层级结构中，不用再写namespace.yaml这个创建namespace的文件了，默认他会读取目录名称，并创建相应的namespace。<br>③ 如果集群存在一个deployment为A，那么我创建一个deployment-A.yaml，配置名称完全跟集群中的一致，那么他不会重新创建，而是直接纳管。<br>④ 非结构化模式中也可以使用cluster-selector，你只需要在git仓库里新建一个clusterregistry目录即可，文件内容和用法跟层级结构一样。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2021/03/23/gcp-anthos-multi-cluster-mgt/" data-id="ckmm1k6h80000d2ty2cdx65qa" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/anthos/" rel="tag">anthos</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gcp/" rel="tag">gcp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gke/" rel="tag">gke</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2021/03/19/sre-portal-website-start/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">从零开始创建一个sre的门户网站</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#提前说明"><span class="toc-number">1.</span> <span class="toc-text">提前说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#了解"><span class="toc-number">2.</span> <span class="toc-text">了解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#多集群管理"><span class="toc-number">2.1.</span> <span class="toc-text">多集群管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置管理"><span class="toc-number">2.2.</span> <span class="toc-text">配置管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务管理"><span class="toc-number">2.3.</span> <span class="toc-text">服务管理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#额外提示"><span class="toc-number">3.</span> <span class="toc-text">额外提示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开始吧"><span class="toc-number">4.</span> <span class="toc-text">开始吧</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#注册集群"><span class="toc-number">4.1.</span> <span class="toc-text">注册集群</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#纳管gke集群"><span class="toc-number">4.1.1.</span> <span class="toc-text">纳管gke集群</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#纳管三方集群"><span class="toc-number">4.1.2.</span> <span class="toc-text">纳管三方集群</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#效果和验证"><span class="toc-number">4.1.3.</span> <span class="toc-text">效果和验证</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#注意事项"><span class="toc-number">4.1.4.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建git中心"><span class="toc-number">4.2.</span> <span class="toc-text">创建git中心</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#抽象配置文件"><span class="toc-number">4.3.</span> <span class="toc-text">抽象配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#nomos"><span class="toc-number">4.3.1.</span> <span class="toc-text">nomos</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#层级结构"><span class="toc-number">4.3.2.</span> <span class="toc-text">层级结构</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-初始化层级结构目录"><span class="toc-number">4.3.2.1.</span> <span class="toc-text">1.初始化层级结构目录</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-编写一下集群注册的文件"><span class="toc-number">4.3.2.2.</span> <span class="toc-text">2.编写一下集群注册的文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-编写namespace相关"><span class="toc-number">4.3.2.3.</span> <span class="toc-text">3.编写namespace相关</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4-验证语法"><span class="toc-number">4.3.2.4.</span> <span class="toc-text">4.验证语法</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#非结构化模式"><span class="toc-number">4.3.3.</span> <span class="toc-text">非结构化模式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#开启配置同步"><span class="toc-number">4.4.</span> <span class="toc-text">开启配置同步</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#选择合适的git仓库类型"><span class="toc-number">4.4.1.</span> <span class="toc-text">选择合适的git仓库类型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#填写git地址等信息"><span class="toc-number">4.4.2.</span> <span class="toc-text">填写git地址等信息</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#开始安装"><span class="toc-number">4.4.3.</span> <span class="toc-text">开始安装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查看状态"><span class="toc-number">4.4.4.</span> <span class="toc-text">查看状态</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#测试批量管理"><span class="toc-number">4.5.</span> <span class="toc-text">测试批量管理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注意事项-1"><span class="toc-number">5.</span> <span class="toc-text">注意事项</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2021 野生&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>
