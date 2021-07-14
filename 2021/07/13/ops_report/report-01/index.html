@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>稳定性报告(report)平台思考 | 猿的野生香蕉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="从日常巡检报告出发，我们来思考一下如何建设一个稳定性运营平台&#x2F;稳定性报告平台">
+<meta property="og:type" content="article">
+<meta property="og:title" content="稳定性报告(report)平台思考">
+<meta property="og:url" content="https://blog.itmonkey.icu/2021/07/13/ops_report/report-01/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="从日常巡检报告出发，我们来思考一下如何建设一个稳定性运营平台&#x2F;稳定性报告平台">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/3.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/4.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/5.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/6.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/7.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/8.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/9.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/10.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/11.png">
+<meta property="article:published_time" content="2021-07-13T05:44:01.000Z">
+<meta property="article:modified_time" content="2021-07-14T02:33:29.322Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="运营报告">
+<meta property="article:tag" content="巡检">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/ops_report/01/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">猿的野生香蕉</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">野生</a>
+        </h2>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ops_report/report-01" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/07/13/ops_report/report-01/" class="article-date">
+  <time datetime="2021-07-13T05:44:01.000Z" itemprop="datePublished">2021-07-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Devops/">Devops</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      稳定性报告(report)平台思考
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>首先说一些日常工作场景：</p>
+<ol>
+<li>你的群里是否经常会发送一些巡检报告，比如qps峰值统计，cpu利用率，机器使用数量统计等等</li>
+<li>你的领导是否需要你每周发送一次公司业务层级的运行报告，包括上周有没有故障，上周所有业务的qps峰值是多少，周期内的一些业务变更或者运营活动等。</li>
+</ol>
+<a id="more"></a>
+
+<p>所以你可能会看到类似这样的一些图：<br><img src="/img/ops_report/01/1.png" alt="png1"><br><img src="/img/ops_report/01/2.png" alt="png2"><br><img src="/img/ops_report/01/3.png" alt="png3"></p>
+<h3 id="初步思考"><a href="#初步思考" class="headerlink" title="初步思考"></a>初步思考</h3><p>基于上述的背景，我们常规的实现方式有以下几种：</p>
+<ol>
+<li>日常的巡检报告，我们可能会用一个脚本定期的获取数据，然后发送到企业微信机器人、邮箱、钉钉等</li>
+<li>周、月巡检报告运营报告这些，我们可能需要手动创建一个md文件，写上一些数据，截上一些监控图，加上一部分解读和批注，最终发到群里给大家看。</li>
+</ol>
+<p>那么基于上述的实现方式，我们是否可以进一步的去考虑<code>自动化</code>或者说是<code>平台化</code>。比如是否可以设想一下：</p>
+<ol>
+<li>把日常的报告、通知发送集中起来管理(目前可能是一个人一个脚本，不知道跑在哪个机器的定时任务上)</li>
+<li>是否可以模板化，比如定制一些模板，然后拿着这个模板去渲染真实的数据，最终发送出来</li>
+<li>还可以增加定时任务，比如针对这个模板，我想要定期发送，这样就更简单的托管起来我们分部在各个机器上的定时脚本了</li>
+</ol>
+<h3 id="功能期望"><a href="#功能期望" class="headerlink" title="功能期望"></a>功能期望</h3><p>针对上述的思考，我们团队做了一些建设，目前一期建设想要产出一个<code>稳定性运营平台</code>，这个平台目前的任务主要有以下几个：</p>
+<blockquote>
+<ol>
+<li>接管我们当前的日常报告的功能(目前的报告都是自动化脚本实现，定期发送qps数据，带宽数据，网关数据等)</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>提供自定义模板功能，能快速定义想要的数据模板</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>可以实现监控图的发送(目前更多的是grafana的图片)</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="4">
+<li>接管我们当前每周的稳定性运营报告的工作，可自动渲染数据，可自定义标注，最终发送<code>终版报告</code>给到用户</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="5">
+<li>历史数据的存储，目前监控平台会存储全量数据，这个平台只是想要存储一些特定数据或者叫做过滤后有效的数据</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="6">
+<li>实现定期发送的功能，可配置定时任务</li>
+</ol>
+</blockquote>
+<h3 id="平台设计"><a href="#平台设计" class="headerlink" title="平台设计"></a>平台设计</h3><p>首先这个平台分成了三个大的部分：<code>前端</code>、<code>后端接口</code>、<code>定时任务端</code></p>
+<p>这里主要讲解一下非前端部分，首先功能模块分了几个大块：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">仪表盘模块</span><br><span class="line">模板模块</span><br><span class="line">变量注册模块</span><br><span class="line">报告模块</span><br><span class="line">数据存储模块</span><br><span class="line">定时任务模块</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="仪表盘模块"><a href="#仪表盘模块" class="headerlink" title="仪表盘模块"></a>仪表盘模块</h4><p>这一块主要是总览展示的功能模块，包括整个平台有多少模板，有多少报告等。<br>这一快的功能放到二期了，一起暂时没做，不过有一个初版的样子可以看看。</p>
+<p><img src="/img/ops_report/01/4.png" alt="png4"></p>
+<h4 id="模板模块"><a href="#模板模块" class="headerlink" title="模板模块"></a>模板模块</h4><p>模板模块和变量注册模块是相辅相成的。模板目前主要划分了几种类型：</p>
+<table>
+<thead>
+<tr>
+<th align="left">模板类型</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">基础模板</td>
+<td align="left">基础模板主要提供接入能力，比如我定义好了域名QPS统计的能力，那么你只需要提供你的域名，我就可以帮你完成统计动作</td>
+</tr>
+<tr>
+<td align="left">开放模板/周期模板</td>
+<td align="left">这类模板就相对自由，你可以自定义模板内容，变量，最终定义定时任务来定时的渲染该模板，然后选择发送等</td>
+</tr>
+</tbody></table>
+<p>模板定义主要的原理就是：创建一个markdown主体内容，然后写上一些变量，最终这些变量都会被真实的值所替换。所以创建模板需要你重要的能力就是：<code>会写markdown</code>。</p>
+<p>创建模板大致长这样：</p>
+<p><img src="/img/ops_report/01/5.png" alt="png5"></p>
+<h4 id="变量注册模块"><a href="#变量注册模块" class="headerlink" title="变量注册模块"></a>变量注册模块</h4><p>变量注册主要是定义你在模板中设置的变量，比如这个变量的获取方式是什么样子的，获取的数据字段是哪个。<br>对比变量的说明，主要划分了几种：<code>内置变量</code>、<code>模板变量</code>、<code>图片变量</code><br>针对这三种变量有一个简单的说明：</p>
+<table>
+<thead>
+<tr>
+<th align="left">变量类型</th>
+<th align="left">变量说明</th>
+<th align="left">提供信息</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">内置变量</td>
+<td align="left">所有模板都可以使用的，可以理解为公共变量</td>
+<td align="left">提供获取地址</td>
+</tr>
+<tr>
+<td align="left">模板变量</td>
+<td align="left">属于模板特有的</td>
+<td align="left">提供获取地址</td>
+</tr>
+<tr>
+<td align="left">图片变量</td>
+<td align="left">专门下载grafana图片的</td>
+<td align="left">提供grafana地址</td>
+</tr>
+</tbody></table>
+<p>比如我举个例子：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">我在模板中定义了一个变量`DATE`，那么我在变量注册的时候需要提供这些信息：</span><br><span class="line">变量获取地址：https://abc.com/var/date</span><br><span class="line">变量获取字段：data</span><br><span class="line">等到真正渲染模板动作执行的时候，就会去请求这个地址，拿到返回数据中data字段的值来具体的替换我的`DATE`数据，来达到渲染的目标。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">我在模板中定义了一个变量`QPS__TREND_IMG`，这个主要是一个图片变量，获取的数据就是一个域名在某段时间的qps趋势图，那他提供的信息就是:</span><br><span class="line">grafana地址：http://grafana.c.com/****</span><br><span class="line">grafana的key：这个当然你可以放到服务端配置中去，也可以自定义，随意</span><br><span class="line">等到真正渲染模板动作执行的时候，就会去请求这个下载这个grafana图片，然后上传到你自己的存储，比如阿里云的oss，华为云的obs，最终提供一个图片地址然后替换这个变量，达到渲染的目标。</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/ops_report/01/6.png" alt="png6"></p>
+<h4 id="报告模块"><a href="#报告模块" class="headerlink" title="报告模块"></a>报告模块</h4><p>对于报告模块来讲，就是我们最终要发送和呈现的产物，那么我们可以从几个维度来讲解一下：<code>报告如何产生</code>、<code>报告产生的来源</code>、<code>报告的状态</code></p>
+<blockquote>
+<p>报告如何产生</p>
+</blockquote>
+<p>报告产生的唯一入口就是通过模板，我们可以在模板处选择对应的模板，然后创建报告，创建报告需要几个信息需要填写：</p>
+<ol>
+<li>模板名称(选哪个就用哪个)</li>
+<li>报告名称</li>
+<li>时间范围(所有数据都依赖于时间范围，有了时间范围我们才能产生数据，然后渲染报告)</li>
+</ol>
+<p><img src="/img/ops_report/01/7.png" alt="png7"></p>
+<blockquote>
+<p>报告产生的来源</p>
+</blockquote>
+<p>关于报告的来源，平台的规划主要有两个，第一个是<code>手动生成的报告</code>,第二个是<code>定时任务产生的报告</code></p>
+<blockquote>
+<p>报告的状态</p>
+</blockquote>
+<p>针对报告，我们需要有几种状态：<code>未渲染</code>、<code>渲染中</code>、<code>待标注</code>、<code>已发布</code>(NotRendered、RenderedIng、ToBeLabeled、Published)</p>
+<p><img src="/img/ops_report/01/8.png" alt="png8"></p>
+<h4 id="数据存储模块"><a href="#数据存储模块" class="headerlink" title="数据存储模块"></a>数据存储模块</h4><p>对于数据存储模块，我们前面定义的是<code>历史数据的存储，目前监控平台会存储全量数据，这个平台只是想要存储一些特定数据或者叫做过滤后有效的数据</code>。</p>
+<p>举个例子，当前我们平台存储的数据有哪些：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.qps峰值数据(我们监控存的是5s一个点的qps数据，不过该平台会每小时取一次时间段内的峰值qps作为存储)</span><br><span class="line">2.snat峰值数据(对于nat网关，我们也是采用类似的方式，存储过去一小时的峰值数据)</span><br><span class="line">3.带宽峰值数据</span><br><span class="line">4.弹性机器峰值数据(目前k8s集群的机器是弹性的，所以会存储每一小时的峰值数据)</span><br></pre></td></tr></table></figure>
+
+<p>当我们有了这些数据，我们能做的就比较多了，比如：</p>
+<ol>
+<li>我们基础的监控数据在获取大范围时间内的数据，都是对峰值等数据做了聚合，所以会低于真实峰值，有了每小时的峰值数据，能准确的描绘业务峰值。</li>
+<li>当我们需要周报、月报、年报的时候，我们都可以对这些峰值数据做一些处理和分析</li>
+<li>从一定角度上讲，我们可以分析峰值的走势，来辅助业务做一些判断，比如业务的峰值时间越来越晚，是不是说明用户睡的越来越晚呢？</li>
+</ol>
+<p><img src="/img/ops_report/01/9.png" alt="png9"></p>
+<h4 id="定时任务模块"><a href="#定时任务模块" class="headerlink" title="定时任务模块"></a>定时任务模块</h4><p>定时任务，毋庸置疑，他承担着控制我们报告的发送时间和频率。比如我在平台可以针对模板创建一个定时任务：什么时间、哪个模板、发送到哪里。</p>
+<p>目前我们使用的定时任务是对接开源的分布式定时任务框架<code>xxl-job</code>，二开了一些定时任务接口给到平台使用。</p>
+<p>那么需要了解的主要可能有几点：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.定时任务的发送地方：目前支持发送到企业微信应用、企业微信机器人</span><br><span class="line">2.定时任务的发送频率：主要取决你定时任务表达式的书写</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/ops_report/01/10.png" alt="png10"></p>
+<p><img src="/img/ops_report/01/11.png" alt="png11"></p>
+<h3 id="最后说一句"><a href="#最后说一句" class="headerlink" title="最后说一句"></a>最后说一句</h3><p>对于这个平台来说，其实整体功能不难，不过个人感觉能接管不少分散的服务和脚本，也使得趋于统一化。<br>不过弊端也有，说实话当前的功能还比较单一，后续拓展有，但是还没有想好，所以对于单一的功能平台化，就是有点太卷了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2021/07/13/ops_report/report-01/" data-id="ckr1nwb7g0000ngty6xz1813j" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A1%E6%A3%80/" rel="tag">巡检</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BF%90%E8%90%A5%E6%8A%A5%E5%91%8A/" rel="tag">运营报告</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2021/03/23/gcp-anthos-multi-cluster-mgt/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">上手GCP Anthos之多集群管理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初步思考"><span class="toc-number">2.</span> <span class="toc-text">初步思考</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#功能期望"><span class="toc-number">3.</span> <span class="toc-text">功能期望</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#平台设计"><span class="toc-number">4.</span> <span class="toc-text">平台设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#仪表盘模块"><span class="toc-number">4.1.</span> <span class="toc-text">仪表盘模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#模板模块"><span class="toc-number">4.2.</span> <span class="toc-text">模板模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#变量注册模块"><span class="toc-number">4.3.</span> <span class="toc-text">变量注册模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#报告模块"><span class="toc-number">4.4.</span> <span class="toc-text">报告模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据存储模块"><span class="toc-number">4.5.</span> <span class="toc-text">数据存储模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#定时任务模块"><span class="toc-number">4.6.</span> <span class="toc-text">定时任务模块</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最后说一句"><span class="toc-number">5.</span> <span class="toc-text">最后说一句</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2021 野生&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>
