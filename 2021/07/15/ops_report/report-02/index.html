@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>稳定性报告(report)平台 -- 模板篇 | 猿的野生香蕉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="详细介绍下稳定性报告平台中模板模块的实现原理和方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="稳定性报告(report)平台 -- 模板篇">
+<meta property="og:url" content="https://blog.itmonkey.icu/2021/07/15/ops_report/report-02/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="详细介绍下稳定性报告平台中模板模块的实现原理和方式">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/02/1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/02/2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/02/3.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/02/4.png">
+<meta property="article:published_time" content="2021-07-15T05:37:17.000Z">
+<meta property="article:modified_time" content="2021-07-15T09:26:17.623Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="运营报告">
+<meta property="article:tag" content="巡检">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/ops_report/02/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">猿的野生香蕉</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">野生</a>
+        </h2>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ops_report/report-02" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/07/15/ops_report/report-02/" class="article-date">
+  <time datetime="2021-07-15T05:37:17.000Z" itemprop="datePublished">2021-07-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Devops/">Devops</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      稳定性报告(report)平台 -- 模板篇
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>后续我们称这个平台为<code>srp</code>平台。</p>
+<a id="more"></a>
+
+<p>后续的每一个模块，基本上会通过几个方面来介绍：</p>
+<ol>
+<li>基础讲解</li>
+<li>数据库设计</li>
+<li>核心功能介绍</li>
+<li>简单展示</li>
+</ol>
+<h3 id="基础讲解"><a href="#基础讲解" class="headerlink" title="基础讲解"></a>基础讲解</h3><p>模板篇，我会把模板和变量注册放在一起讲解，因为两个关联性比较大，所以一起讲解会比较容易点。<br>前面说到，我们的模板分成了三种类型：</p>
+<table>
+<thead>
+<tr>
+<th align="left">模板类型</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">基础模板</td>
+<td align="left">基础模板主要提供接入能力，比如我定义好了域名QPS统计的能力，那么你只需要提供你的域名，我就可以帮你完成统计动作</td>
+</tr>
+<tr>
+<td align="left">开放模板/周期模板</td>
+<td align="left">这类模板就相对自由，你可以自定义模板内容，变量，最终定义定时任务来定时的渲染该模板，然后选择发送等</td>
+</tr>
+</tbody></table>
+<h4 id="基础模板"><a href="#基础模板" class="headerlink" title="基础模板"></a>基础模板</h4><p>首先对于基础模板，换个概念理解就是平台已经约定了这个模板只会采集某一类型的数据，然后对于用户来讲，你只需要关注<code>要不要</code>采集即可。</p>
+<p>举个例子：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">我创建一个统计`QPS峰值`的模板，这个模板主要是统计每一个注册进来的域名过去1小时的峰值，而且是每小时统计一次。</span><br><span class="line">那么对于用户来讲，我只需要增加注册即可，比如我有一个a域名，那么新增注册，告诉平台我这个域名希望加入统计。</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/ops_report/02/1.png" alt="png1"></p>
+<p>像这种模板还有很多，比如带宽、nat网关、负载均衡等等，都可以当成基础模板来使用，用户只需接入即可，不用配置更多。</p>
+<h4 id="开放模板-周期模板"><a href="#开放模板-周期模板" class="headerlink" title="开放模板/周期模板"></a>开放模板/周期模板</h4><p>其实当初定义了两种类型，最后发现没有实际上的差别，所以就放到一起讲吧。<br>这里我统称为自定义模板吧，字面意义上理解就是完全自定义，你可以定义你想要的报告的样子，比如下面：</p>
+<p><img src="/img/ops_report/02/2.png" alt="png2"></p>
+<p>我这变用了一个markdown编辑器来做，目前我们都是通过markdown格式的数据来展示报告，你可以跟日常写markdown文档一样就行。<br>当你在某个位置想要用变量展示，那么定义一个变量名称，然后在下面添加就行，这个变量可以是图片变量、内置变量、模板变量。</p>
+<h4 id="变量注册"><a href="#变量注册" class="headerlink" title="变量注册"></a>变量注册</h4><p>我们定义好开放模板之后，以及也增加好了里面的变量。现在就需要去注册变量，本质就是告诉平台我这个变量是什么意思，怎么获取到这个值。</p>
+<h3 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h3><p>首先对于模板表，我这边主要设计了以下几个字段：(唯一需要关注的就是Content字段，本身是markdown内容，所以设置成了TEXT类型)</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模板表</span></span><br><span class="line"><span class="keyword">type</span> ReportTemplate <span class="keyword">struct</span> &#123;</span><br><span class="line">	BaseModel</span><br><span class="line">	TemplateId <span class="keyword">string</span> <span class="string">`json:"template_id"`</span>                            <span class="comment">// 模板id</span></span><br><span class="line">	Name       <span class="keyword">string</span> <span class="string">`json:"name"`</span>                                   <span class="comment">// 模板名称</span></span><br><span class="line">	Creater    <span class="keyword">string</span> <span class="string">`json:"creater"`</span>                                <span class="comment">// 创建人</span></span><br><span class="line">	Status     <span class="keyword">string</span> <span class="string">`json:"status"`</span>                                 <span class="comment">// 模板状态 禁用，可用 enable disable</span></span><br><span class="line">	Type       <span class="keyword">string</span> <span class="string">`json:"type"`</span>                                   <span class="comment">// 模板类型，基础模板(base_temp)，开放模板(open_temp)，周期模板(cron_temp)</span></span><br><span class="line">	Router     <span class="keyword">string</span> <span class="string">`json:"router" gorm:"default:null"`</span>             <span class="comment">// 前端跳转路由</span></span><br><span class="line">	Content    <span class="keyword">string</span> <span class="string">`json:"content" gorm:"type:TEXT;default:null"`</span>  <span class="comment">// markdown内容</span></span><br><span class="line">	VarList    <span class="keyword">string</span> <span class="string">`json:"var_list" gorm:"type:TEXT;default:null"`</span> <span class="comment">// 变量json串</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其次是变量表：(变量参数是指请求url的时候带上什么参数，获取字段是指请求的结果中我用哪个字段的数据)</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 变量注册表</span></span><br><span class="line"><span class="keyword">type</span> ReportTemplateVar <span class="keyword">struct</span> &#123;</span><br><span class="line">	BaseModel</span><br><span class="line">	VarTempId   <span class="keyword">string</span> <span class="string">`json:"var_temp_id"`</span>                    <span class="comment">// 模板id</span></span><br><span class="line">	VarName     <span class="keyword">string</span> <span class="string">`json:"var_name"`</span>                       <span class="comment">// 变量名称</span></span><br><span class="line">	VarUrl      <span class="keyword">string</span> <span class="string">`json:"var_url" gorm:"type:TEXT"`</span>       <span class="comment">// 变量获取地址</span></span><br><span class="line">	VarUrlField <span class="keyword">string</span> <span class="string">`json:"var_url_field"`</span>                  <span class="comment">// 变量结果获取字段</span></span><br><span class="line">	VarType     <span class="keyword">string</span> <span class="string">`json:"var_type"`</span>                       <span class="comment">// 变量类型 ,内置变量、自定义变量、图片变量，inner_temp_var、custom_temp_var、img_temp_var</span></span><br><span class="line">	VarParams   <span class="keyword">string</span> <span class="string">`json:"var_params" gorm:"default:null"`</span> <span class="comment">// 变量参数</span></span><br><span class="line">	VarDesc     <span class="keyword">string</span> <span class="string">`json:"var_desc" gorm:"default:null"`</span>   <span class="comment">// 变量备注，变量说明</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果是基础模板的话，我们其实还会涉及到一个接入信息，比如我有一个qps的基础模板，那么接入表里面就会涉及到，哪个域名，什么path等：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// qps峰值模板接入表，当前默认规定该模板下的接入，都是定时1小时获取数据一次，并存储数据。</span></span><br><span class="line"><span class="keyword">type</span> QPSPeakBaseTemp <span class="keyword">struct</span> &#123;</span><br><span class="line">	model.BaseModel</span><br><span class="line">	Aid            <span class="keyword">string</span> <span class="string">`json:"aid"`</span>              <span class="comment">// 接入id</span></span><br><span class="line">	Name           <span class="keyword">string</span> <span class="string">`json:"name"`</span>             <span class="comment">// 接入名称</span></span><br><span class="line">	Domain         <span class="keyword">string</span> <span class="string">`json:"domain"`</span>           <span class="comment">// 接入域名</span></span><br><span class="line">	LoadBalanceBiz <span class="keyword">string</span> <span class="string">`json:"load_balance_biz"`</span> <span class="comment">// lb分组</span></span><br><span class="line">	Path           <span class="keyword">string</span> <span class="string">`json:"path"`</span>             <span class="comment">// 域名path</span></span><br><span class="line">	Group          <span class="keyword">string</span> <span class="string">`json:"group"`</span>            <span class="comment">// 业务组</span></span><br><span class="line">	Creater        <span class="keyword">string</span> <span class="string">`json:"creater"`</span>          <span class="comment">// 创建人</span></span><br><span class="line">	Status         <span class="keyword">string</span> <span class="string">`json:"status"`</span>           <span class="comment">// 接入状态 禁用，可用 enable disable</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="核心功能介绍"><a href="#核心功能介绍" class="headerlink" title="核心功能介绍"></a>核心功能介绍</h3><p>其实对于模板来讲，没啥核心功能，就是简单的crud。</p>
+<blockquote>
+<p>前端的markdown表单</p>
+</blockquote>
+<p>使用的是一个开源的markdown插件，git地址：<code>https://github.com/hinesboy/mavonEditor</code></p>
+<p>注册完成之后，可以很容易就创建一个markdown编辑框：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;v-md-editor v-model&#x3D;&quot;markdownContent&quot; height&#x3D;&quot;500px&quot;&gt;&lt;&#x2F;v-md-editor&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>变量注册</p>
+</blockquote>
+<p>因为涉及到几种变量类型，所以需要分别做处理。</p>
+<p>内置变量：其实就是平台提供好的变量，我这边主要是定义了一些基础的，比如时间的获取、某个域名的QPS峰值获取、某个nat网关的峰值获取等<br>自定义变量：就是用户自己提供的url，返回值需要按照一定的格式来填写<br>图片变量：目前主要是对接grafana，每一个grafana的panel都可以生成一个图片地址</p>
+<p>比如：<br><code>https://grafana.baidu.com/render/d-solo/BvV4IsPWk/nat?from=000000000&amp;orgId=63&amp;to=000000000&amp;panelId=2&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai</code><br>我在注册的时候就会替换里面的<code>from</code>和<code>to</code>两个时间，因为时间需要可传参，结果就是这样：<br><code>https://grafana.baidu.com/render/d-solo/BvV4IsPWk/nat?from=SVAR_START_TIME&amp;orgId=63&amp;to=SVAR_END_TIME&amp;panelId=2&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai</code></p>
+<h3 id="简单展示"><a href="#简单展示" class="headerlink" title="简单展示"></a>简单展示</h3><p>模板列表：(不同的模板类型，他的操作按钮也是不一样的)<br><img src="/img/ops_report/02/3.png" alt="png3"></p>
+<p>变量列表：<br><img src="/img/ops_report/02/4.png" alt="png4"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.itmonkey.icu/2021/07/15/ops_report/report-02/" data-id="ckr4p5j700000ldtydj3pdbie" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A1%E6%A3%80/" rel="tag">巡检</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BF%90%E8%90%A5%E6%8A%A5%E5%91%8A/" rel="tag">运营报告</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2021/07/13/ops_report/report-01/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">稳定性报告(report)平台思考</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基础讲解"><span class="toc-number">2.</span> <span class="toc-text">基础讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基础模板"><span class="toc-number">2.1.</span> <span class="toc-text">基础模板</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#开放模板-周期模板"><span class="toc-number">2.2.</span> <span class="toc-text">开放模板&#x2F;周期模板</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#变量注册"><span class="toc-number">2.3.</span> <span class="toc-text">变量注册</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库设计"><span class="toc-number">3.</span> <span class="toc-text">数据库设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#核心功能介绍"><span class="toc-number">4.</span> <span class="toc-text">核心功能介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单展示"><span class="toc-number">5.</span> <span class="toc-text">简单展示</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2021 野生&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
+    </div>
+  </div>
+</footer>
+ 
+<script src="/jquery/jquery.min.js"></script>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ 
+<script src="/js/is.js"></script>
+
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/elevator.js"></script>
+
+  </div>
+</body>
+</html>

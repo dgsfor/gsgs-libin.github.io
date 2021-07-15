@@ -23,7 +23,7 @@
 <meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/10.png">
 <meta property="og:image" content="https://blog.itmonkey.icu/img/ops_report/01/11.png">
 <meta property="article:published_time" content="2021-07-13T05:44:01.000Z">
-<meta property="article:modified_time" content="2021-07-14T02:33:29.322Z">
+<meta property="article:modified_time" content="2021-07-14T02:50:17.404Z">
 <meta property="article:author" content="野生">
 <meta property="article:tag" content="运营报告">
 <meta property="article:tag" content="巡检">
@@ -138,30 +138,10 @@
 <blockquote>
 <ol>
 <li>接管我们当前的日常报告的功能(目前的报告都是自动化脚本实现，定期发送qps数据，带宽数据，网关数据等)</li>
-</ol>
-</blockquote>
-<blockquote>
-<ol start="2">
 <li>提供自定义模板功能，能快速定义想要的数据模板</li>
-</ol>
-</blockquote>
-<blockquote>
-<ol start="3">
 <li>可以实现监控图的发送(目前更多的是grafana的图片)</li>
-</ol>
-</blockquote>
-<blockquote>
-<ol start="4">
 <li>接管我们当前每周的稳定性运营报告的工作，可自动渲染数据，可自定义标注，最终发送<code>终版报告</code>给到用户</li>
-</ol>
-</blockquote>
-<blockquote>
-<ol start="5">
 <li>历史数据的存储，目前监控平台会存储全量数据，这个平台只是想要存储一些特定数据或者叫做过滤后有效的数据</li>
-</ol>
-</blockquote>
-<blockquote>
-<ol start="6">
 <li>实现定期发送的功能，可配置定时任务</li>
 </ol>
 </blockquote>
@@ -228,11 +208,8 @@
 <p>报告如何产生</p>
 </blockquote>
 <p>报告产生的唯一入口就是通过模板，我们可以在模板处选择对应的模板，然后创建报告，创建报告需要几个信息需要填写：</p>
-<ol>
-<li>模板名称(选哪个就用哪个)</li>
-<li>报告名称</li>
-<li>时间范围(所有数据都依赖于时间范围，有了时间范围我们才能产生数据，然后渲染报告)</li>
-</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 模板名称(选哪个就用哪个)</span><br><span class="line">2. 报告名称</span><br><span class="line">3. 时间范围(所有数据都依赖于时间范围，有了时间范围我们才能产生数据，然后渲染报告)</span><br></pre></td></tr></table></figure>
+
 <p><img src="/img/ops_report/01/7.png" alt="png7"></p>
 <blockquote>
 <p>报告产生的来源</p>
@@ -248,11 +225,8 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.qps峰值数据(我们监控存的是5s一个点的qps数据，不过该平台会每小时取一次时间段内的峰值qps作为存储)</span><br><span class="line">2.snat峰值数据(对于nat网关，我们也是采用类似的方式，存储过去一小时的峰值数据)</span><br><span class="line">3.带宽峰值数据</span><br><span class="line">4.弹性机器峰值数据(目前k8s集群的机器是弹性的，所以会存储每一小时的峰值数据)</span><br></pre></td></tr></table></figure>
 
 <p>当我们有了这些数据，我们能做的就比较多了，比如：</p>
-<ol>
-<li>我们基础的监控数据在获取大范围时间内的数据，都是对峰值等数据做了聚合，所以会低于真实峰值，有了每小时的峰值数据，能准确的描绘业务峰值。</li>
-<li>当我们需要周报、月报、年报的时候，我们都可以对这些峰值数据做一些处理和分析</li>
-<li>从一定角度上讲，我们可以分析峰值的走势，来辅助业务做一些判断，比如业务的峰值时间越来越晚，是不是说明用户睡的越来越晚呢？</li>
-</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 我们基础的监控数据在获取大范围时间内的数据，都是对峰值等数据做了聚合，所以会低于真实峰值，有了每小时的峰值数据，能准确的描绘业务峰值。</span><br><span class="line">2. 当我们需要周报、月报、年报的时候，我们都可以对这些峰值数据做一些处理和分析</span><br><span class="line">3. 从一定角度上讲，我们可以分析峰值的走势，来辅助业务做一些判断，比如业务的峰值时间越来越晚，是不是说明用户睡的越来越晚呢？</span><br></pre></td></tr></table></figure>
+
 <p><img src="/img/ops_report/01/9.png" alt="png9"></p>
 <h4 id="定时任务模块"><a href="#定时任务模块" class="headerlink" title="定时任务模块"></a>定时任务模块</h4><p>定时任务，毋庸置疑，他承担着控制我们报告的发送时间和频率。比如我在平台可以针对模板创建一个定时任务：什么时间、哪个模板、发送到哪里。</p>
 <p>目前我们使用的定时任务是对接开源的分布式定时任务框架<code>xxl-job</code>，二开了一些定时任务接口给到平台使用。</p>
@@ -321,6 +295,15 @@
 
     
 <nav id="article-nav">
+  
+    <a href="/2021/07/15/ops_report/report-02/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          稳定性报告(report)平台 -- 模板篇
+        
+      </div>
+    </a>
   
   
     <a href="/2021/03/23/gcp-anthos-multi-cluster-mgt/" id="article-nav-older" class="article-nav-link-wrap">
