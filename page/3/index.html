@@ -1,748 +1,916 @@
 <!DOCTYPE html>
-<html>
+<html lang=en>
 <head>
   <meta charset="utf-8">
   
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
   <title>猿的野生香蕉</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="在运维道路上一路狂飙的老司机">
 <meta property="og:type" content="website">
 <meta property="og:title" content="猿的野生香蕉">
 <meta property="og:url" content="https://blog.itmonkey.icu/page/3/index.html">
 <meta property="og:site_name" content="猿的野生香蕉">
 <meta property="og:description" content="在运维道路上一路狂飙的老司机">
+<meta property="og:locale" content="en_US">
 <meta property="article:author" content="野生">
 <meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.itmonkey.icu/page/3/index.html">
   
     <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
-  
-  
-    
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
   
   
 <link rel="stylesheet" href="/css/style.css">
 
   
-
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
+  
 <meta name="generator" content="Hexo 4.2.1"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    
-    <div id="header-inner" class="inner">
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.itmonkey.icu"></form>
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/gsgs-libin" target="_blank">
+          <img class="img-circle img-rotate" src="/img/wechat/avatar.jpeg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">猿的野生香蕉</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">SRE</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> XiaMen, China</small>
       </div>
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">首页</a>
-        
-          <a class="main-nav-link" href="/archives">归档</a>
-        
-          <a class="main-nav-link" href="/about">关于</a>
-        
-      </nav>
       
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
     </div>
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">猿的野生香蕉</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">野生</a>
-        </h2>
-      
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
     </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">Repository</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/gsgs-libin" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
   </div>
 </header>
-      <div class="outer">
-        <section id="main">
+
   
-    <article id="post-prometheus-operator-prometheusrules" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/09/prometheus-operator-prometheusrules/" class="article-date">
-  <time datetime="2020-11-09T09:21:27.000Z" itemprop="datePublished">2020-11-09</time>
-</a>
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎关注公众号："程序猿的野生香蕉"</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/DevOps/">DevOps</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Report/">Report</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/anthos/">anthos</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/">基础运维</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%9A%E4%BA%91%E4%B8%93%E8%BE%91/">多云专辑</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/">运维进阶</a><span class="category-list-count">3</span></li></ul>
+    </div>
   </div>
 
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/anthos/" rel="tag">anthos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cdn/" rel="tag">cdn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chartmuseum/" rel="tag">chartmuseum</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloudnative/" rel="tag">cloudnative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcp/" rel="tag">gcp</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gke/" rel="tag">gke</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/" rel="tag">helm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/https/" rel="tag">https</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ingress/" rel="tag">ingress</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ingress-nginx/" rel="tag">ingress-nginx</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify-tools/" rel="tag">inotify-tools</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a><span class="tag-list-count">12</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/operator/" rel="tag">operator</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/" rel="tag">prometheus</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus-operator/" rel="tag">prometheus-operator</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheusrules/" rel="tag">prometheusrules</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpm/" rel="tag">rpm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/" rel="tag">rsync</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serviceMonitor/" rel="tag">serviceMonitor</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/time/" rel="tag">time</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vpn-tunnel/" rel="tag">vpn-tunnel</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yum%E4%BB%93%E5%BA%93/" rel="tag">yum仓库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E8%BF%90%E7%BB%B4/" rel="tag">云运维</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0/" rel="tag">内核参数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A1%E6%A3%80/" rel="tag">巡检</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5/" rel="tag">文件同步</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E5%8E%8B%E6%B5%8B/" rel="tag">服务压测</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%B3%E7%90%86/" rel="tag">梳理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/" rel="tag">监控告警</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%AD%E8%BF%9E%E6%8E%A5/" rel="tag">短连接</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BE%8E%E5%9B%BE/" rel="tag">美图</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag">运维</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%90%E7%BB%B4%E9%97%A8%E6%88%B7/" rel="tag">运维门户</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%90%E8%90%A5%E6%8A%A5%E5%91%8A/" rel="tag">运营报告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" rel="tag">阿里云</a><span class="tag-list-count">1</span></li></ul>
+    </div>
   </div>
-  <div class="article-inner">
+
+
     
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/anthos/" style="font-size: 13px;">anthos</a> <a href="/tags/cdn/" style="font-size: 13px;">cdn</a> <a href="/tags/chartmuseum/" style="font-size: 13px;">chartmuseum</a> <a href="/tags/cloudnative/" style="font-size: 13px;">cloudnative</a> <a href="/tags/gcp/" style="font-size: 13.6px;">gcp</a> <a href="/tags/gke/" style="font-size: 13.4px;">gke</a> <a href="/tags/go/" style="font-size: 13px;">go</a> <a href="/tags/helm/" style="font-size: 13.6px;">helm</a> <a href="/tags/https/" style="font-size: 13px;">https</a> <a href="/tags/ingress/" style="font-size: 13.4px;">ingress</a> <a href="/tags/ingress-nginx/" style="font-size: 13.2px;">ingress-nginx</a> <a href="/tags/inotify-tools/" style="font-size: 13px;">inotify-tools</a> <a href="/tags/java/" style="font-size: 13px;">java</a> <a href="/tags/k8s/" style="font-size: 14px;">k8s</a> <a href="/tags/linux/" style="font-size: 13px;">linux</a> <a href="/tags/nginx/" style="font-size: 13px;">nginx</a> <a href="/tags/operator/" style="font-size: 13.4px;">operator</a> <a href="/tags/prometheus/" style="font-size: 13.8px;">prometheus</a> <a href="/tags/prometheus-operator/" style="font-size: 13.4px;">prometheus-operator</a> <a href="/tags/prometheusrules/" style="font-size: 13px;">prometheusrules</a> <a href="/tags/python/" style="font-size: 13px;">python</a> <a href="/tags/rpm/" style="font-size: 13px;">rpm</a> <a href="/tags/rsync/" style="font-size: 13px;">rsync</a> <a href="/tags/serviceMonitor/" style="font-size: 13px;">serviceMonitor</a> <a href="/tags/time/" style="font-size: 13px;">time</a> <a href="/tags/vpn-tunnel/" style="font-size: 13px;">vpn-tunnel</a> <a href="/tags/vue/" style="font-size: 13px;">vue</a> <a href="/tags/yum%E4%BB%93%E5%BA%93/" style="font-size: 13px;">yum仓库</a> <a href="/tags/%E4%BA%91%E8%BF%90%E7%BB%B4/" style="font-size: 13.4px;">云运维</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0/" style="font-size: 13px;">内核参数</a> <a href="/tags/%E5%B7%A1%E6%A3%80/" style="font-size: 13.2px;">巡检</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 13px;">开源</a> <a href="/tags/%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5/" style="font-size: 13px;">文件同步</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%8E%8B%E6%B5%8B/" style="font-size: 13px;">服务压测</a> <a href="/tags/%E6%A2%B3%E7%90%86/" style="font-size: 13px;">梳理</a> <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/" style="font-size: 13px;">监控告警</a> <a href="/tags/%E7%9F%AD%E8%BF%9E%E6%8E%A5/" style="font-size: 13px;">短连接</a> <a href="/tags/%E7%BE%8E%E5%9B%BE/" style="font-size: 13px;">美图</a> <a href="/tags/%E8%BF%90%E7%BB%B4/" style="font-size: 13.4px;">运维</a> <a href="/tags/%E8%BF%90%E7%BB%B4%E9%97%A8%E6%88%B7/" style="font-size: 13px;">运维门户</a> <a href="/tags/%E8%BF%90%E8%90%A5%E6%8A%A5%E5%91%8A/" style="font-size: 13.2px;">运营报告</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13px;">阿里云</a>
+    </div>
+  </div>
+
     
-      <header class="article-header">
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
         
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/DevOps/">DevOps</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/21/ops-time/" class="title">编程时间处理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-21T03:12:05.000Z" itemprop="datePublished">2021-07-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Report/">Report</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/15/ops_report/report-02/" class="title">稳定性报告(report)平台 -- 模板篇</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-15T05:37:17.000Z" itemprop="datePublished">2021-07-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Report/">Report</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/13/ops_report/report-01/" class="title">稳定性报告(report)平台思考</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-13T05:44:01.000Z" itemprop="datePublished">2021-07-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/anthos/">anthos</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/23/gcp-anthos-multi-cluster-mgt/" class="title">上手GCP Anthos之多集群管理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-23T11:52:18.000Z" itemprop="datePublished">2021-03-23</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/DevOps/">DevOps</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/03/19/sre-portal-website-start/" class="title">从零开始创建一个sre的门户网站</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-03-19T07:46:57.000Z" itemprop="datePublished">2021-03-19</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  <main class="main" role="main">
+  
+  <div class="content article-list">
+    
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/11/helm-install-ingress-in-gke-with-daemonset/">(daemonset篇)使用helm3在gke中安装ingress-controller</a>
+    </h1>
+  
+
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>我们的业务目前在gke上是使用的自带的ingress服务，直接对接他们的loadbalancer服务，上几篇文章写的是安装prometheus，发现获取不到代理层的一些数据，所以想直接自己撸ingress-controller来实现。<br>备注：gke上的stackdriver虽然可以看到比较多的数据，但是关于loadbalancer，他没有具体的域名数据，所以比较不直观。</p>
+  </div>
+  
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/11/11/helm-install-ingress-in-gke-with-daemonset/" class="article-date">
+	  <time datetime="2020-11-11T08:32:38.000Z" itemprop="datePublished">Nov 11</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/k8s/">k8s</a>
+  </span>
+
+    
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/helm/" rel="tag">helm</a>, <a class="article-tag-link" href="/tags/ingress/" rel="tag">ingress</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>
+  </span>
+
+
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/11/helm-install-ingress-in-gke-with-daemonset/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.3k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 5(minutes)</span>
+	
+
+  </p>
+</article>
+
+    
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
+    
   
     <h1 itemprop="name">
       <a class="article-title" href="/2020/11/09/prometheus-operator-prometheusrules/">使用prometheusrules自定义创建告警规则</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>首先这篇文章是跟着上一篇helm 部署prometheus-operator来的，部署完成之后，我们就需要自定义一些配置。</p>
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>首先这篇文章是跟着上一篇helm 部署prometheus-operator来的，部署完成之后，我们就需要自定义一些配置。</p>
 <p>这篇文章主要讲解如何自定义告警规则，如何让prometheus发现他。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/11/09/prometheus-operator-prometheusrules/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/11/09/prometheus-operator-prometheusrules/" data-id="ckhd2m7zv000dr5ty1ixd03ua" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/" rel="tag">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus-operator/" rel="tag">prometheus-operator</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheusrules/" rel="tag">prometheusrules</a></li></ul>
-
-    </footer>
   </div>
   
-</article>
- 
-
-
-  
-    <article id="post-prometheus-operator-servicemanager" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/09/prometheus-operator-servicemanager/" class="article-date">
-  <time datetime="2020-11-09T06:50:18.000Z" itemprop="datePublished">2020-11-09</time>
-</a>
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/11/09/prometheus-operator-prometheusrules/" class="article-date">
+	  <time datetime="2020-11-09T09:21:27.000Z" itemprop="datePublished">Nov 9</time>
+	</a>
+</span>
     
-  <div class="article-category">
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
     <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </div>
+  </span>
 
-  </div>
-  <div class="article-inner">
     
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/prometheus/" rel="tag">prometheus</a>, <a class="article-tag-link" href="/tags/prometheus-operator/" rel="tag">prometheus-operator</a>, <a class="article-tag-link" href="/tags/prometheusrules/" rel="tag">prometheusrules</a>
+  </span>
+
+
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/09/prometheus-operator-prometheusrules/#comments" class="article-comment-link">Comments</a></span>
     
-      <header class="article-header">
-        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 681(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3(minutes)</span>
+	
+
+  </p>
+</article>
+
+    
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
+    
   
     <h1 itemprop="name">
       <a class="article-title" href="/2020/11/09/prometheus-operator-servicemanager/">使用ServiceMonitor自定义暴露指标</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>首先这篇文章是跟着上一篇helm 部署prometheus-operator来的，部署完成之后，我们就需要自定义一些配置。</p>
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>首先这篇文章是跟着上一篇helm 部署prometheus-operator来的，部署完成之后，我们就需要自定义一些配置。</p>
 <p>这篇文章主要讲解如何自定义服务发现，当我们有一个服务想要暴露数据给prometheus，我怎么操作。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/11/09/prometheus-operator-servicemanager/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/11/09/prometheus-operator-servicemanager/" data-id="ckhd2m7zy000hr5tyfk667dma" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/" rel="tag">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus-operator/" rel="tag">prometheus-operator</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/serviceMonitor/" rel="tag">serviceMonitor</a></li></ul>
-
-    </footer>
   </div>
   
-</article>
- 
-
-
-  
-    <article id="post-install-prometheus-operator-in-gcp" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/06/install-prometheus-operator-in-gcp/" class="article-date">
-  <time datetime="2020-11-06T06:28:00.000Z" itemprop="datePublished">2020-11-06</time>
-</a>
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/11/09/prometheus-operator-servicemanager/" class="article-date">
+	  <time datetime="2020-11-09T06:50:18.000Z" itemprop="datePublished">Nov 9</time>
+	</a>
+</span>
     
-  <div class="article-category">
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
     <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </div>
+  </span>
 
-  </div>
-  <div class="article-inner">
     
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/prometheus/" rel="tag">prometheus</a>, <a class="article-tag-link" href="/tags/prometheus-operator/" rel="tag">prometheus-operator</a>, <a class="article-tag-link" href="/tags/serviceMonitor/" rel="tag">serviceMonitor</a>
+  </span>
+
+
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/09/prometheus-operator-servicemanager/#comments" class="article-comment-link">Comments</a></span>
     
-      <header class="article-header">
-        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 938(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3(minutes)</span>
+	
+
+  </p>
+</article>
+
+    
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
+    
   
     <h1 itemprop="name">
       <a class="article-title" href="/2020/11/06/install-prometheus-operator-in-gcp/">使用helm3在gke上安装prometheus-operator</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>本文主要讲解如何使用helm3在gke上安装prometheus-operator，包含持久化存储的使用。</p>
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>本文主要讲解如何使用helm3在gke上安装prometheus-operator，包含持久化存储的使用。</p>
 <p>今天会先最简单安装一下prometheus-operator，然后再一步一步优化，最终我们使用自定义Chart文件保存为私有的安装包。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/11/06/install-prometheus-operator-in-gcp/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/11/06/install-prometheus-operator-in-gcp/" data-id="ckhd2m80w002fr5tye0hr5xp9" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gke/" rel="tag">gke</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/" rel="tag">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus-operator/" rel="tag">prometheus-operator</a></li></ul>
-
-    </footer>
   </div>
   
-</article>
- 
-
-
-  
-    <article id="post-helm-repo-chartmuseum-deploy" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/10/20/helm-repo-chartmuseum-deploy/" class="article-date">
-  <time datetime="2020-10-20T10:37:41.000Z" itemprop="datePublished">2020-10-20</time>
-</a>
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/11/06/install-prometheus-operator-in-gcp/" class="article-date">
+	  <time datetime="2020-11-06T06:28:00.000Z" itemprop="datePublished">Nov 6</time>
+	</a>
+</span>
     
-  <div class="article-category">
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
     <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </div>
+  </span>
 
-  </div>
-  <div class="article-inner">
     
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/gke/" rel="tag">gke</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>, <a class="article-tag-link" href="/tags/prometheus/" rel="tag">prometheus</a>, <a class="article-tag-link" href="/tags/prometheus-operator/" rel="tag">prometheus-operator</a>
+  </span>
+
+
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/06/install-prometheus-operator-in-gcp/#comments" class="article-comment-link">Comments</a></span>
     
-      <header class="article-header">
-        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.9k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 8(minutes)</span>
+	
+
+  </p>
+</article>
+
+    
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
+    
   
     <h1 itemprop="name">
       <a class="article-title" href="/2020/10/20/helm-repo-chartmuseum-deploy/">helm仓库chartmuseum的部署</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="了解chartmuseum"><a href="#了解chartmuseum" class="headerlink" title="了解chartmuseum"></a>了解chartmuseum</h3><p>用过helm的都知道，chartmuseum作为helm重要的仓库，掌握他的私有部署是必不可少的。</p>
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <h3 id="了解chartmuseum"><a href="#了解chartmuseum" class="headerlink" title="了解chartmuseum"></a>了解chartmuseum</h3><p>用过helm的都知道，chartmuseum作为helm重要的仓库，掌握他的私有部署是必不可少的。</p>
 <p>官方文档：<a href="https://chartmuseum.com/" target="_blank" rel="noopener">跳转</a></p>
-        
-          <p class="article-more-link">
-            <a href="/2020/10/20/helm-repo-chartmuseum-deploy/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/10/20/helm-repo-chartmuseum-deploy/" data-id="ckhd2m7zr0008r5ty30of9uhs" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chartmuseum/" rel="tag">chartmuseum</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/" rel="tag">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
-
-    </footer>
   </div>
   
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/10/20/helm-repo-chartmuseum-deploy/" class="article-date">
+	  <time datetime="2020-10-20T10:37:41.000Z" itemprop="datePublished">Oct 20</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/k8s/">k8s</a>
+  </span>
+
+    
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/chartmuseum/" rel="tag">chartmuseum</a>, <a class="article-tag-link" href="/tags/helm/" rel="tag">helm</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>
+  </span>
+
+
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/10/20/helm-repo-chartmuseum-deploy/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 437(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 2(minutes)</span>
+	
+
+  </p>
 </article>
- 
 
-
-  
-    <article id="post-create-vpn-tunnel-in-gcp-hwcloud" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/" class="article-date">
-  <time datetime="2020-10-10T10:16:45.000Z" itemprop="datePublished">2020-10-10</time>
-</a>
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
     
-    
-      <header class="article-header">
-        
   
     <h1 itemprop="name">
       <a class="article-title" href="/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/">使用vpn隧道模式打通gcp和华为云内网</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>公司某业务目前有海外和国内服务，需求是国内数据需要实时同步到海外，DBA同事使用mysql主从同步的方式进行，所以建议打通海外和国内网络。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/" data-id="ckhd2m7zq0006r5tyho5u0b5r" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gcp/" rel="tag">gcp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vpn-tunnel/" rel="tag">vpn-tunnel</a></li></ul>
-
-    </footer>
   </div>
   
+  <div class="article-entry text-muted" itemprop="description">
+    <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>公司某业务目前有海外和国内服务，需求是国内数据需要实时同步到海外，DBA同事使用mysql主从同步的方式进行，所以建议打通海外和国内网络。</p>
+  </div>
+  
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/" class="article-date">
+	  <time datetime="2020-10-10T10:16:45.000Z" itemprop="datePublished">Oct 10</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a>
+  </span>
+
+    
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/gcp/" rel="tag">gcp</a>, <a class="article-tag-link" href="/tags/vpn-tunnel/" rel="tag">vpn-tunnel</a>
+  </span>
+
+
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 833(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 2(minutes)</span>
+	
+
+  </p>
 </article>
- 
 
-
-  
-    <article id="post-java-prometheus-exporter-demo" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/09/23/java-prometheus-exporter-demo/" class="article-date">
-  <time datetime="2020-09-23T07:05:53.000Z" itemprop="datePublished">2020-09-23</time>
-</a>
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/DevOps/">DevOps</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
     
-    
-      <header class="article-header">
-        
   
     <h1 itemprop="name">
       <a class="article-title" href="/2020/09/23/java-prometheus-exporter-demo/">用java简单实现一个prometheus exporter</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>塔罗斯(Talus)</p>
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>塔罗斯(Talus)</p>
 <p>塔罗斯（希腊语：Ταλως；英语：Talos / Talus）是希腊神话中的机械巨人（Automaton）。该名义为“砍伐”或“太阳”。塔罗斯的身世有三种版本。按赫西奥德（Hesiod）的说法，宙斯曾创造了四代人类：黄金、白银、青铜、黑铁。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/09/23/java-prometheus-exporter-demo/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/09/23/java-prometheus-exporter-demo/" data-id="ckhd2m7zs0009r5tyh72d25oq" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cloudnative/" rel="tag">cloudnative</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/" rel="tag">prometheus</a></li></ul>
-
-    </footer>
   </div>
   
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/09/23/java-prometheus-exporter-demo/" class="article-date">
+	  <time datetime="2020-09-23T07:05:53.000Z" itemprop="datePublished">Sep 23</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/DevOps/">DevOps</a>
+  </span>
+
+    
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="article-tag-link" href="/tags/java/" rel="tag">java</a>, <a class="article-tag-link" href="/tags/prometheus/" rel="tag">prometheus</a>
+  </span>
+
+
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/09/23/java-prometheus-exporter-demo/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 482(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
+	
+
+  </p>
 </article>
- 
 
-
-  
-    <article id="post-nginx-with-prometheus" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/09/18/nginx-with-prometheus/" class="article-date">
-  <time datetime="2020-09-18T02:54:45.000Z" itemprop="datePublished">2020-09-18</time>
-</a>
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/">基础运维</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
     
-    
-      <header class="article-header">
-        
   
     <h1 itemprop="name">
       <a class="article-title" href="/2020/09/18/nginx-with-prometheus/">如何使用prometheus监控nginx</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[toc]</p>
+  </div>
+  
+  <div class="article-entry text-muted" itemprop="description">
+    <p>[toc]</p>
 <h3 id="需求场景"><a href="#需求场景" class="headerlink" title="需求场景"></a>需求场景</h3><p>使用prometheus监控nginx，图表展示使用grafana。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/09/18/nginx-with-prometheus/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/09/18/nginx-with-prometheus/" data-id="ckhd2m80z002lr5ty0x7r9l61" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/" rel="tag">prometheus</a></li></ul>
-
-    </footer>
   </div>
   
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/09/18/nginx-with-prometheus/" class="article-date">
+	  <time datetime="2020-09-18T02:54:45.000Z" itemprop="datePublished">Sep 18</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/">基础运维</a>
+  </span>
+
+    
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/nginx/" rel="tag">nginx</a>, <a class="article-tag-link" href="/tags/prometheus/" rel="tag">prometheus</a>
+  </span>
+
+
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/09/18/nginx-with-prometheus/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 962(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 5(minutes)</span>
+	
+
+  </p>
 </article>
- 
 
-
-  
-    <article id="post-k8s-AntiAffinity-and-Affinity" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/09/17/k8s-AntiAffinity-and-Affinity/" class="article-date">
-  <time datetime="2020-09-17T02:40:04.000Z" itemprop="datePublished">2020-09-17</time>
-</a>
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/">运维进阶</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
     
-    
-      <header class="article-header">
-        
   
     <h1 itemprop="name">
       <a class="article-title" href="/2020/09/17/k8s-AntiAffinity-and-Affinity/">k8s亲和和反亲和相关</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近在测试亲和和反亲和，发现很多知识都遗忘了，准备重新捡起来看看。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/09/17/k8s-AntiAffinity-and-Affinity/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/09/17/k8s-AntiAffinity-and-Affinity/" data-id="ckhd2m7zu000cr5ty4qnz608k" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
-
-    </footer>
   </div>
   
+  <div class="article-entry text-muted" itemprop="description">
+    <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近在测试亲和和反亲和，发现很多知识都遗忘了，准备重新捡起来看看。</p>
+  </div>
+  
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/09/17/k8s-AntiAffinity-and-Affinity/" class="article-date">
+	  <time datetime="2020-09-17T02:40:04.000Z" itemprop="datePublished">Sep 17</time>
+	</a>
+</span>
+    
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/">运维进阶</a>
+  </span>
+
+    
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>
+  </span>
+
+
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/09/17/k8s-AntiAffinity-and-Affinity/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 351(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
+	
+
+  </p>
 </article>
- 
 
-
-  
-    <article id="post-get-kubeconfig-without-gcloud-in-gke" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/23/get-kubeconfig-without-gcloud-in-gke/" class="article-date">
-  <time datetime="2020-07-23T06:41:02.000Z" itemprop="datePublished">2020-07-23</time>
-</a>
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%A4%9A%E4%BA%91%E4%B8%93%E8%BE%91/">多云专辑</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
+      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="article-header">
     
-    
-      <header class="article-header">
-        
   
     <h1 itemprop="name">
       <a class="article-title" href="/2020/07/23/get-kubeconfig-without-gcloud-in-gke/">不使用gcloud认证gke集群</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>正常我们都是通过gcloud切换集群，然后才能正常使用kubectl，这篇文章主要教你如何”不使用”gcloud来进行gke集群的认证。这里的不使用，意思是只要使用一次即可。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/07/23/get-kubeconfig-without-gcloud-in-gke/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/07/23/get-kubeconfig-without-gcloud-in-gke/" data-id="ckhd2m7zm0002r5tyg0ssggwf" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gcp/" rel="tag">gcp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gke/" rel="tag">gke</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
-
-    </footer>
   </div>
   
-</article>
- 
-
-
+  <div class="article-entry text-muted" itemprop="description">
+    <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>正常我们都是通过gcloud切换集群，然后才能正常使用kubectl，这篇文章主要教你如何”不使用”gcloud来进行gke集群的认证。这里的不使用，意思是只要使用一次即可。</p>
+  </div>
   
-    <article id="post-sre-cloud-base-1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/23/sre-cloud-base-1/" class="article-date">
-  <time datetime="2020-06-23T09:57:42.000Z" itemprop="datePublished">2020-06-23</time>
-</a>
+  <p class="article-meta">
+    <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/07/23/get-kubeconfig-without-gcloud-in-gke/" class="article-date">
+	  <time datetime="2020-07-23T06:41:02.000Z" itemprop="datePublished">Jul 23</time>
+	</a>
+</span>
     
-  <div class="article-category">
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
     <a class="article-category-link" href="/categories/%E5%A4%9A%E4%BA%91%E4%B8%93%E8%BE%91/">多云专辑</a>
-  </div>
+  </span>
 
-  </div>
-  <div class="article-inner">
     
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/23/sre-cloud-base-1/">云运维-简单认识各个云常用云服务</a>
-    </h1>
-  
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/gcp/" rel="tag">gcp</a>, <a class="article-tag-link" href="/tags/gke/" rel="tag">gke</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>
+  </span>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><blockquote>
-<p>再多的讲解不如后面的实战课程，概念性的东西本身有点枯燥无味，这篇文章旨在让大家对我们使用的云服务有一个大概的了解，后续补个ppt</p>
-</blockquote>
-<p>在大家了解华为云之后，其实这篇文章相对来说就没这么重要的，我就简单列举下常用的，另外说几个其他云独有的服务。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/06/23/sre-cloud-base-1/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://blog.itmonkey.icu/2020/06/23/sre-cloud-base-1/" data-id="ckhd2m801000or5tyc8dhc3wk" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BA%91%E8%BF%90%E7%BB%B4/" rel="tag">云运维</a></li></ul>
 
-    </footer>
-  </div>
-  
+    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/07/23/get-kubeconfig-without-gcloud-in-gke/#comments" class="article-comment-link">Comments</a></span>
+    
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 457(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
+	
+
+  </p>
 </article>
+
+    
+  </div>
+
+  
+    
+    <nav class="bar bar-footer clearfix" data-stick-bottom>
+        <div class="bar-inner">
+        <ul class="pager pull-left">
+            
+            <li class="prev">
+                <a href="/page/2/">
+                    <i class="icon icon-angle-left"></i>
+                    Prev
+                </a>
+            </li>
+            
+            
+            <li class="next">
+                <a href="/page/4/">
+                    Next
+                    <i class="icon icon-angle-right"></i>
+                </a>
+            </li>
+            
+        </ul>
+        <div class="total-article bar-right">Page 3 of 4</div>
+        </div>
+    </nav>
+    
  
+</main>
 
-
-  
-
-
-  <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/page/2/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">下一页</a>
-  </nav>
-
-</section>
-           
-    <aside id="sidebar">
-  
-    
-
-  
-    
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">最新文章</h3>
-    <div class="widget">
-      <ul>
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/gsgs-libin" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
         
-          <li>
-            <a href="/2021/07/15/ops_report/report-02/">稳定性报告(report)平台 -- 模板篇</a>
-          </li>
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
         
-          <li>
-            <a href="/2021/07/13/ops_report/report-01/">稳定性报告(report)平台思考</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/23/gcp-anthos-multi-cluster-mgt/">上手GCP Anthos之多集群管理</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/19/sre-portal-website-start/">从零开始创建一个sre的门户网站</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/19/how-to-comb-my-business/">如何梳理我负责的业务(SRE)</a>
-          </li>
-        
-      </ul>
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
     </div>
-  </div>
-
-  
-    
-
-  
-    
-  
-    <!--微信公众号二维码-->
-
-
-  
-</aside>
-
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-left">
-      &copy; 2014 - 2021 野生&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
-    </div>
-     <div id="footer-right">
-      联系方式&nbsp;|&nbsp;dgsfor@gmail.com
-    </div>
-  </div>
 </footer>
- 
-<script src="/jquery/jquery.min.js"></script>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">首页</a>
-  
-    <a href="/archives" class="mobile-nav-link">归档</a>
-  
-    <a href="/about" class="mobile-nav-link">关于</a>
-  
-</nav>
-    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
 <script>
-// Elevator script included on the page, already.
-window.onload = function() {
-  var elevator = new Elevator({
-    selector:'.back-to-top-btn',
-    element: document.querySelector('.back-to-top-btn'),
-    duration: 1000 // milliseconds
-  });
-}
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 </script>
-      
 
-  
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
     <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "e2fb4051c49842688ce669e634bc983f",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
-    
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
 
-  
-
-
-
-
-
-
-
-<!-- author:forvoid begin -->
-<!-- author:forvoid begin -->
-
-<!-- author:forvoid end -->
-
-<!-- author:forvoid end -->
-
-
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      })
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      })
-    </script>
-    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
-
-
- 
-<script src="/js/is.js"></script>
-
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script src="/js/insight.js"></script>
 
 
 
 
-<script src="/js/script.js"></script>
 
 
-<script src="/js/elevator.js"></script>
+   
 
-  </div>
+
+
+
+
+
+
+
+
 </body>
 </html>

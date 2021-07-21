@@ -1,115 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.itmonkey.icu/2021/07/21/ops-time/</loc>
+    <lastmod>2021-07-21</lastmod>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2021/07/15/ops_report/report-02/</loc>
-    <lastmod>2021-07-15</lastmod>
-  </url>  <url>
+    <lastmod>2021-07-16</lastmod>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2021/07/13/ops_report/report-01/</loc>
-    <lastmod>2021-07-14</lastmod>
-  </url>  <url>
+    <lastmod>2021-07-16</lastmod>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2021/03/23/gcp-anthos-multi-cluster-mgt/</loc>
     <lastmod>2021-03-23</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2021/03/19/sre-portal-website-start/</loc>
     <lastmod>2021-03-23</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/11/06/install-prometheus-operator-in-gcp/</loc>
     <lastmod>2021-03-19</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2021/03/19/how-to-comb-my-business/</loc>
     <lastmod>2021-03-19</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2021/03/08/auto-refresh-cdn/</loc>
     <lastmod>2021-03-08</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2021/01/18/gcp-modify-default-cloudsql-iprange/</loc>
     <lastmod>2021-02-26</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2021/02/02/ingress-self-define-403/</loc>
     <lastmod>2021-02-02</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2021/01/14/tcp-short-port-exhausted/</loc>
     <lastmod>2021-01-14</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/12/25/write-an-operator-3/</loc>
     <lastmod>2020-12-25</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/12/22/write-an-operator-2/</loc>
     <lastmod>2020-12-23</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/12/22/write-an-operator-1/</loc>
     <lastmod>2020-12-22</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/12/22/get-some-mesg-in-k8s-event/</loc>
     <lastmod>2020-12-22</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/12/01/go-module-speedup/</loc>
     <lastmod>2020-12-01</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/12/01/def-custom-crd/</loc>
     <lastmod>2020-12-01</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/11/23/ingress-nginx-enable-customheader-and-ssl/</loc>
     <lastmod>2020-11-23</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/11/16/ssl-cert-cer-to-pem-or-crt/</loc>
     <lastmod>2020-11-16</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/11/12/helm-install-ingress-controller-in-gke/</loc>
     <lastmod>2020-11-13</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/11/11/helm-install-ingress-in-gke-with-daemonset/</loc>
     <lastmod>2020-11-13</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/11/12/helm-install-ingress-in-gke-with-deployment/</loc>
     <lastmod>2020-11-12</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/11/09/prometheus-operator-prometheusrules/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/06/22/sre-cloud/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/06/17/pandora-alert/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/06/17/how-to-empress/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/06/22/sre-cloud-start/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/09/18/nginx-with-prometheus/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/10/20/helm-repo-chartmuseum-deploy/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/06/23/sre-cloud-base-1/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/06/17/meitu-aliyun-use-experience/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/07/23/get-kubeconfig-without-gcloud-in-gke/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/06/17/rsync-inotify/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/09/17/k8s-AntiAffinity-and-Affinity/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/10/10/create-vpn-tunnel-in-gcp-hwcloud/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/11/09/prometheus-operator-servicemanager/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/09/23/java-prometheus-exporter-demo/</loc>
     <lastmod>2020-11-11</lastmod>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://blog.itmonkey.icu/2020/06/17/build-rpmrepo-and-first-rpm/</loc>
     <lastmod>2020-11-11</lastmod>
   </url>
-</urlset>
+</urlset> 
