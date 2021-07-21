@@ -9,13 +9,6 @@
   </url>
   
   <url>
-    <loc>https://blog.itmonkey.icu/tags/index.html</loc>
-    
-    <lastmod>2021-07-21</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://blog.itmonkey.icu/repository/index.html</loc>
     
     <lastmod>2021-07-21</lastmod>
@@ -24,6 +17,13 @@
   
   <url>
     <loc>https://blog.itmonkey.icu/links/index.html</loc>
+    
+    <lastmod>2021-07-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/index.html</loc>
     
     <lastmod>2021-07-21</lastmod>
     
@@ -326,6 +326,27 @@
 
   
   <url>
+    <loc>https://blog.itmonkey.icu/tags/cdn/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/gcp/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/vpn-tunnel/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.itmonkey.icu/tags/rpm/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
@@ -334,13 +355,6 @@
   
   <url>
     <loc>https://blog.itmonkey.icu/tags/yum%E4%BB%93%E5%BA%93/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/gcp/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -361,7 +375,7 @@
   </url>
   
   <url>
-    <loc>https://blog.itmonkey.icu/tags/vpn-tunnel/</loc>
+    <loc>https://blog.itmonkey.icu/tags/go/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -369,6 +383,34 @@
   
   <url>
     <loc>https://blog.itmonkey.icu/tags/helm/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/ingress/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/%E8%BF%90%E7%BB%B4/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/%E6%A2%B3%E7%90%86/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/ingress-nginx/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -403,6 +445,13 @@
   </url>
   
   <url>
+    <loc>https://blog.itmonkey.icu/tags/time/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.itmonkey.icu/tags/prometheus-operator/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
@@ -410,14 +459,14 @@
   </url>
   
   <url>
-    <loc>https://blog.itmonkey.icu/tags/prometheusrules/</loc>
+    <loc>https://blog.itmonkey.icu/tags/serviceMonitor/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.itmonkey.icu/tags/serviceMonitor/</loc>
+    <loc>https://blog.itmonkey.icu/tags/prometheusrules/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -452,6 +501,55 @@
   </url>
   
   <url>
+    <loc>https://blog.itmonkey.icu/tags/https/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/%E8%BF%90%E7%BB%B4%E9%97%A8%E6%88%B7/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/vue/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/operator/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/%E7%9F%AD%E8%BF%9E%E6%8E%A5/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itmonkey.icu/tags/anthos/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.itmonkey.icu/tags/linux/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
@@ -460,13 +558,6 @@
   
   <url>
     <loc>https://blog.itmonkey.icu/tags/%E6%9C%8D%E5%8A%A1%E5%8E%8B%E6%B5%8B/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/%E8%BF%90%E7%BB%B4/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -515,90 +606,6 @@
   </url>
   
   <url>
-    <loc>https://blog.itmonkey.icu/tags/ingress/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/ingress-nginx/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/https/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/go/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/operator/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/%E7%9F%AD%E8%BF%9E%E6%8E%A5/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/cdn/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/%E6%A2%B3%E7%90%86/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/%E8%BF%90%E7%BB%B4%E9%97%A8%E6%88%B7/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/vue/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/tags/anthos/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.itmonkey.icu/tags/%E8%BF%90%E8%90%A5%E6%8A%A5%E5%91%8A/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
@@ -612,14 +619,21 @@
     <priority>0.6</priority>
   </url>
   
+
+  
   <url>
-    <loc>https://blog.itmonkey.icu/tags/time/</loc>
+    <loc>https://blog.itmonkey.icu/categories/DevOps/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
-
+  <url>
+    <loc>https://blog.itmonkey.icu/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/</loc>
+    <lastmod>2021-07-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
   
   <url>
     <loc>https://blog.itmonkey.icu/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/</loc>
@@ -636,7 +650,7 @@
   </url>
   
   <url>
-    <loc>https://blog.itmonkey.icu/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/</loc>
+    <loc>https://blog.itmonkey.icu/categories/go/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -650,21 +664,7 @@
   </url>
   
   <url>
-    <loc>https://blog.itmonkey.icu/categories/DevOps/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.itmonkey.icu/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/</loc>
-    <lastmod>2021-07-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.itmonkey.icu/categories/go/</loc>
     <lastmod>2021-07-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
