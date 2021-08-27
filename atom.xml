@@ -6,7 +6,7 @@
   <link href="https://blog.itmonkey.icu/atom.xml" rel="self"/>
   
   <link href="https://blog.itmonkey.icu/"/>
-  <updated>2021-07-21T05:56:21.014Z</updated>
+  <updated>2021-08-27T07:46:29.721Z</updated>
   <id>https://blog.itmonkey.icu/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>gcp如何限制某台机器公网流量，放行内网流量</title>
+    <link href="https://blog.itmonkey.icu/2021/08/27/gcp-firewalls-restrict-release-of-public-networks-to-the-intranet/"/>
+    <id>https://blog.itmonkey.icu/2021/08/27/gcp-firewalls-restrict-release-of-public-networks-to-the-intranet/</id>
+    <published>2021-08-27T07:38:40.000Z</published>
+    <updated>2021-08-27T07:46:29.721Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>当前有一台带公网ip的机器，网络标记是：<code>datax</code>，我们期望的状态是：</p><ol><li>公网只放行8080、8793端口</li><li>内网只允许22端口</li></ol><h3 id="做法"><a href="#做法" class="headerlink" title="做法"></a>做法</h3><ol><li>新增入站规则，目标是网络标记为datax，来源<code>0.0.0.0/0</code>，允许8080和8974端口，优先级为1</li><li>新增入站规则，目标是网络标记为datax，来源是<code>10.0.0.0/8</code>(这个看你们内网网段是多少)，允许22端口，优先级为2</li><li>新增入站规则，目标是网络标记为datax，来源是<code>0.0.0.0/0</code>，拒绝所有流量，优先级为3</li></ol><h3 id="截图"><a href="#截图" class="headerlink" title="截图"></a>截图</h3><p><img src="/img/gcp-firewalls-restrict-release-of-public-networks-to-the-intranet/img.png" alt="png"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h3&gt;&lt;p&gt;当前有一台带公网ip的机器，网络标记是：&lt;code&gt;datax&lt;/code&gt;，我们期望的状态是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;公网只放行808</summary>
+      
+    
+    
+    
+    <category term="云运维" scheme="https://blog.itmonkey.icu/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="gcp" scheme="https://blog.itmonkey.icu/tags/gcp/"/>
+    
+    <category term="firewalls" scheme="https://blog.itmonkey.icu/tags/firewalls/"/>
+    
+  </entry>
   
   <entry>
     <title>编程时间处理</title>
@@ -438,31 +466,6 @@
     <category term="helm" scheme="https://blog.itmonkey.icu/tags/helm/"/>
     
     <category term="ingress-nginx" scheme="https://blog.itmonkey.icu/tags/ingress-nginx/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>(deployment篇)使用helm3在gke中安装ingress-controller</title>
-    <link href="https://blog.itmonkey.icu/2020/11/12/helm-install-ingress-in-gke-with-deployment/"/>
-    <id>https://blog.itmonkey.icu/2020/11/12/helm-install-ingress-in-gke-with-deployment/</id>
-    <published>2020-11-12T06:27:01.000Z</published>
-    <updated>2020-11-12T06:36:05.799Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>上一篇文章已经通过daemonset的方式安装部署了ingress-controller，这篇文章我们主要通过deployment方式来部署，其实基本上差不多，就一些小点需要修改下罢了。<br>如果你没有看过上一篇文章，请先看上一篇的内容。</p><a id="more"></a><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul><li>创建gke ingress 节点池</li><li>下载最新的helm charts</li><li>修改配置文件</li><li>安装验证</li><li>验证流量</li></ul><h4 id="创建节点池"><a href="#创建节点池" class="headerlink" title="创建节点池"></a>创建节点池</h4><p>这里就直接通过控制台创建一个ingress的节点池就好了，或者你也可以不用创建，也可以和业务混合调度，不过建议还是分开，毕竟代理更重要点。<br><img src="/img/helm-install-ingress-controller/nodepool.png" alt="png1"></p><h4 id="下载charts"><a href="#下载charts" class="headerlink" title="下载charts"></a>下载charts</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> helm repo add nginx-stable https://helm.nginx.com/stable</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> helm repo update</span></span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> helm pull nginx-stable/nginx-ingress</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> tar xvf nginx-ingress-0.7.0.tgz</span></span><br></pre></td></tr></table></figure><h4 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h4><p>既然我们选择了deployment+loadbalancer的方式来部署，那么我们主要修改以下内容：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vim values.yaml</span></span><br><span class="line"></span><br><span class="line">1. nodeSelector: (如果你有单独的节点池请修改,没有就算了)</span><br><span class="line">     nodetype: ingress</span><br><span class="line">2. 如果你有自定义镜像，也可以把image.repository和image.tag修改掉，注意修改下imagePullSecrets</span><br><span class="line">3. 如果你有日志落盘的需求，那么可以设置volumeMounts来挂载宿主机目录到容器</span><br><span class="line">4. 打开健康检查healthStatus=true,healthStatusURL="/devops/status"，另外自定义健康检查路径</span><br><span class="line">5. 修改ingressClass为自定义组：mt-ingress-eve-release(后面会说有啥用)</span><br></pre></td></tr></table></figure><h4 id="安装验证"><a href="#安装验证" class="headerlink" title="安装验证"></a>安装验证</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> helm install nginx-ingress -n ingress-controller .</span></span><br><span class="line">NAME: nginx-ingress</span><br><span class="line">LAST DEPLOYED: Wed Nov 11 16:26:25 2020</span><br><span class="line">NAMESPACE: ingress-controller</span><br><span class="line">STATUS: deployed</span><br><span class="line">REVISION: 1</span><br><span class="line">TEST SUITE: None</span><br><span class="line">NOTES:</span><br><span class="line">The NGINX Ingress Controller has been installed.</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl get deployment -n ingress-controller</span></span><br><span class="line">NAME                                DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR      AGE</span><br><span class="line">nginx-ingress-nginx-ingress   1         1         1       1            1           nodetype=ingress   44m</span><br><span class="line"><span class="meta">$</span><span class="bash"> kubectl get pods -n ingress-controller</span></span><br><span class="line">NAME                                      READY   STATUS    RESTARTS   AGE</span><br><span class="line">nginx-ingress-nginx-ingress-xxx8z   1/1     Running   0          40m</span><br></pre></td></tr></table></figure><p>由于是通过deployment+svc的模式创建的，他会默认创建一个loadbalancer类型的svc，接管你现在的ingress-controller的pod，然后端口转发，80到80，443到443</p><h4 id="验证流量"><a href="#验证流量" class="headerlink" title="验证流量"></a>验证流量</h4><p>拿到loadbalancer类型svc的公网ip之后，你就可以直接创建ingress资源来验证，然后绑定host测试即可。</p><p>(注意：secret要在这个ns下创建好)</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  annotations:</span><br><span class="line">    nginx.ingress.kubernetes.io/enable-cors: "true"</span><br><span class="line">    kubernetes.io/ingress.class: mt-eve-ingress-release</span><br><span class="line">  name: ingress-xx-com</span><br><span class="line">  namespace: monitoring</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: test.xx.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - backend:</span><br><span class="line">          serviceName: mt-prometheus-operator-prometheus</span><br><span class="line">          servicePort: 9090</span><br><span class="line">  tls:</span><br><span class="line">  - hosts:</span><br><span class="line">    - test.xx.com</span><br><span class="line">    secretName: x-xx-com-20201112</span><br></pre></td></tr></table></figure><h3 id="还是额外讲一句"><a href="#还是额外讲一句" class="headerlink" title="还是额外讲一句"></a>还是额外讲一句</h3><p>由于gke的机器是不允许的登录的，所以通过这种方式创建的ingress-controller，你是没有办法日志落盘的，所以搞不定。</p>]]></content>
-    
-    
-    <summary type="html">教你如何在gke中使用helm安装ingress-controller</summary>
-    
-    
-    
-    <category term="k8s" scheme="https://blog.itmonkey.icu/categories/k8s/"/>
-    
-    
-    <category term="k8s" scheme="https://blog.itmonkey.icu/tags/k8s/"/>
-    
-    <category term="helm" scheme="https://blog.itmonkey.icu/tags/helm/"/>
-    
-    <category term="ingress" scheme="https://blog.itmonkey.icu/tags/ingress/"/>
     
   </entry>
   
