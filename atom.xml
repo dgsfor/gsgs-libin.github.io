@@ -6,7 +6,7 @@
   <link href="https://blog.itmonkey.icu/atom.xml" rel="self"/>
   
   <link href="https://blog.itmonkey.icu/"/>
-  <updated>2021-10-26T09:50:29.406Z</updated>
+  <updated>2021-11-09T08:05:09.423Z</updated>
   <id>https://blog.itmonkey.icu/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>SRE稳定性运营平台之模板和权威消息</title>
+    <link href="https://blog.itmonkey.icu/2021/11/09/sre-stability-operation-platform-authority-message/"/>
+    <id>https://blog.itmonkey.icu/2021/11/09/sre-stability-operation-platform-authority-message/</id>
+    <published>2021-11-09T05:12:21.000Z</published>
+    <updated>2021-11-09T08:05:09.423Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在我们逐步由运维转向SRE、SRE转向成SRE运营的过程中，我们的工作内容和工作重心都有着慢慢的变化。<br>在这个转变的过程中，我们需要不断的把这些日常工作或者是定期工作逐步沉淀、不断的创新，那么就会带来两种东西：</p><ul><li>第一：<code>工具平台</code></li><li>第二：<code>特色输出</code></li></ul><p>工具能够协助我们快速、自动化、智能的完成工作；特色输出能够告诉外界你们做了什么，更重要的是它代表SRE独有，对于提高部门影响力起到一个关键作用以及也是重要途径之一。</p><blockquote><p>备注：之前有写过一篇关于运营报告平台的介绍，可以简单看下，写的更具体一点：<a href="https://blog.itmonkey.icu/2021/07/13/ops_report/report-01/">点击我跳转</a></p></blockquote><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>目前我基于在公司做的稳定性运营平台，抽离了部分功能以及脱离了公司的一些框架，输出了一版使用开源框架做的运营平台。<br>这个平台会持续更新，当然可能会慢于公司的版本更新。</p><p>项目地址：<a href="https://github.com/gsgs-libin/sre_cerebrum" target="_blank" rel="noopener">点击我跳转</a></p><p>开源版本的信息：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">前端：https://github.com/gsgs-libin/sre_cerebrum</span><br><span class="line">后端：https://github.com/gsgs-libin/sre_cerebrum_api</span><br><span class="line">前端框架：ant-design-vue-pro</span><br><span class="line">后端框架：gin</span><br></pre></td></tr></table></figure><p>开源版本的优势：</p><ul><li>更丰富的日志输出</li><li>更好的规范</li><li>更好看的界面</li></ul><h2 id="公司内部版本功能"><a href="#公司内部版本功能" class="headerlink" title="公司内部版本功能"></a>公司内部版本功能</h2><p>目前公司内部的项目已有的一些功能有：<br>1.业务周报、SRE运营报告、巡检报告等一系列报告的输出<br>2.业务巡检覆盖<br>3.SRE权威消息发布(包含一切核心消息同步)<br>4.通知渠道注册<br>5.SRE事件编排(SRE轮值、节假日轮值、周期性事件)<br>6.业务基础数据采集(qps，sla，带宽，db资源信息等)<br>7.定时任务</p><h2 id="开源版本"><a href="#开源版本" class="headerlink" title="开源版本"></a>开源版本</h2><p>这次先实现了权威消息模块以及渠道通知模块，平台有一个基础模块就是模板，所有的报告、消息都是基于模板来实现的。</p><h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>权威消息起初设计的目的是覆盖SRE内部日常对内对外的消息，包括：</p><ul><li>各式各样的通知(该写周报了、该巡检了、该处理问题了)</li><li>对外轮值通知(告诉业务方今天是谁轮值)</li><li>故障消息(发生了什么故障、故障恢复了等等的通知，权威通知，防止群里七嘴八舌的)</li><li>定时发送的消息</li></ul><h2 id="如何创建权威消息"><a href="#如何创建权威消息" class="headerlink" title="如何创建权威消息"></a>如何创建权威消息</h2><h4 id="1-创建权威消息模板"><a href="#1-创建权威消息模板" class="headerlink" title="1.创建权威消息模板"></a>1.创建权威消息模板</h4><p><img src="/img/sre-stability-operation-platform/1.png" alt="png1"></p><h4 id="2-编辑模板内容"><a href="#2-编辑模板内容" class="headerlink" title="2.编辑模板内容"></a>2.编辑模板内容</h4><p>模板内容可以是静态内容也可以是变量模式，比如可以用一个变量来替代你要发送的消息内容。</p><p>如果没有变量可以这样：<br><img src="/img/sre-stability-operation-platform/2.png" alt="png2"><br>如果有变量可以在内容增加写一个变量，然后在下面变量列表中写上：<br> <img src="/img/sre-stability-operation-platform/3.png" alt="png3"></p><h4 id="3-变量注册"><a href="#3-变量注册" class="headerlink" title="3.变量注册"></a>3.变量注册</h4><p>如果在编辑模板的过程中增加了变量，那么我们需要注册下这个变量，意思就是我从哪里获取到你这个变量。<br>目前变量分了三种：<code>内置变量</code>，<code>自定义变量</code>，<code>图片变量</code>。<br>内置变量就是注册一次谁都可以用，自定义变量和图片变量都是跟具体的模板绑定的。</p><p><img src="/img/sre-stability-operation-platform/4.png" alt="png4"></p><p>注册完成之后，可以看看这个变量的详情：<br><img src="/img/sre-stability-operation-platform/5.png" alt="png5"></p><h4 id="4-通知渠道注册"><a href="#4-通知渠道注册" class="headerlink" title="4.通知渠道注册"></a>4.通知渠道注册</h4><p>顾名思义，就是创建一些可以通知消息的渠道，比如<code>企业微信机器人</code>，<code>企业微信应用</code>，<code>钉钉机器人</code>，<code>邮件</code>，<code>短信</code>等等。<br>由于公司内部使用企业微信，所以我目前就实现了注册机器人和应用的功能，其他的有需求再加，或者可以提pr。</p><p><img src="/img/sre-stability-operation-platform/6.png" alt="png6"></p><h4 id="4-创建消息"><a href="#4-创建消息" class="headerlink" title="4.创建消息"></a>4.创建消息</h4><p>我们的每一条消息都是基于模板的，所以我们需要在模板位置去创建消息。<br>创建消息会经历的步骤：创建动作–渲染动作(如果有变量)–合并动作(如果有变量)–审核动作(如果是需要审核的)–发送</p><p><img src="/img/sre-stability-operation-platform/7.png" alt="png7"></p><h4 id="5-查看消息渲染进度-如果有变量的话"><a href="#5-查看消息渲染进度-如果有变量的话" class="headerlink" title="5.查看消息渲染进度(如果有变量的话)"></a>5.查看消息渲染进度(如果有变量的话)</h4><p><img src="/img/sre-stability-operation-platform/8.png" alt="png8"></p><h4 id="6-发送或者审核"><a href="#6-发送或者审核" class="headerlink" title="6.发送或者审核"></a>6.发送或者审核</h4><p>在这里你可以对消息进行一系列的操作，比如：</p><ul><li>测试发送消息</li><li>看下发送历史，到底被发送了多少次</li><li>编辑，如果消息内容不理想，可以进行二次编辑</li><li>审核(当然需要审核人员才行，可以看后端代码定义)</li><li>废弃(创建消息的人可以选择主动废弃)</li></ul><p><img src="/img/sre-stability-operation-platform/9.png" alt="png9"></p><p><img src="/img/sre-stability-operation-platform/10.png" alt="png10"></p><p><img src="/img/sre-stability-operation-platform/11.png" alt="png11"></p><h2 id="下期介绍"><a href="#下期介绍" class="headerlink" title="下期介绍"></a>下期介绍</h2><p>下期会发布新功能：报告相关(运营报告、巡检报告等等)</p>]]></content>
+    
+    
+    <summary type="html">如何打造一个企业级使用的sre稳定性运营平台</summary>
+    
+    
+    
+    <category term="sre-report" scheme="https://blog.itmonkey.icu/categories/sre-report/"/>
+    
+    
+    <category term="sre" scheme="https://blog.itmonkey.icu/tags/sre/"/>
+    
+    <category term="devops" scheme="https://blog.itmonkey.icu/tags/devops/"/>
+    
+  </entry>
   
   <entry>
     <title>基于DCGM的ubuntu GPU监控方案</title>
@@ -447,27 +470,6 @@
     
     
     <category term="k8s" scheme="https://blog.itmonkey.icu/tags/k8s/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>helm安装ingress-nginx开启自定义header以及关闭强制https跳转</title>
-    <link href="https://blog.itmonkey.icu/2020/11/23/ingress-nginx-enable-customheader-and-ssl/"/>
-    <id>https://blog.itmonkey.icu/2020/11/23/ingress-nginx-enable-customheader-and-ssl/</id>
-    <published>2020-11-23T02:51:17.000Z</published>
-    <updated>2020-11-23T03:11:58.267Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>默认安装的ingress-nginx，是没有开启用户自定义header的，以及强制跳转https是开启的，所以我们可以选择关闭。</p><a id="more"></a><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>修改values.yaml文件，配置如下：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">config:</span><br><span class="line">  allow-backend-server-header: "true"</span><br><span class="line">  enable-underscores-in-headers: "true"</span><br><span class="line">  hsts-include-subdomains: "false"</span><br><span class="line">  ssl-redirect: "false"</span><br></pre></td></tr></table></figure><p>修改完成后升级ingress-nginx，查看默认ingress-controller启动配置的configmap，配置中多了一些自定义内容。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[root@locahost]#</span><span class="bash"> kubectl get configmap -n ingress</span></span><br><span class="line">NAME                                            DATA   AGE</span><br><span class="line">ingress-controller-leader-ingress-public-eve    0      9d</span><br><span class="line">ingress-nginx-controller                        1      9d</span><br></pre></td></tr></table></figure><p>查看ingress-nginx-controller可以获取到自定义的配置：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">data:</span><br><span class="line">  allow-backend-server-header: "true"</span><br><span class="line">  enable-underscores-in-headers: "true"</span><br><span class="line">  hsts-include-subdomains: "false"</span><br><span class="line">  ssl-redirect: "false"</span><br><span class="line">kind: ConfigMap</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure><h3 id="另外说一句"><a href="#另外说一句" class="headerlink" title="另外说一句"></a>另外说一句</h3><p>因为上述我们关闭了全局的默认强制跳转https，如果有需要强制跳转，我们可以单独配置在ingress资源上，如下：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  annotations:</span><br><span class="line">    kubernetes.io/ingress.class: ingress-public</span><br><span class="line">    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"</span><br><span class="line">  name: ingress-prexx-xx-com</span><br><span class="line">  namespace: eve</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: prexx.xx.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - backend:</span><br><span class="line">          serviceName: php-global-svc-pre</span><br><span class="line">          servicePort: 80</span><br><span class="line">  tls:</span><br><span class="line">  - hosts:</span><br><span class="line">    - prexx.xx.com</span><br><span class="line">    secretName: x-xx-com-20200728</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">开启ingress-nginx中自定义header，以及关闭默认强制跳转https</summary>
-    
-    
-    
-    <category term="k8s" scheme="https://blog.itmonkey.icu/categories/k8s/"/>
-    
-    
-    <category term="ingress-nginx" scheme="https://blog.itmonkey.icu/tags/ingress-nginx/"/>
     
   </entry>
   
