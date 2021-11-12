@@ -17,18 +17,29 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>猿的野生香蕉</title>
-  <meta name="description" content="在运维道路上一路狂飙的老司机">
-<meta property="og:type" content="website">
-<meta property="og:title" content="猿的野生香蕉">
-<meta property="og:url" content="https://blog.itmonkey.icu/page/3/index.html">
+  <title>SRE稳定性运营平台之 巡检和运营报告 | 猿的野生香蕉</title>
+  <meta name="description" content="如何打造一个企业级使用的sre稳定性运营平台">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SRE稳定性运营平台之 巡检和运营报告">
+<meta property="og:url" content="https://blog.itmonkey.icu/2021/11/12/sre-stability-operation-platform-report/index.html">
 <meta property="og:site_name" content="猿的野生香蕉">
-<meta property="og:description" content="在运维道路上一路狂飙的老司机">
+<meta property="og:description" content="如何打造一个企业级使用的sre稳定性运营平台">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-stability-operation-platform/10.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-stability-operation-platform/11.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-stability-operation-platform/12.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-stability-operation-platform/13.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-stability-operation-platform/14.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-stability-operation-platform/15.png">
+<meta property="article:published_time" content="2021-11-12T09:01:45.000Z">
+<meta property="article:modified_time" content="2021-11-12T10:35:55.250Z">
 <meta property="article:author" content="野生">
+<meta property="article:tag" content="sre">
+<meta property="article:tag" content="devops">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/sre-stability-operation-platform/10.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://blog.itmonkey.icu/page/3/index.html">
+  <link rel="canonical" href="https://blog.itmonkey.icu/2021/11/12/sre-stability-operation-platform-report/index.html">
   
     <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
   
@@ -328,524 +339,209 @@
 </aside>
 
   
-  <main class="main" role="main">
   
-  <div class="content article-list">
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-sre-stability-operation-platform-report" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
+    <div class="article-header">
+      
+        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/12/01/def-custom-crd/">例子：自定义crd</a>
+    <h1 class="article-title" itemprop="name">
+      SRE稳定性运营平台之 巡检和运营报告
     </h1>
   
 
-  </div>
-  
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="写一个crd资源"><a href="#写一个crd资源" class="headerlink" title="写一个crd资源"></a>写一个crd资源</h3>
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
+      
+      <div class="article-meta">
+        <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2020/12/01/def-custom-crd/" class="article-date">
-	  <time datetime="2020-12-01T10:12:27.000Z" itemprop="datePublished">Dec 1</time>
+	<a href="/2021/11/12/sre-stability-operation-platform-report/" class="article-date">
+	  <time datetime="2021-11-12T09:01:45.000Z" itemprop="datePublished">2021-11-12</time>
 	</a>
 </span>
-    
+        
   <span class="article-category">
     <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
+    <a class="article-category-link" href="/categories/sre-report/">sre-report</a>
   </span>
 
-    
+        
   <span class="article-tag">
     <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>
+	<a class="article-tag-link" href="/tags/devops/" rel="tag">devops</a>, <a class="article-tag-link" href="/tags/sre/" rel="tag">sre</a>
   </span>
 
 
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/12/01/def-custom-crd/#comments" class="article-comment-link">Comments</a></span>
-    
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/11/12/sre-stability-operation-platform-report/#comments" class="article-comment-link">Comments</a></span>
+        
 	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 140(words)</span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 476(words)</span>
 	
 	
 		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
 	
 
-  </p>
-</article>
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>继续上集说到，持续更新我的SRE稳定性运营平台，上次我们介绍了权威消息和模板相关的功能。<br>没看过的可以点击这里：<a href="https://blog.itmonkey.icu/2021/11/09/sre-stability-operation-platform-authority-message/">跳转</a></p>
+<h2 id="新功能介绍"><a href="#新功能介绍" class="headerlink" title="新功能介绍"></a>新功能介绍</h2><p>本次主要介绍<code>报告模块</code>，这个模块是这个平台的核心模块。<br>所谓报告，我们日常会接触到的报告有什么？</p>
+<p>1.业务日报、周报、月报、年报<br>2.业务巡检报告<br>3.业务成本报告<br>4.等等</p>
+<p>那么对于这些报告来说，我们可以手动输出也可以自动生成，当然对于这个平台来说，我们核心的功能就是<code>接管了报告生成步骤中最繁琐的数据收集和渲染过程</code>。<br>所以他的功能就是：</p>
+<ul>
+<li>支持创建各种报告</li>
+<li>支持插槽批注(在报告中预留位置，可以后续进行不同人的批注)</li>
+</ul>
+<h2 id="使用流程"><a href="#使用流程" class="headerlink" title="使用流程"></a>使用流程</h2><p>对于这个新功能，我们可以通过下面的步骤进行快速上手：</p>
+<ol>
+<li>创建报告模板</li>
+<li>编写模板内容(设置变量、设置插槽)</li>
+<li>注册变量、注册插槽</li>
+<li>渲染报告并合并</li>
+<li>预览报告、完结报告</li>
+</ol>
+<h2 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h2><h4 id="1、2"><a href="#1、2" class="headerlink" title="1、2"></a>1、2</h4><p>1、2步骤跟之前文章有重复，请看上一篇文章：<a href="https://blog.itmonkey.icu/2021/11/09/sre-stability-operation-platform-authority-message/">跳转</a></p>
+<h4 id="注册插槽"><a href="#注册插槽" class="headerlink" title="注册插槽"></a>注册插槽</h4><p><img src="/img/sre-stability-operation-platform/10.png" alt="10"></p>
+<h4 id="创建报告、渲染、合并"><a href="#创建报告、渲染、合并" class="headerlink" title="创建报告、渲染、合并"></a>创建报告、渲染、合并</h4><p>创建一个报告<br><img src="/img/sre-stability-operation-platform/11.png" alt="11"></p>
+<p>渲染报告<br><img src="/img/sre-stability-operation-platform/12.png" alt="12"></p>
+<p>查看渲染进度,会看到每一个变量的渲染结果，然后渲染完成之后可以点击合并把渲染后的内容合并到报告里<br><img src="/img/sre-stability-operation-platform/13.png" alt="13"></p>
+<h4 id="编写插槽内容"><a href="#编写插槽内容" class="headerlink" title="编写插槽内容"></a>编写插槽内容</h4><p>针对具体的报告，我们可以对插槽进行内容批注，最终也会合并到报告主体中<br><img src="/img/sre-stability-operation-platform/14.png" alt="14"></p>
+<h4 id="预览报告"><a href="#预览报告" class="headerlink" title="预览报告"></a>预览报告</h4><p>预览报告，最终也可以把这个报告发送出去(注意：预览的报告是不需要登录的)<br><img src="/img/sre-stability-operation-platform/15.png" alt="15"></p>
 
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
     
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.itmonkey.icu/2021/11/12/sre-stability-operation-platform-report/" title="SRE稳定性运营平台之 巡检和运营报告" target="_blank" rel="external">https://blog.itmonkey.icu/2021/11/12/sre-stability-operation-platform-report/</a>
+    </li>
     
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/23/ingress-nginx-enable-customheader-and-ssl/">helm安装ingress-nginx开启自定义header以及关闭强制https跳转</a>
-    </h1>
-  
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
 
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/gsgs-libin" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/img/wechat/avatar.jpeg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/gsgs-libin" target="_blank"><span class="text-dark">猿的野生香蕉</span><small class="ml-1x">SRE</small></a></h3>
+        <div>一个在运维道路上狂飙的老司机</div>
+      </div>
+    </figure>
   </div>
+</div>
+
+
+    </div>
+  </article>
   
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>默认安装的ingress-nginx，是没有开启用户自定义header的，以及强制跳转https是开启的，所以我们可以选择关闭。</p>
-  </div>
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
   
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2020/11/23/ingress-nginx-enable-customheader-and-ssl/" class="article-date">
-	  <time datetime="2020-11-23T02:51:17.000Z" itemprop="datePublished">Nov 23</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </span>
+</div>
 
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/ingress-nginx/" rel="tag">ingress-nginx</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/23/ingress-nginx-enable-customheader-and-ssl/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 261(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/16/ssl-cert-cer-to-pem-or-crt/">https证书cer转pem或者crt</a>
-    </h1>
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2021/11/09/sre-stability-operation-platform-authority-message/" title="SRE稳定性运营平台之模板和权威消息"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
   
-
-  </div>
   
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>在对接各个cdn厂商的过程中，会遇到上传https证书的需求，不过不同的厂商导入https的姿势或者格式是不同的，证书签发商一般给的都是cer+key，所以需要我们做一下格式转换等操作。</p>
-  </div>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
   
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2020/11/16/ssl-cert-cer-to-pem-or-crt/" class="article-date">
-	  <time datetime="2020-11-16T05:46:14.000Z" itemprop="datePublished">Nov 16</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/">基础运维</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/https/" rel="tag">https</a>, <a class="article-tag-link" href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag">运维</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/16/ssl-cert-cer-to-pem-or-crt/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 107(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/12/helm-install-ingress-controller-in-gke/">(官方版)使用helm3在gke集群中安装ingress-nginx</a>
-    </h1>
-  
-
-  </div>
-  
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>前两篇文章已经讲解过nginx-ingress，nginx-ingress是由nginx官方推出的，今天讲解一下k8s社区推出的ingress-nginx。<br>另外gke上基础的东西我就不讲了，类似节点池的创建，在之前的文章都已经写过了，不太懂的可以翻看一下。</p>
-<h3 id="前置注意"><a href="#前置注意" class="headerlink" title="前置注意"></a>前置注意</h3><p>k8s集群版本要求<code>&gt;=1.16.0-0</code>，所以如果没达到要求的，建议升级下~</p>
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2020/11/12/helm-install-ingress-controller-in-gke/" class="article-date">
-	  <time datetime="2020-11-12T08:45:05.000Z" itemprop="datePublished">Nov 12</time>
-	</a>
-</span>
+  <div class="bar-right">
     
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/helm/" rel="tag">helm</a>, <a class="article-tag-link" href="/tags/ingress-nginx/" rel="tag">ingress-nginx</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/12/helm-install-ingress-controller-in-gke/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 700(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 2(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/12/helm-install-ingress-in-gke-with-deployment/">(deployment篇)使用helm3在gke中安装ingress-controller</a>
-    </h1>
-  
-
-  </div>
-  
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>上一篇文章已经通过daemonset的方式安装部署了ingress-controller，这篇文章我们主要通过deployment方式来部署，其实基本上差不多，就一些小点需要修改下罢了。<br>如果你没有看过上一篇文章，请先看上一篇的内容。</p>
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2020/11/12/helm-install-ingress-in-gke-with-deployment/" class="article-date">
-	  <time datetime="2020-11-12T06:27:01.000Z" itemprop="datePublished">Nov 12</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/helm/" rel="tag">helm</a>, <a class="article-tag-link" href="/tags/ingress/" rel="tag">ingress</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/12/helm-install-ingress-in-gke-with-deployment/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 633(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 2(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/11/helm-install-ingress-in-gke-with-daemonset/">(daemonset篇)使用helm3在gke中安装ingress-controller</a>
-    </h1>
-  
-
-  </div>
-  
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>我们的业务目前在gke上是使用的自带的ingress服务，直接对接他们的loadbalancer服务，上几篇文章写的是安装prometheus，发现获取不到代理层的一些数据，所以想直接自己撸ingress-controller来实现。<br>备注：gke上的stackdriver虽然可以看到比较多的数据，但是关于loadbalancer，他没有具体的域名数据，所以比较不直观。</p>
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2020/11/11/helm-install-ingress-in-gke-with-daemonset/" class="article-date">
-	  <time datetime="2020-11-11T08:32:38.000Z" itemprop="datePublished">Nov 11</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/helm/" rel="tag">helm</a>, <a class="article-tag-link" href="/tags/ingress/" rel="tag">ingress</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/11/helm-install-ingress-in-gke-with-daemonset/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.3k(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 5(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/09/prometheus-operator-prometheusrules/">使用prometheusrules自定义创建告警规则</a>
-    </h1>
-  
-
-  </div>
-  
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>首先这篇文章是跟着上一篇helm 部署prometheus-operator来的，部署完成之后，我们就需要自定义一些配置。</p>
-<p>这篇文章主要讲解如何自定义告警规则，如何让prometheus发现他。</p>
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2020/11/09/prometheus-operator-prometheusrules/" class="article-date">
-	  <time datetime="2020-11-09T09:21:27.000Z" itemprop="datePublished">Nov 9</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/prometheus/" rel="tag">prometheus</a>, <a class="article-tag-link" href="/tags/prometheus-operator/" rel="tag">prometheus-operator</a>, <a class="article-tag-link" href="/tags/prometheusrules/" rel="tag">prometheusrules</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/09/prometheus-operator-prometheusrules/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 681(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/09/prometheus-operator-servicemanager/">使用ServiceMonitor自定义暴露指标</a>
-    </h1>
-  
-
-  </div>
-  
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>首先这篇文章是跟着上一篇helm 部署prometheus-operator来的，部署完成之后，我们就需要自定义一些配置。</p>
-<p>这篇文章主要讲解如何自定义服务发现，当我们有一个服务想要暴露数据给prometheus，我怎么操作。</p>
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2020/11/09/prometheus-operator-servicemanager/" class="article-date">
-	  <time datetime="2020-11-09T06:50:18.000Z" itemprop="datePublished">Nov 9</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/prometheus/" rel="tag">prometheus</a>, <a class="article-tag-link" href="/tags/prometheus-operator/" rel="tag">prometheus-operator</a>, <a class="article-tag-link" href="/tags/serviceMonitor/" rel="tag">serviceMonitor</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/09/prometheus-operator-servicemanager/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 938(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 3(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/06/install-prometheus-operator-in-gcp/">使用helm3在gke上安装prometheus-operator</a>
-    </h1>
-  
-
-  </div>
-  
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>本文主要讲解如何使用helm3在gke上安装prometheus-operator，包含持久化存储的使用。</p>
-<p>今天会先最简单安装一下prometheus-operator，然后再一步一步优化，最终我们使用自定义Chart文件保存为私有的安装包。</p>
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2020/11/06/install-prometheus-operator-in-gcp/" class="article-date">
-	  <time datetime="2020-11-06T06:28:00.000Z" itemprop="datePublished">Nov 6</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/gke/" rel="tag">gke</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>, <a class="article-tag-link" href="/tags/prometheus/" rel="tag">prometheus</a>, <a class="article-tag-link" href="/tags/prometheus-operator/" rel="tag">prometheus-operator</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/06/install-prometheus-operator-in-gcp/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.9k(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 8(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/20/helm-repo-chartmuseum-deploy/">helm仓库chartmuseum的部署</a>
-    </h1>
-  
-
-  </div>
-  
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="了解chartmuseum"><a href="#了解chartmuseum" class="headerlink" title="了解chartmuseum"></a>了解chartmuseum</h3><p>用过helm的都知道，chartmuseum作为helm重要的仓库，掌握他的私有部署是必不可少的。</p>
-<p>官方文档：<a href="https://chartmuseum.com/" target="_blank" rel="noopener">跳转</a></p>
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2020/10/20/helm-repo-chartmuseum-deploy/" class="article-date">
-	  <time datetime="2020-10-20T10:37:41.000Z" itemprop="datePublished">Oct 20</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/chartmuseum/" rel="tag">chartmuseum</a>, <a class="article-tag-link" href="/tags/helm/" rel="tag">helm</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/10/20/helm-repo-chartmuseum-deploy/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 437(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 2(minutes)</span>
-	
-
-  </p>
-</article>
-
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
     
   </div>
-
+  </div>
+</nav>
   
-    
-    <nav class="bar bar-footer clearfix" data-stick-bottom>
-        <div class="bar-inner">
-        <ul class="pager pull-left">
-            
-            <li class="prev">
-                <a href="/page/2/">
-                    <i class="icon icon-angle-left"></i>
-                    Prev
-                </a>
-            </li>
-            
-            
-            <li class="next">
-                <a href="/page/4/">
-                    Next
-                    <i class="icon icon-angle-right"></i>
-                </a>
-            </li>
-            
-        </ul>
-        <div class="total-article bar-right">Page 3 of 5</div>
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/img/wechat/alpay.jpeg" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/img/wechat/wepay.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
         </div>
-    </nav>
-    
- 
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 </main>
 
   <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
@@ -906,6 +602,28 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 
 
 
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '4c1562de952eeb22333e',
+    clientSecret: '94b2bbe132cd9d532bb6777536f81ef662ede824',
+    repo: 'libin_blog_gittalk',
+    owner: 'gsgs-libin',
+    admin: ['gsgs-libin'],
+    id: md5(location.pathname),
+    distractionFreeMode: true,
+    proxy: 'https://shielded-brushlands-08810.herokuapp.com/https://github.com/login/oauth/access_token'
+  })
+  gitalk.render('comments')
+  </script>
+
+      
 
 
 

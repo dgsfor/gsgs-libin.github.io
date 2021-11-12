@@ -6,7 +6,7 @@
   <link href="https://blog.itmonkey.icu/atom.xml" rel="self"/>
   
   <link href="https://blog.itmonkey.icu/"/>
-  <updated>2021-11-09T08:05:09.423Z</updated>
+  <updated>2021-11-12T10:35:55.250Z</updated>
   <id>https://blog.itmonkey.icu/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>SRE稳定性运营平台之 巡检和运营报告</title>
+    <link href="https://blog.itmonkey.icu/2021/11/12/sre-stability-operation-platform-report/"/>
+    <id>https://blog.itmonkey.icu/2021/11/12/sre-stability-operation-platform-report/</id>
+    <published>2021-11-12T09:01:45.000Z</published>
+    <updated>2021-11-12T10:35:55.250Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>继续上集说到，持续更新我的SRE稳定性运营平台，上次我们介绍了权威消息和模板相关的功能。<br>没看过的可以点击这里：<a href="https://blog.itmonkey.icu/2021/11/09/sre-stability-operation-platform-authority-message/">跳转</a></p><h2 id="新功能介绍"><a href="#新功能介绍" class="headerlink" title="新功能介绍"></a>新功能介绍</h2><p>本次主要介绍<code>报告模块</code>，这个模块是这个平台的核心模块。<br>所谓报告，我们日常会接触到的报告有什么？</p><p>1.业务日报、周报、月报、年报<br>2.业务巡检报告<br>3.业务成本报告<br>4.等等</p><p>那么对于这些报告来说，我们可以手动输出也可以自动生成，当然对于这个平台来说，我们核心的功能就是<code>接管了报告生成步骤中最繁琐的数据收集和渲染过程</code>。<br>所以他的功能就是：</p><ul><li>支持创建各种报告</li><li>支持插槽批注(在报告中预留位置，可以后续进行不同人的批注)</li></ul><h2 id="使用流程"><a href="#使用流程" class="headerlink" title="使用流程"></a>使用流程</h2><p>对于这个新功能，我们可以通过下面的步骤进行快速上手：</p><ol><li>创建报告模板</li><li>编写模板内容(设置变量、设置插槽)</li><li>注册变量、注册插槽</li><li>渲染报告并合并</li><li>预览报告、完结报告</li></ol><h2 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h2><h4 id="1、2"><a href="#1、2" class="headerlink" title="1、2"></a>1、2</h4><p>1、2步骤跟之前文章有重复，请看上一篇文章：<a href="https://blog.itmonkey.icu/2021/11/09/sre-stability-operation-platform-authority-message/">跳转</a></p><h4 id="注册插槽"><a href="#注册插槽" class="headerlink" title="注册插槽"></a>注册插槽</h4><p><img src="/img/sre-stability-operation-platform/10.png" alt="10"></p><h4 id="创建报告、渲染、合并"><a href="#创建报告、渲染、合并" class="headerlink" title="创建报告、渲染、合并"></a>创建报告、渲染、合并</h4><p>创建一个报告<br><img src="/img/sre-stability-operation-platform/11.png" alt="11"></p><p>渲染报告<br><img src="/img/sre-stability-operation-platform/12.png" alt="12"></p><p>查看渲染进度,会看到每一个变量的渲染结果，然后渲染完成之后可以点击合并把渲染后的内容合并到报告里<br><img src="/img/sre-stability-operation-platform/13.png" alt="13"></p><h4 id="编写插槽内容"><a href="#编写插槽内容" class="headerlink" title="编写插槽内容"></a>编写插槽内容</h4><p>针对具体的报告，我们可以对插槽进行内容批注，最终也会合并到报告主体中<br><img src="/img/sre-stability-operation-platform/14.png" alt="14"></p><h4 id="预览报告"><a href="#预览报告" class="headerlink" title="预览报告"></a>预览报告</h4><p>预览报告，最终也可以把这个报告发送出去(注意：预览的报告是不需要登录的)<br><img src="/img/sre-stability-operation-platform/15.png" alt="15"></p>]]></content>
+    
+    
+    <summary type="html">如何打造一个企业级使用的sre稳定性运营平台</summary>
+    
+    
+    
+    <category term="sre-report" scheme="https://blog.itmonkey.icu/categories/sre-report/"/>
+    
+    
+    <category term="sre" scheme="https://blog.itmonkey.icu/tags/sre/"/>
+    
+    <category term="devops" scheme="https://blog.itmonkey.icu/tags/devops/"/>
+    
+  </entry>
   
   <entry>
     <title>SRE稳定性运营平台之模板和权威消息</title>
@@ -449,27 +472,6 @@
     
     
     <category term="go" scheme="https://blog.itmonkey.icu/tags/go/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>例子：自定义crd</title>
-    <link href="https://blog.itmonkey.icu/2020/12/01/def-custom-crd/"/>
-    <id>https://blog.itmonkey.icu/2020/12/01/def-custom-crd/</id>
-    <published>2020-12-01T10:12:27.000Z</published>
-    <updated>2020-12-01T12:35:02.986Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="写一个crd资源"><a href="#写一个crd资源" class="headerlink" title="写一个crd资源"></a>写一个crd资源</h3><a id="more"></a><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat custom-res-def.yaml</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: libin.meitu.k8s.io</span><br><span class="line">spec:</span><br><span class="line">  group: meitu.k8s.io</span><br><span class="line">  versions:</span><br><span class="line">    - name: v1</span><br><span class="line">      served: true</span><br><span class="line">      storage: true</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  names:</span><br><span class="line">    plural: libin</span><br><span class="line">    singular: libin</span><br><span class="line">    kind: Libin</span><br><span class="line">    shortNames:</span><br><span class="line">    - lib</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl apply -f custom-res-def.yaml</span></span><br><span class="line">customresourcedefinition.apiextensions.k8s.io/libin.meitu.k8s.io created</span><br></pre></td></tr></table></figure><h3 id="查看crd定义"><a href="#查看crd定义" class="headerlink" title="查看crd定义"></a>查看crd定义</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> kubectl get crd | grep libin</span></span><br><span class="line">NAME                                             CREATED AT</span><br><span class="line">libin.meitu.k8s.io                               2020-12-01T09:11:32Z</span><br></pre></td></tr></table></figure><h3 id="创建crd资源对象"><a href="#创建crd资源对象" class="headerlink" title="创建crd资源对象"></a>创建crd资源对象</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat custom-res-object.yaml</span></span><br><span class="line">apiVersion: meitu.k8s.io/v1</span><br><span class="line">kind: Libin</span><br><span class="line">metadata:</span><br><span class="line">  name: object-libin</span><br><span class="line">  namespace: ops</span><br><span class="line">spec:</span><br><span class="line">  name: "李彬"</span><br><span class="line">  func: "SRE"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl apply -f custom-res-object.yaml</span></span><br><span class="line">libin.meitu.k8s.io/object-libin created</span><br></pre></td></tr></table></figure><h3 id="查看创建的对象"><a href="#查看创建的对象" class="headerlink" title="查看创建的对象"></a>查看创建的对象</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> kubectl get libin -n ops</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl get lib -n ops</span></span><br><span class="line">NAME           AGE</span><br><span class="line">object-libin   1h</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">自定义一个crd资源</summary>
-    
-    
-    
-    <category term="k8s" scheme="https://blog.itmonkey.icu/categories/k8s/"/>
-    
-    
-    <category term="k8s" scheme="https://blog.itmonkey.icu/tags/k8s/"/>
     
   </entry>
   
