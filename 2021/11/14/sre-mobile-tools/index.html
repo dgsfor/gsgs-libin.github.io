@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>SRE移动端运维工具- 小程序 | 猿的野生香蕉</title>
+  <meta name="description" content="移动端运维工具，解放你的电脑">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SRE移动端运维工具- 小程序">
+<meta property="og:url" content="https://blog.itmonkey.icu/2021/11/14/sre-mobile-tools/index.html">
+<meta property="og:site_name" content="猿的野生香蕉">
+<meta property="og:description" content="移动端运维工具，解放你的电脑">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/2.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/3.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/4.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/5.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/6.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/7.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/8.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/9.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/10.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/11.png">
+<meta property="article:published_time" content="2021-11-14T14:34:35.000Z">
+<meta property="article:modified_time" content="2021-11-14T16:03:16.556Z">
+<meta property="article:author" content="野生">
+<meta property="article:tag" content="sre">
+<meta property="article:tag" content="移动端运维">
+<meta property="article:tag" content="小程序">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/sre-mobile-tools/1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.itmonkey.icu/2021/11/14/sre-mobile-tools/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/gsgs-libin" target="_blank">
+          <img class="img-circle img-rotate" src="/img/wechat/avatar.jpeg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">猿的野生香蕉</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">SRE</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> XiaMen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">Repository</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/gsgs-libin" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎关注公众号："程序猿的野生香蕉"</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/DevOps/">DevOps</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Report/">Report</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/anthos/">anthos</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sre-report/">sre-report</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/">基础运维</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%9A%E4%BA%91%E4%B8%93%E8%BE%91/">多云专辑</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4%E8%BF%9B%E9%98%B6/">运维进阶</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/GPU/" rel="tag">GPU</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anthos/" rel="tag">anthos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cdn/" rel="tag">cdn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chartmuseum/" rel="tag">chartmuseum</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cloudnative/" rel="tag">cloudnative</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/devops/" rel="tag">devops</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/firewalls/" rel="tag">firewalls</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gcp/" rel="tag">gcp</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gke/" rel="tag">gke</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gpu/" rel="tag">gpu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/" rel="tag">grafana</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/" rel="tag">helm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/https/" rel="tag">https</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ingress/" rel="tag">ingress</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ingress-nginx/" rel="tag">ingress-nginx</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify-tools/" rel="tag">inotify-tools</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a><span class="tag-list-count">13</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/operator/" rel="tag">operator</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/" rel="tag">prometheus</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus-operator/" rel="tag">prometheus-operator</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheusrules/" rel="tag">prometheusrules</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpm/" rel="tag">rpm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/" rel="tag">rsync</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serviceMonitor/" rel="tag">serviceMonitor</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sre/" rel="tag">sre</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/time/" rel="tag">time</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vpn-tunnel/" rel="tag">vpn-tunnel</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yum%E4%BB%93%E5%BA%93/" rel="tag">yum仓库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E8%BF%90%E7%BB%B4/" rel="tag">云运维</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0/" rel="tag">内核参数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8E%E4%B8%BA%E4%BA%91/" rel="tag">华为云</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A1%E6%A3%80/" rel="tag">巡检</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5/" rel="tag">文件同步</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E5%8E%8B%E6%B5%8B/" rel="tag">服务压测</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%B3%E7%90%86/" rel="tag">梳理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/" rel="tag">监控告警</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%AD%E8%BF%9E%E6%8E%A5/" rel="tag">短连接</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%BF%90%E7%BB%B4/" rel="tag">移动端运维</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BE%8E%E5%9B%BE/" rel="tag">美图</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag">运维</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%90%E7%BB%B4%E9%97%A8%E6%88%B7/" rel="tag">运维门户</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%90%E8%90%A5%E6%8A%A5%E5%91%8A/" rel="tag">运营报告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" rel="tag">阿里云</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/GPU/" style="font-size: 13px;">GPU</a> <a href="/tags/anthos/" style="font-size: 13px;">anthos</a> <a href="/tags/cdn/" style="font-size: 13px;">cdn</a> <a href="/tags/chartmuseum/" style="font-size: 13px;">chartmuseum</a> <a href="/tags/cloudnative/" style="font-size: 13px;">cloudnative</a> <a href="/tags/devops/" style="font-size: 13.17px;">devops</a> <a href="/tags/firewalls/" style="font-size: 13px;">firewalls</a> <a href="/tags/gcp/" style="font-size: 13.67px;">gcp</a> <a href="/tags/gke/" style="font-size: 13.33px;">gke</a> <a href="/tags/go/" style="font-size: 13px;">go</a> <a href="/tags/gpu/" style="font-size: 13px;">gpu</a> <a href="/tags/grafana/" style="font-size: 13px;">grafana</a> <a href="/tags/helm/" style="font-size: 13.5px;">helm</a> <a href="/tags/https/" style="font-size: 13px;">https</a> <a href="/tags/ingress/" style="font-size: 13.33px;">ingress</a> <a href="/tags/ingress-nginx/" style="font-size: 13.17px;">ingress-nginx</a> <a href="/tags/inotify-tools/" style="font-size: 13px;">inotify-tools</a> <a href="/tags/java/" style="font-size: 13px;">java</a> <a href="/tags/k8s/" style="font-size: 14px;">k8s</a> <a href="/tags/linux/" style="font-size: 13px;">linux</a> <a href="/tags/nginx/" style="font-size: 13px;">nginx</a> <a href="/tags/operator/" style="font-size: 13.33px;">operator</a> <a href="/tags/prometheus/" style="font-size: 13.83px;">prometheus</a> <a href="/tags/prometheus-operator/" style="font-size: 13.33px;">prometheus-operator</a> <a href="/tags/prometheusrules/" style="font-size: 13px;">prometheusrules</a> <a href="/tags/python/" style="font-size: 13px;">python</a> <a href="/tags/rpm/" style="font-size: 13px;">rpm</a> <a href="/tags/rsync/" style="font-size: 13px;">rsync</a> <a href="/tags/serviceMonitor/" style="font-size: 13px;">serviceMonitor</a> <a href="/tags/sre/" style="font-size: 13.33px;">sre</a> <a href="/tags/time/" style="font-size: 13px;">time</a> <a href="/tags/vpn-tunnel/" style="font-size: 13px;">vpn-tunnel</a> <a href="/tags/vue/" style="font-size: 13px;">vue</a> <a href="/tags/yum%E4%BB%93%E5%BA%93/" style="font-size: 13px;">yum仓库</a> <a href="/tags/%E4%BA%91%E8%BF%90%E7%BB%B4/" style="font-size: 13.33px;">云运维</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0/" style="font-size: 13px;">内核参数</a> <a href="/tags/%E5%8D%8E%E4%B8%BA%E4%BA%91/" style="font-size: 13px;">华为云</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E5%B7%A1%E6%A3%80/" style="font-size: 13.17px;">巡检</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 13px;">开源</a> <a href="/tags/%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5/" style="font-size: 13px;">文件同步</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%8E%8B%E6%B5%8B/" style="font-size: 13px;">服务压测</a> <a href="/tags/%E6%A2%B3%E7%90%86/" style="font-size: 13px;">梳理</a> <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/" style="font-size: 13px;">监控告警</a> <a href="/tags/%E7%9F%AD%E8%BF%9E%E6%8E%A5/" style="font-size: 13px;">短连接</a> <a href="/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%BF%90%E7%BB%B4/" style="font-size: 13px;">移动端运维</a> <a href="/tags/%E7%BE%8E%E5%9B%BE/" style="font-size: 13px;">美图</a> <a href="/tags/%E8%BF%90%E7%BB%B4/" style="font-size: 13.33px;">运维</a> <a href="/tags/%E8%BF%90%E7%BB%B4%E9%97%A8%E6%88%B7/" style="font-size: 13px;">运维门户</a> <a href="/tags/%E8%BF%90%E8%90%A5%E6%8A%A5%E5%91%8A/" style="font-size: 13.17px;">运营报告</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13px;">阿里云</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">November 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">August 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/DevOps/">DevOps</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/14/sre-mobile-tools/" class="title">SRE移动端运维工具- 小程序</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-14T14:34:35.000Z" itemprop="datePublished">2021-11-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/sre-report/">sre-report</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/12/sre-stability-operation-platform-report/" class="title">SRE稳定性运营平台之 巡检和运营报告</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-12T09:01:45.000Z" itemprop="datePublished">2021-11-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/sre-report/">sre-report</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/09/sre-stability-operation-platform-authority-message/" class="title">SRE稳定性运营平台之模板和权威消息</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-09T05:12:21.000Z" itemprop="datePublished">2021-11-09</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/k8s/">k8s</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/10/26/ubuntu-gpu-monitor-prometheus/" class="title">基于DCGM的ubuntu GPU监控方案</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-10-26T08:50:15.000Z" itemprop="datePublished">2021-10-26</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/08/31/hwcloud-cce-dual-gpu-version-coexist/" class="title">实现华为云cce集群双GPU版本共存</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-08-31T06:31:08.000Z" itemprop="datePublished">2021-08-31</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-sre-mobile-tools" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SRE移动端运维工具- 小程序
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/11/14/sre-mobile-tools/" class="article-date">
+	  <time datetime="2021-11-14T14:34:35.000Z" itemprop="datePublished">2021-11-14</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/DevOps/">DevOps</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/sre/" rel="tag">sre</a>, <a class="article-tag-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a>, <a class="article-tag-link" href="/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%BF%90%E7%BB%B4/" rel="tag">移动端运维</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/11/14/sre-mobile-tools/#comments" class="article-comment-link">Comments</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.2k(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 4(minutes)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>你是否有遇到过线上服务出现问题，你还在吃饭、约会、看电影，这时候你怎么办？<br>让我猜测一下，你可能的动作就是：<code>停止手头</code> – <code>打开电脑</code> – <code>拨vpn</code> – <code>看消息</code> – <code>处理问题</code> – <code>回消息</code>.</p>
+<p>这样的场景我猜测很多运维同学都有经历过，就像我一样，去茶卡盐湖处理问题、在高铁站处理问题。</p>
+<img src="/img/sre-mobile-tools/1.png" width="50%" height="50%" alt="1" />
+<img src="/img/sre-mobile-tools/2.png" width="50%" height="50%" alt="2" />
+
+<h2 id="头脑风暴"><a href="#头脑风暴" class="headerlink" title="头脑风暴"></a>头脑风暴</h2><p>我们试想一下，是否可以减轻这种“负担”呢？<br>我个人是比较懒的，电脑束缚了我的玩耍，每次聚餐必然打开电脑处理问题，所以在2019年我就开始在<code>运维是不是可以不背电脑</code>这个方向上做着努力。</p>
+<h2 id="经历"><a href="#经历" class="headerlink" title="经历"></a>经历</h2><p>在移动端运维上面，我经历了几个方面。</p>
+<ul>
+<li>ios开发(由于自己用iPhone，所以只开发了苹果端，用了swift)</li>
+<li>双端ios和android(用了flutter)</li>
+<li>小程序(原生框架)</li>
+</ul>
+<h4 id="IOS开发"><a href="#IOS开发" class="headerlink" title="IOS开发"></a>IOS开发</h4><p>  对于最初的用swift，我当时做了一些简单的功能(毕竟菜鸟，不会写复杂的)，我之前的一篇文章有简单介绍过，有兴趣的可以看下：<a href="https://blog.itmonkey.icu/2020/06/17/meitu-aliyun-use-experience/">跳转</a></p>
+<h4 id="双端flutter"><a href="#双端flutter" class="headerlink" title="双端flutter"></a>双端flutter</h4><p>  这个本来进展还不错，写的都差不多了，安卓也上线了，可是坑就坑在苹果上，App Store硬是认为我的应用不具有普遍性，被无情拒绝五六次(白瞎了我的开发者账号，我记得是快一千大洋了)。<br>这样不行啊，只有安卓，苹果用户用不了，那不白扯了。最终也是草草了之！</p>
+<h4 id="小程序"><a href="#小程序" class="headerlink" title="小程序"></a>小程序</h4><p>  最终我想到了小程序，目前来说不会受到平台的限制，除非你不玩微信，那我”无fuck说”。<br>最开始写小程序，看了两天的项目实战教程，然后就自己写了，效果还行，“借鉴”了一些开源的样式，整体不算太丑，也是能看。<br>  另外开始搞小程序的时候，有一个缺点就是上架后大家都能用，那肯定不行。所以后面直接转成”企业微信小程序”，绑定到企业微信上，在企业微信上做一些权限控制，目前就是按照这样的状态持续运行着，挺好~</p>
+<h4 id="展示一下-老的"><a href="#展示一下-老的" class="headerlink" title="展示一下(老的)"></a>展示一下(老的)</h4><p>之前用flutter做的app，给大家看个图标吧，内部就不展示了。(whyme是安卓端，mtmops是苹果端)<br><img src="/img/sre-mobile-tools/3.png" alt="3"></p>
+<h2 id="开源"><a href="#开源" class="headerlink" title="开源"></a>开源</h2><p>个人觉得这个开发难度不是很大，而且可能存在对于某些同学有些小意义，打算把基础框架给开源出来，包含了：</p>
+<ul>
+<li>后端接口(主要涉及登录认证以及后续接其他功能的接口预留)</li>
+<li>前端页面框架(感觉这个页面还行，简洁明了，适合我自己)</li>
+<li>企业微信登录可以配合公司内部认证使用(比如统一登录OA)</li>
+</ul>
+<p>里面主要分为两种登录方式，<code>企业微信登录</code>和<code>微信登录</code>。<br>备注：企业微信登录要求必须先发布小程序，我就没有写具体的演示代码，我直接改成微信登录了，简单些，需要企业微信登录的照葫芦画瓢就行。</p>
+<p>项目信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/gsgs-libin/handleWhileDrinking</span><br></pre></td></tr></table></figure>
+
+<p>技术栈：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">小程序端：原生微信小程序语言</span><br><span class="line">服务端：go(gin框架)</span><br></pre></td></tr></table></figure>
+
+<p>正如项目名字所说：在喝酒的时候处理问题，说的就是我经常出去聚餐的时候临时处理问题。</p>
+<h2 id="项目意义"><a href="#项目意义" class="headerlink" title="项目意义"></a>项目意义</h2><ul>
+<li>个人认为算是小小的填补了移动端运维的空白</li>
+<li>提升了简单操作、信息查询的效率，更加便捷</li>
+</ul>
+<h2 id="收益"><a href="#收益" class="headerlink" title="收益"></a>收益</h2><p>目前我们使用这个移动端运维工具已经一段时间了，带来了一些好处，同时也存在着一些问题：</p>
+<ul>
+<li>在线一键扩容(只需要手机一点就可以扩容)</li>
+<li>监控查看(我们日常的监控报表都可以通过这个来看)</li>
+<li>基本信息查看(日常的一些信息查询都可以查询)</li>
+<li>其他功能</li>
+</ul>
+<p>存在的问题：</p>
+<ul>
+<li>真正大故障你用上，真正有问题可能还是需要你打开电脑</li>
+<li>需求不多，日常都在办公室对着电脑，真正拿手机处理问题又能有几次</li>
+<li>人力不足，目前这个就我一个人维护，虽然也够了，不过还是需要一些能力更强的人加入到建设中</li>
+</ul>
+<h2 id="项目演示"><a href="#项目演示" class="headerlink" title="项目演示"></a>项目演示</h2><h4 id="整体页面"><a href="#整体页面" class="headerlink" title="整体页面"></a>整体页面</h4><p><img src="/img/sre-mobile-tools/4.png" alt="4"><br><img src="/img/sre-mobile-tools/5.png" alt="5"><br><img src="/img/sre-mobile-tools/6.png" alt="6"><br><img src="/img/sre-mobile-tools/7.png" alt="7"></p>
+<h4 id="登录相关"><a href="#登录相关" class="headerlink" title="登录相关"></a>登录相关</h4><p><img src="/img/sre-mobile-tools/8.png" alt="8"><br><img src="/img/sre-mobile-tools/9.png" alt="9"></p>
+<h4 id="企业微信登录"><a href="#企业微信登录" class="headerlink" title="企业微信登录"></a>企业微信登录</h4><p>这个是我们公司正在使用的小程序端，企业微信登录的，配合了公司内部统一登录获取了一些用户信息相关的然后进行展示。</p>
+<p><img src="/img/sre-mobile-tools/10.png" alt="10"><br><img src="/img/sre-mobile-tools/11.png" alt="11"></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.itmonkey.icu/2021/11/14/sre-mobile-tools/" title="SRE移动端运维工具- 小程序" target="_blank" rel="external">https://blog.itmonkey.icu/2021/11/14/sre-mobile-tools/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/gsgs-libin" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/img/wechat/avatar.jpeg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/gsgs-libin" target="_blank"><span class="text-dark">猿的野生香蕉</span><small class="ml-1x">SRE</small></a></h3>
+        <div>一个在运维道路上狂飙的老司机</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2021/11/12/sre-stability-operation-platform-report/" title="SRE稳定性运营平台之 巡检和运营报告"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/img/wechat/alpay.jpeg" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/img/wechat/wepay.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/gsgs-libin" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '4c1562de952eeb22333e',
+    clientSecret: '94b2bbe132cd9d532bb6777536f81ef662ede824',
+    repo: 'libin_blog_gittalk',
+    owner: 'gsgs-libin',
+    admin: ['gsgs-libin'],
+    id: md5(location.pathname),
+    distractionFreeMode: true,
+    proxy: 'https://shielded-brushlands-08810.herokuapp.com/https://github.com/login/oauth/access_token'
+  })
+  gitalk.render('comments')
+  </script>
+
+      
+
+
+
+
+
+
+
+</body>
+</html>

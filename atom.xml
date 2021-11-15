@@ -6,7 +6,7 @@
   <link href="https://blog.itmonkey.icu/atom.xml" rel="self"/>
   
   <link href="https://blog.itmonkey.icu/"/>
-  <updated>2021-11-12T13:07:23.171Z</updated>
+  <updated>2021-11-14T16:03:16.556Z</updated>
   <id>https://blog.itmonkey.icu/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>SRE移动端运维工具- 小程序</title>
+    <link href="https://blog.itmonkey.icu/2021/11/14/sre-mobile-tools/"/>
+    <id>https://blog.itmonkey.icu/2021/11/14/sre-mobile-tools/</id>
+    <published>2021-11-14T14:34:35.000Z</published>
+    <updated>2021-11-14T16:03:16.556Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>你是否有遇到过线上服务出现问题，你还在吃饭、约会、看电影，这时候你怎么办？<br>让我猜测一下，你可能的动作就是：<code>停止手头</code> – <code>打开电脑</code> – <code>拨vpn</code> – <code>看消息</code> – <code>处理问题</code> – <code>回消息</code>.</p><p>这样的场景我猜测很多运维同学都有经历过，就像我一样，去茶卡盐湖处理问题、在高铁站处理问题。</p><img src="/img/sre-mobile-tools/1.png" width="50%" height="50%" alt="1" /><img src="/img/sre-mobile-tools/2.png" width="50%" height="50%" alt="2" /><h2 id="头脑风暴"><a href="#头脑风暴" class="headerlink" title="头脑风暴"></a>头脑风暴</h2><p>我们试想一下，是否可以减轻这种“负担”呢？<br>我个人是比较懒的，电脑束缚了我的玩耍，每次聚餐必然打开电脑处理问题，所以在2019年我就开始在<code>运维是不是可以不背电脑</code>这个方向上做着努力。</p><h2 id="经历"><a href="#经历" class="headerlink" title="经历"></a>经历</h2><p>在移动端运维上面，我经历了几个方面。</p><ul><li>ios开发(由于自己用iPhone，所以只开发了苹果端，用了swift)</li><li>双端ios和android(用了flutter)</li><li>小程序(原生框架)</li></ul><h4 id="IOS开发"><a href="#IOS开发" class="headerlink" title="IOS开发"></a>IOS开发</h4><p>  对于最初的用swift，我当时做了一些简单的功能(毕竟菜鸟，不会写复杂的)，我之前的一篇文章有简单介绍过，有兴趣的可以看下：<a href="https://blog.itmonkey.icu/2020/06/17/meitu-aliyun-use-experience/">跳转</a></p><h4 id="双端flutter"><a href="#双端flutter" class="headerlink" title="双端flutter"></a>双端flutter</h4><p>  这个本来进展还不错，写的都差不多了，安卓也上线了，可是坑就坑在苹果上，App Store硬是认为我的应用不具有普遍性，被无情拒绝五六次(白瞎了我的开发者账号，我记得是快一千大洋了)。<br>这样不行啊，只有安卓，苹果用户用不了，那不白扯了。最终也是草草了之！</p><h4 id="小程序"><a href="#小程序" class="headerlink" title="小程序"></a>小程序</h4><p>  最终我想到了小程序，目前来说不会受到平台的限制，除非你不玩微信，那我”无fuck说”。<br>最开始写小程序，看了两天的项目实战教程，然后就自己写了，效果还行，“借鉴”了一些开源的样式，整体不算太丑，也是能看。<br>  另外开始搞小程序的时候，有一个缺点就是上架后大家都能用，那肯定不行。所以后面直接转成”企业微信小程序”，绑定到企业微信上，在企业微信上做一些权限控制，目前就是按照这样的状态持续运行着，挺好~</p><h4 id="展示一下-老的"><a href="#展示一下-老的" class="headerlink" title="展示一下(老的)"></a>展示一下(老的)</h4><p>之前用flutter做的app，给大家看个图标吧，内部就不展示了。(whyme是安卓端，mtmops是苹果端)<br><img src="/img/sre-mobile-tools/3.png" alt="3"></p><h2 id="开源"><a href="#开源" class="headerlink" title="开源"></a>开源</h2><p>个人觉得这个开发难度不是很大，而且可能存在对于某些同学有些小意义，打算把基础框架给开源出来，包含了：</p><ul><li>后端接口(主要涉及登录认证以及后续接其他功能的接口预留)</li><li>前端页面框架(感觉这个页面还行，简洁明了，适合我自己)</li><li>企业微信登录可以配合公司内部认证使用(比如统一登录OA)</li></ul><p>里面主要分为两种登录方式，<code>企业微信登录</code>和<code>微信登录</code>。<br>备注：企业微信登录要求必须先发布小程序，我就没有写具体的演示代码，我直接改成微信登录了，简单些，需要企业微信登录的照葫芦画瓢就行。</p><p>项目信息：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/gsgs-libin/handleWhileDrinking</span><br></pre></td></tr></table></figure><p>技术栈：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">小程序端：原生微信小程序语言</span><br><span class="line">服务端：go(gin框架)</span><br></pre></td></tr></table></figure><p>正如项目名字所说：在喝酒的时候处理问题，说的就是我经常出去聚餐的时候临时处理问题。</p><h2 id="项目意义"><a href="#项目意义" class="headerlink" title="项目意义"></a>项目意义</h2><ul><li>个人认为算是小小的填补了移动端运维的空白</li><li>提升了简单操作、信息查询的效率，更加便捷</li></ul><h2 id="收益"><a href="#收益" class="headerlink" title="收益"></a>收益</h2><p>目前我们使用这个移动端运维工具已经一段时间了，带来了一些好处，同时也存在着一些问题：</p><ul><li>在线一键扩容(只需要手机一点就可以扩容)</li><li>监控查看(我们日常的监控报表都可以通过这个来看)</li><li>基本信息查看(日常的一些信息查询都可以查询)</li><li>其他功能</li></ul><p>存在的问题：</p><ul><li>真正大故障你用上，真正有问题可能还是需要你打开电脑</li><li>需求不多，日常都在办公室对着电脑，真正拿手机处理问题又能有几次</li><li>人力不足，目前这个就我一个人维护，虽然也够了，不过还是需要一些能力更强的人加入到建设中</li></ul><h2 id="项目演示"><a href="#项目演示" class="headerlink" title="项目演示"></a>项目演示</h2><h4 id="整体页面"><a href="#整体页面" class="headerlink" title="整体页面"></a>整体页面</h4><p><img src="/img/sre-mobile-tools/4.png" alt="4"><br><img src="/img/sre-mobile-tools/5.png" alt="5"><br><img src="/img/sre-mobile-tools/6.png" alt="6"><br><img src="/img/sre-mobile-tools/7.png" alt="7"></p><h4 id="登录相关"><a href="#登录相关" class="headerlink" title="登录相关"></a>登录相关</h4><p><img src="/img/sre-mobile-tools/8.png" alt="8"><br><img src="/img/sre-mobile-tools/9.png" alt="9"></p><h4 id="企业微信登录"><a href="#企业微信登录" class="headerlink" title="企业微信登录"></a>企业微信登录</h4><p>这个是我们公司正在使用的小程序端，企业微信登录的，配合了公司内部统一登录获取了一些用户信息相关的然后进行展示。</p><p><img src="/img/sre-mobile-tools/10.png" alt="10"><br><img src="/img/sre-mobile-tools/11.png" alt="11"></p>]]></content>
+    
+    
+    <summary type="html">移动端运维工具，解放你的电脑</summary>
+    
+    
+    
+    <category term="DevOps" scheme="https://blog.itmonkey.icu/categories/DevOps/"/>
+    
+    
+    <category term="sre" scheme="https://blog.itmonkey.icu/tags/sre/"/>
+    
+    <category term="移动端运维" scheme="https://blog.itmonkey.icu/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%BF%90%E7%BB%B4/"/>
+    
+    <category term="小程序" scheme="https://blog.itmonkey.icu/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>SRE稳定性运营平台之 巡检和运营报告</title>
@@ -451,27 +476,6 @@
     
     
     <category term="k8s" scheme="https://blog.itmonkey.icu/tags/k8s/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>go get国内加速</title>
-    <link href="https://blog.itmonkey.icu/2020/12/01/go-module-speedup/"/>
-    <id>https://blog.itmonkey.icu/2020/12/01/go-module-speedup/</id>
-    <published>2020-12-01T12:42:21.000Z</published>
-    <updated>2020-12-01T12:48:15.698Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>go开发过程中，国内下载依赖包太慢了，怎么办？</p><a id="more"></a><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><ol><li>开启go module</li></ol><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export GO111MODULE=on</span><br></pre></td></tr></table></figure><ol start="2"><li>配置代理</li></ol><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export GOPROXY=https://goproxy.io</span><br></pre></td></tr></table></figure><ol start="3"><li>下载，可以试用go get 体验极速</li></ol><h3 id="额外说一句"><a href="#额外说一句" class="headerlink" title="额外说一句"></a>额外说一句</h3><p>有很多都是配置阿里云的<code>export GOPROXY=https://mirrors.aliyun.com/goproxy/</code>，不过我发现很多包都找不到，所以干脆不用了。</p><h3 id="全局配置"><a href="#全局配置" class="headerlink" title="全局配置"></a>全局配置</h3><p>你可以配置到<code>/etc/profile</code>或者个人用户下<code>~/.bash_profile</code></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export GO111MODULE=on</span><br><span class="line">export GOPROXY=https://goproxy.io</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">go module国内加速</summary>
-    
-    
-    
-    <category term="go" scheme="https://blog.itmonkey.icu/categories/go/"/>
-    
-    
-    <category term="go" scheme="https://blog.itmonkey.icu/tags/go/"/>
     
   </entry>
   
