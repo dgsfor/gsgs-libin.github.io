@@ -17,22 +17,24 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>istio gateway在GCP上的最佳实现 | 猿的野生香蕉</title>
+  <title>istio gateway在GCP上的最佳实践 | 猿的野生香蕉</title>
   <meta name="description" content="如何在gcp上使用istio的gateway">
 <meta property="og:type" content="article">
-<meta property="og:title" content="istio gateway在GCP上的最佳实现">
+<meta property="og:title" content="istio gateway在GCP上的最佳实践">
 <meta property="og:url" content="https://blog.itmonkey.icu/2021/11/17/istio-in-gcp/index.html">
 <meta property="og:site_name" content="猿的野生香蕉">
 <meta property="og:description" content="如何在gcp上使用istio的gateway">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/istio-in-gcp/1.png">
 <meta property="article:published_time" content="2021-11-17T05:48:02.000Z">
-<meta property="article:modified_time" content="2021-11-19T02:56:17.787Z">
+<meta property="article:modified_time" content="2021-11-19T06:11:41.090Z">
 <meta property="article:author" content="野生">
 <meta property="article:tag" content="gcp">
 <meta property="article:tag" content="k8s">
 <meta property="article:tag" content="istio">
 <meta property="article:tag" content="envory">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/istio-in-gcp/1.png">
   <!-- Canonical links -->
   <link rel="canonical" href="https://blog.itmonkey.icu/2021/11/17/istio-in-gcp/index.html">
   
@@ -256,7 +258,7 @@
                 <a class="category-link" href="/categories/k8s/">k8s</a>
               </p>
               <p class="item-title">
-                <a href="/2021/11/17/istio-in-gcp/" class="title">istio gateway在GCP上的最佳实现</a>
+                <a href="/2021/11/17/istio-in-gcp/" class="title">istio gateway在GCP上的最佳实践</a>
               </p>
               <p class="item-date">
                 <time datetime="2021-11-17T05:48:02.000Z" itemprop="datePublished">2021-11-17</time>
@@ -344,7 +346,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      istio gateway在GCP上的最佳实现
+      istio gateway在GCP上的最佳实践
     </h1>
   
 
@@ -381,17 +383,18 @@
         <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/11/17/istio-in-gcp/#comments" class="article-comment-link">Comments</a></span>
         
 	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 928(words)</span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.1k(words)</span>
 	
 	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 4(minutes)</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 5(minutes)</span>
 	
 
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h2 id="快速安装"><a href="#快速安装" class="headerlink" title="快速安装"></a>快速安装</h2><p>我目前选择helm安装istio相关组件，首先你需要准备好一些东西：</p>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>没啥背景，就是想折腾，后续慢慢更新，这次先使用istio中的gateway相关。</p>
+<h2 id="快速安装"><a href="#快速安装" class="headerlink" title="快速安装"></a>快速安装</h2><p>我目前选择helm安装istio相关组件，首先你需要准备好一些东西：</p>
 <ul>
 <li>下载好istio安装包</li>
 <li>helm版本在3以上</li>
@@ -442,12 +445,12 @@
 <h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><ul>
 <li>创建secret</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> kubectl create secret generic  x-abc-com-20211118 --from-file=x.abc.com.cer  --from-file=x.abc.com.key -n istio-system</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl get secret -n istio-system</span></span><br><span class="line">x-abc-com-20211118                                        Opaque                                2      12s</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> kubectl create secret generic  x-abc-com-20211118 --from-file=cert=x.abc.com.cer  --from-file=key=x.abc.com.key -n istio-system</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl get secret -n istio-system</span></span><br><span class="line">x-abc-com-20211118                                        Opaque                                2      12s</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>创建gateway</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> vim test.yaml</span></span><br><span class="line">apiVersion: networking.istio.io/v1beta1</span><br><span class="line">kind: Gateway</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    host: www.abc.com</span><br><span class="line">  name: www-abc-com</span><br><span class="line">  namespace: my-cluster1-gateway</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: istio-ingressgateway</span><br><span class="line">    istio: ingressgateway</span><br><span class="line">  servers:</span><br><span class="line">  - hosts:</span><br><span class="line">    - www.abc.com</span><br><span class="line">    port:</span><br><span class="line">      name: www.abc.com-80</span><br><span class="line">      number: 80</span><br><span class="line">      protocol: HTTP</span><br><span class="line">    tls:</span><br><span class="line">      httpsRedirect: true</span><br><span class="line">  - hosts:</span><br><span class="line">    - www.abc.com</span><br><span class="line">    port:</span><br><span class="line">      name: https-www.abc.com-443</span><br><span class="line">      number: 443</span><br><span class="line">      protocol: HTTPS</span><br><span class="line">    tls:</span><br><span class="line">      credentialName: x-abc-com-20211118</span><br><span class="line">      mode: SIMPLE</span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl apply -f test.yaml</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> vim test.yaml</span></span><br><span class="line">apiVersion: networking.istio.io/v1beta1</span><br><span class="line">kind: Gateway</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    host: www.abc.com</span><br><span class="line">  name: gateway-www-abc-com</span><br><span class="line">  namespace: my-cluster1-gateway</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: istio-ingressgateway</span><br><span class="line">    istio: ingressgateway</span><br><span class="line">  servers:</span><br><span class="line">  - hosts:</span><br><span class="line">    - www.abc.com</span><br><span class="line">    port:</span><br><span class="line">      name: www.abc.com-80</span><br><span class="line">      number: 80</span><br><span class="line">      protocol: HTTP</span><br><span class="line">    tls:</span><br><span class="line">      httpsRedirect: true</span><br><span class="line">  - hosts:</span><br><span class="line">    - www.abc.com</span><br><span class="line">    port:</span><br><span class="line">      name: https-www.abc.com-443</span><br><span class="line">      number: 443</span><br><span class="line">      protocol: HTTPS</span><br><span class="line">    tls:</span><br><span class="line">      credentialName: x-abc-com-20211118</span><br><span class="line">      mode: SIMPLE</span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl apply -f test.yaml</span></span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>查看gateway监听</li>
@@ -457,7 +460,23 @@
 <ul>
 <li>创建一个四层的负载均衡器</li>
 </ul>
-<p>我们创建一个四层的负载均衡器代理到我们的gateway上，不过多截图了，代理80和443即可，很简单。</p>
+<p>我们创建一个四层的负载均衡器代理到我们的gateway上，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 创建一个公网的和一个内网的</span><br><span class="line">2. 代理80和443</span><br><span class="line">3. 健康检查使用15021/healthz/ready</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/istio-in-gcp/1.png" alt="png1"></p>
+<ul>
+<li>创建vs</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> vim vs.yaml</span></span><br><span class="line">apiVersion: networking.istio.io/v1beta1</span><br><span class="line">kind: VirtualService</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    host: www.abc.com</span><br><span class="line">  name: vs-www.abc.com</span><br><span class="line">  namespace: my-cluster1-vs</span><br><span class="line">spec:</span><br><span class="line">  gateways:</span><br><span class="line">  - my-cluster1-gateway/gateway-www-abc-com</span><br><span class="line">  hosts:</span><br><span class="line">  - www.abc.com</span><br><span class="line">  http:</span><br><span class="line">  - match:</span><br><span class="line">    - uri:</span><br><span class="line">        prefix: /</span><br><span class="line">    name: www.abc.com-/</span><br><span class="line">    retries: &#123;&#125;</span><br><span class="line">    route:</span><br><span class="line">    - destination:</span><br><span class="line">        host: test-svc.test-ns.svc.cluster.local</span><br><span class="line">        port:</span><br><span class="line">          number: 80</span><br><span class="line">      weight: 100</span><br><span class="line">    timeout: 75s</span><br><span class="line">  - match:</span><br><span class="line">    - uri:</span><br><span class="line">        prefix: /api</span><br><span class="line">    name: www.abc.com-/api</span><br><span class="line">    retries: &#123;&#125;</span><br><span class="line">    route:</span><br><span class="line">    - destination:</span><br><span class="line">        host: test-svc.test-ns.svc.cluster.local</span><br><span class="line">        port:</span><br><span class="line">          number: 80</span><br><span class="line">      weight: 100</span><br><span class="line">    timeout: 75s</span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl apply -f vs.yaml</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>验证</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> kubectl get gateway -n my-cluster1-gateway</span></span><br><span class="line">NAME                              AGE</span><br><span class="line">gateway-www-abc-com                       16h</span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl get vs -n my-cluster1-vs</span></span><br><span class="line">NAME                              GATEWAYS                                                   HOSTS                                 AGE</span><br><span class="line">vs-www.abc.com                       ["my-cluster1-gateway/www-abc-com"]                        ["www.abc.com"]                       58m</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> curl -x your_public_ip:443 <span class="string">"https://www.abc.com"</span> -vvv</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="推广"><a href="#推广" class="headerlink" title="推广"></a>推广</h2><p>目前新的博客地址：<code>dgsfor.com</code><br>托管于：”zeno”<br>文档：<a href="https://top7y84e.xvx.app/" target="_blank" rel="noopener">点击我</a><br>鸣谢：<a href="https://github.com/oif" target="_blank" rel="noopener">卓越</a></p>
 
       
     </div>
@@ -467,7 +486,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://blog.itmonkey.icu/2021/11/17/istio-in-gcp/" title="istio gateway在GCP上的最佳实现" target="_blank" rel="external">https://blog.itmonkey.icu/2021/11/17/istio-in-gcp/</a>
+      <a href="https://blog.itmonkey.icu/2021/11/17/istio-in-gcp/" title="istio gateway在GCP上的最佳实践" target="_blank" rel="external">https://blog.itmonkey.icu/2021/11/17/istio-in-gcp/</a>
     </li>
     
     <li class="post-copyright-license">
