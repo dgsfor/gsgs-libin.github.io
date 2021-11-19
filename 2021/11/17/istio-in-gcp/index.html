@@ -17,18 +17,24 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>Tag: 移动端运维 | 猿的野生香蕉</title>
-  <meta name="description" content="在运维道路上一路狂飙的老司机">
-<meta property="og:type" content="website">
-<meta property="og:title" content="猿的野生香蕉">
-<meta property="og:url" content="https://blog.itmonkey.icu/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%BF%90%E7%BB%B4/index.html">
+  <title>istio gateway在GCP上的最佳实现 | 猿的野生香蕉</title>
+  <meta name="description" content="如何在gcp上使用istio的gateway">
+<meta property="og:type" content="article">
+<meta property="og:title" content="istio gateway在GCP上的最佳实现">
+<meta property="og:url" content="https://blog.itmonkey.icu/2021/11/17/istio-in-gcp/index.html">
 <meta property="og:site_name" content="猿的野生香蕉">
-<meta property="og:description" content="在运维道路上一路狂飙的老司机">
+<meta property="og:description" content="如何在gcp上使用istio的gateway">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-11-17T05:48:02.000Z">
+<meta property="article:modified_time" content="2021-11-19T02:56:17.787Z">
 <meta property="article:author" content="野生">
+<meta property="article:tag" content="gcp">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="istio">
+<meta property="article:tag" content="envory">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://blog.itmonkey.icu/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%BF%90%E7%BB%B4/index.html">
+  <link rel="canonical" href="https://blog.itmonkey.icu/2021/11/17/istio-in-gcp/index.html">
   
     <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
   
@@ -328,160 +334,253 @@
 </aside>
 
   
-  <main class="main" role="main">
-  <article class="content article article-tags post-type-list" itemscope="">
-    <header class="article-header">
-      <h1 itemprop="name" class="hidden-xs">Tag: 移动端运维</h1>
-      <p class="text-muted hidden-xs">Total 1 articles</p>
-      <nav role="navigation" id="nav-main" class="okayNav">
-        <ul>
-          <li><a href="/tags">All</a></li>
-          
-          <li><a href="/tags/cdn/">cdn</a></li>
-          
-          <li><a href="/tags/gcp/">gcp</a></li>
-          
-          <li><a href="/tags/vpn-tunnel/">vpn-tunnel</a></li>
-          
-          <li><a href="/tags/rpm/">rpm</a></li>
-          
-          <li><a href="/tags/yum仓库/">yum仓库</a></li>
-          
-          <li><a href="/tags/gke/">gke</a></li>
-          
-          <li><a href="/tags/k8s/">k8s</a></li>
-          
-          <li><a href="/tags/go/">go</a></li>
-          
-          <li><a href="/tags/helm/">helm</a></li>
-          
-          <li><a href="/tags/ingress/">ingress</a></li>
-          
-          <li><a href="/tags/运维/">运维</a></li>
-          
-          <li><a href="/tags/梳理/">梳理</a></li>
-          
-          <li><a href="/tags/ingress-nginx/">ingress-nginx</a></li>
-          
-          <li><a href="/tags/chartmuseum/">chartmuseum</a></li>
-          
-          <li><a href="/tags/prometheus/">prometheus</a></li>
-          
-          <li><a href="/tags/java/">java</a></li>
-          
-          <li><a href="/tags/cloudnative/">cloudnative</a></li>
-          
-          <li><a href="/tags/time/">time</a></li>
-          
-          <li><a href="/tags/prometheus-operator/">prometheus-operator</a></li>
-          
-          <li><a href="/tags/serviceMonitor/">serviceMonitor</a></li>
-          
-          <li><a href="/tags/prometheusrules/">prometheusrules</a></li>
-          
-          <li><a href="/tags/rsync/">rsync</a></li>
-          
-          <li><a href="/tags/inotify-tools/">inotify-tools</a></li>
-          
-          <li><a href="/tags/文件同步/">文件同步</a></li>
-          
-          <li><a href="/tags/云运维/">云运维</a></li>
-          
-          <li><a href="/tags/https/">https</a></li>
-          
-          <li><a href="/tags/运维门户/">运维门户</a></li>
-          
-          <li><a href="/tags/vue/">vue</a></li>
-          
-          <li><a href="/tags/operator/">operator</a></li>
-          
-          <li><a href="/tags/短连接/">短连接</a></li>
-          
-          <li><a href="/tags/内核参数/">内核参数</a></li>
-          
-          <li><a href="/tags/anthos/">anthos</a></li>
-          
-          <li><a href="/tags/linux/">linux</a></li>
-          
-          <li><a href="/tags/服务压测/">服务压测</a></li>
-          
-          <li><a href="/tags/阿里云/">阿里云</a></li>
-          
-          <li><a href="/tags/美图/">美图</a></li>
-          
-          <li><a href="/tags/nginx/">nginx</a></li>
-          
-          <li><a href="/tags/python/">python</a></li>
-          
-          <li><a href="/tags/监控告警/">监控告警</a></li>
-          
-          <li><a href="/tags/开源/">开源</a></li>
-          
-          <li><a href="/tags/运营报告/">运营报告</a></li>
-          
-          <li><a href="/tags/巡检/">巡检</a></li>
-          
-          <li><a href="/tags/firewalls/">firewalls</a></li>
-          
-          <li><a href="/tags/华为云/">华为云</a></li>
-          
-          <li><a href="/tags/GPU/">GPU</a></li>
-          
-          <li><a href="/tags/gpu/">gpu</a></li>
-          
-          <li><a href="/tags/grafana/">grafana</a></li>
-          
-          <li><a href="/tags/sre/">sre</a></li>
-          
-          <li><a href="/tags/devops/">devops</a></li>
-          
-          <li><a href="/tags/移动端运维/">移动端运维</a></li>
-          
-          <li><a href="/tags/小程序/">小程序</a></li>
-          
-          <li><a href="/tags/istio/">istio</a></li>
-          
-          <li><a href="/tags/envory/">envory</a></li>
-          
-        </ul>
-      </nav>
-    </header>
-    <!-- /header -->
-    <div class="article-body">
-      <div class="row">
-        
-<div class="col-md-6">
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-istio-in-gcp" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
-<article class="panel panel-default hover-shadow hover-grow" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="panel-body">
-     <div class="article-meta">
-       <time datetime="2021-11-14T14:34:35.000Z" itemprop="datePublished">2021-11-14</time>
-     </div>
-     <h3 class="article-title" itemprop="name">
-       <a class="article-link" href="/2021/11/14/sre-mobile-tools/">SRE移动端运维工具- 小程序</a>
-     </h3>
-   </div>
-   
-   <div class="panel-footer">
-     
-      <a href="/tags/sre/" class="label label-default mb">sre</a>
-     
-      <a href="/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%BF%90%E7%BB%B4/" class="label label-default mb">移动端运维</a>
-     
-      <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" class="label label-default mb">小程序</a>
-     
-     
-   </div>
-   
-</article>
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      istio gateway在GCP上的最佳实现
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/11/17/istio-in-gcp/" class="article-date">
+	  <time datetime="2021-11-17T05:48:02.000Z" itemprop="datePublished">2021-11-17</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/k8s/">k8s</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/envory/" rel="tag">envory</a>, <a class="article-tag-link" href="/tags/gcp/" rel="tag">gcp</a>, <a class="article-tag-link" href="/tags/istio/" rel="tag">istio</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>
+  </span>
 
 
-</div>
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/11/17/istio-in-gcp/#comments" class="article-comment-link">Comments</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 928(words)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 4(minutes)</span>
+	
 
       </div>
     </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h2 id="快速安装"><a href="#快速安装" class="headerlink" title="快速安装"></a>快速安装</h2><p>我目前选择helm安装istio相关组件，首先你需要准备好一些东西：</p>
+<ul>
+<li>下载好istio安装包</li>
+<li>helm版本在3以上</li>
+</ul>
+<p>官方文档在这里，可以瞧一瞧：<a href="https://istio.io/latest/docs/setup/install/helm/" target="_blank" rel="noopener">点击我</a></p>
+<blockquote>
+<p>额外说明</p>
+</blockquote>
+<p>我们目前暂时只是用到istio的gateway，至于流量管理，这一块我们后续再研究、再开启(注入sidecar)。<br>所以我们目前就只部署istiod和ingress。</p>
+<h4 id="下载istio配置istioctl"><a href="#下载istio配置istioctl" class="headerlink" title="下载istio配置istioctl"></a>下载istio配置istioctl</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> curl -L https://istio.io/downloadIstio | sh -</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">cd</span> istio-1.11.4</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 把./istio-1.11.4/bin加到你的环境变量里</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="验证istioctl"><a href="#验证istioctl" class="headerlink" title="验证istioctl"></a>验证istioctl</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> istioctl version</span></span><br><span class="line">no running Istio pods in "istio-system"</span><br><span class="line">1.11.4</span><br></pre></td></tr></table></figure>
+
+<h4 id="开始部署"><a href="#开始部署" class="headerlink" title="开始部署"></a>开始部署</h4><p>我们使用helm部署，所有的chart都在<code>manifests/charts</code>里面，可以进去看看。</p>
+<ul>
+<li>创建ns</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> kubectl create namespace istio-system</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>部署istio-base</li>
+</ul>
+<p>这一步做了哪些工作呢？<br>答：Installs Istio cluster resources: CRDs, cluster bindings and associated service accounts.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> helm install istio-base manifests/charts/base -n istio-system</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>部署istio-discovery</li>
+</ul>
+<p>这一步做了哪些工作呢？<br>答：Installs istiod service.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> helm install istiod manifests/charts/istio-control/istio-discovery -n istio-system</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认istiod配置了2G的内存，测试的话可以配置少一点</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl get all -n istio-system</span></span><br><span class="line">NAME                          READY   STATUS    RESTARTS   AGE</span><br><span class="line">pod/istiod-576c699795-4fq4f   1/1     Running   0          76s</span><br><span class="line"></span><br><span class="line">NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                 AGE</span><br><span class="line">service/istiod   ClusterIP   10.101.203.193   &lt;none&gt;        15010/TCP,15012/TCP,443/TCP,15014/TCP   76s</span><br><span class="line"></span><br><span class="line">NAME                     READY   UP-TO-DATE   AVAILABLE   AGE</span><br><span class="line">deployment.apps/istiod   1/1     1            1           76s</span><br><span class="line"></span><br><span class="line">NAME                                DESIRED   CURRENT   READY   AGE</span><br><span class="line">replicaset.apps/istiod-576c699795   1         1         1       76s</span><br><span class="line"></span><br><span class="line">NAME                                         REFERENCE           TARGETS         MINPODS   MAXPODS   REPLICAS   AGE</span><br><span class="line">horizontalpodautoscaler.autoscaling/istiod   Deployment/istiod   &lt;unknown&gt;/80%   1         5         1          76s</span><br></pre></td></tr></table></figure>
+
+<p>如果你想配置nodeSelector，原生的chart虽然有这个配置，但是是不生效的，所以我们需要修改如下：<br>具体可以看我提的这个issues：<code>https://github.com/istio/istio/issues/36110</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> vim manifests/charts/istio-control/istio-discovery/templates/deployment.yaml</span></span><br><span class="line">添加</span><br><span class="line">    spec:</span><br><span class="line">      &#123;&#123;- if .Values.pilot.nodeSelector &#125;&#125;</span><br><span class="line">      nodeSelector: &#123;&#123; toYaml .Values.pilot.nodeSelector | nindent 8 &#125;&#125;</span><br><span class="line">      &#123;&#123;- end &#125;&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 然后我们再去values.yaml中设置我们想要的nodeselector</span></span><br><span class="line">  nodeSelector:</span><br><span class="line">    nodetype: istio-gateway</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>部署istio-ingress</li>
+</ul>
+<p>这一步做了哪些工作呢？<br>答：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1.修改配置，gateways.type: 从LoadBalancer修改成NodePort</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2.修改配置，gateways.autoscaleEnabled：关闭hpa</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3.修改配置，从deployment部署方式调整成dasmonset方式，由于官方chart没有这样的支持，我单独fork了一个仓库做修改，有兴趣可以看看。</span></span><br></pre></td></tr></table></figure>
+
+<p>仓库地址：<code>https://github.com/gsgs-libin/istio-charts</code></p>
+<p>部署过程中遇到的问题，提了一个issue，具体可以看这里：<code>https://github.com/istio/istio/issues/36128</code></p>
+<p>开始部署：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install istio-ingress manifests/charts/gateways/istio-ingress -n istio-system</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="额外说明"><a href="#额外说明" class="headerlink" title="额外说明"></a>额外说明</h2><p>由于我们只用了gateway相关的功能，所以我们先不要对服务namespace进行注入动作，后续有需要再说。</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><ul>
+<li>创建secret</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> kubectl create secret generic  x-abc-com-20211118 --from-file=x.abc.com.cer  --from-file=x.abc.com.key -n istio-system</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl get secret -n istio-system</span></span><br><span class="line">x-abc-com-20211118                                        Opaque                                2      12s</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建gateway</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> vim test.yaml</span></span><br><span class="line">apiVersion: networking.istio.io/v1beta1</span><br><span class="line">kind: Gateway</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    host: www.abc.com</span><br><span class="line">  name: www-abc-com</span><br><span class="line">  namespace: my-cluster1-gateway</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: istio-ingressgateway</span><br><span class="line">    istio: ingressgateway</span><br><span class="line">  servers:</span><br><span class="line">  - hosts:</span><br><span class="line">    - www.abc.com</span><br><span class="line">    port:</span><br><span class="line">      name: www.abc.com-80</span><br><span class="line">      number: 80</span><br><span class="line">      protocol: HTTP</span><br><span class="line">    tls:</span><br><span class="line">      httpsRedirect: true</span><br><span class="line">  - hosts:</span><br><span class="line">    - www.abc.com</span><br><span class="line">    port:</span><br><span class="line">      name: https-www.abc.com-443</span><br><span class="line">      number: 443</span><br><span class="line">      protocol: HTTPS</span><br><span class="line">    tls:</span><br><span class="line">      credentialName: x-abc-com-20211118</span><br><span class="line">      mode: SIMPLE</span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl apply -f test.yaml</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看gateway监听</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">exec</span> it 进入gateway容器</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> netstat -antulp | grep LISTEN | grep -E <span class="string">"80|443"</span></span></span><br><span class="line">tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      17/envoy</span><br><span class="line">tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      17/envoy</span><br><span class="line"><span class="meta">#</span><span class="bash"> 由于是hostnetwork模式，所以到宿主机上看看</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> istio-node <span class="comment"># netstat -antulp | grep LISTEN | grep -E "80|443"</span></span></span><br><span class="line">tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      1846819/envoy       </span><br><span class="line">tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      1846819/envoy</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建一个四层的负载均衡器</li>
+</ul>
+<p>我们创建一个四层的负载均衡器代理到我们的gateway上，不过多截图了，代理80和443即可，很简单。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.itmonkey.icu/2021/11/17/istio-in-gcp/" title="istio gateway在GCP上的最佳实现" target="_blank" rel="external">https://blog.itmonkey.icu/2021/11/17/istio-in-gcp/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/gsgs-libin" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/img/wechat/avatar.jpeg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/gsgs-libin" target="_blank"><span class="text-dark">猿的野生香蕉</span><small class="ml-1x">SRE</small></a></h3>
+        <div>一个在运维道路上狂飙的老司机</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
   </article>
-   
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2021/11/14/sre-mobile-tools/" title="SRE移动端运维工具- 小程序"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/img/wechat/alpay.jpeg" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/img/wechat/wepay.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 </main>
 
   <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
@@ -536,6 +635,34 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 
 
 
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '4c1562de952eeb22333e',
+    clientSecret: '94b2bbe132cd9d532bb6777536f81ef662ede824',
+    repo: 'libin_blog_gittalk',
+    owner: 'gsgs-libin',
+    admin: ['gsgs-libin'],
+    id: md5(location.pathname),
+    distractionFreeMode: true,
+    proxy: 'https://shielded-brushlands-08810.herokuapp.com/https://github.com/login/oauth/access_token'
+  })
+  gitalk.render('comments')
+  </script>
+
+      
 
 
 
