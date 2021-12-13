@@ -6,7 +6,7 @@
   <link href="https://blog.itmonkey.icu/atom.xml" rel="self"/>
   
   <link href="https://blog.itmonkey.icu/"/>
-  <updated>2021-11-19T06:31:44.758Z</updated>
+  <updated>2021-12-13T07:50:17.627Z</updated>
   <id>https://blog.itmonkey.icu/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>记一次迁移到istio gateway后502问题排查</title>
+    <link href="https://blog.itmonkey.icu/2021/12/08/istio-gateway-502/"/>
+    <id>https://blog.itmonkey.icu/2021/12/08/istio-gateway-502/</id>
+    <published>2021-12-08T02:28:03.000Z</published>
+    <updated>2021-12-13T07:50:17.627Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>我们目前架构从ingress-controller迁移到istio-gateway后，出现了两次服务出现502的情况。</p><ul><li>A服务调用B服务，出现502</li><li>三方服务回调我方域名，出现502</li></ul><h2 id="场景说明"><a href="#场景说明" class="headerlink" title="场景说明"></a>场景说明</h2><ul><li>场景1<br>AB服务在同一个k8s集群，架构是nginx+php，A服务配置了proxy_pass到B服务</li></ul><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location /api/ &#123;</span><br><span class="line">    proxy_pass https://api.dgsfor.com/;</span><br><span class="line">    proxy_set_header Host "api.dgsfor.com";</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>场景2<br>三方服务(可以认为是百度等平台)回调我方C服务，三方服务反映结果502</li></ul><h2 id="初步思路"><a href="#初步思路" class="headerlink" title="初步思路"></a>初步思路</h2><p>正常502，我们都会优先怀疑到服务端是不是有问题，比如最大进程数、request_timeout、数据库、进程挂了等等。<br>所以我们优先看日志。</p><p>假设我方服务是：<code>https://api.dgsfor.com/v1/callback</code>.</p><h2 id="场景1排查"><a href="#场景1排查" class="headerlink" title="场景1排查"></a>场景1排查</h2><ol><li>查看B服务nginx 日志，发现异常</li></ol><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2021/12/01 11:19:37 [error] 44#0: *255 peer closed connection in SSL handshake (104: Connection reset by peer) while SSL handshaking to</span><br><span class="line"> upstream, client: 10.18.33.71, server: api.dgsfor.com, request: "GET /api/ HTTP/1.1", upstream: "https://x.x.x.x:443/",</span><br><span class="line">host: "api.dgsfor.com"</span><br></pre></td></tr></table></figure><ol start="2"><li>可以判断是证书错误，手动curl测试了一下发现正常</li></ol><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -vvv "https://api.dgsfor.com/v1/callback"</span><br></pre></td></tr></table></figure><ol start="3"><li>初步判断是SNI有问题，直接抓包看看</li></ol><p>抓包结果发现 HelloClient 没有 SNI Extension，因此 gateway RST 连接，直接导致502</p><ol start="4"><li>开启sni extension</li></ol><p>nginx+php模式，需要配置<code>proxy_ssl_server_name on;</code>，才会SNI 扩展。</p><ol start="5"><li>开启后正常</li></ol><h2 id="场景2排查"><a href="#场景2排查" class="headerlink" title="场景2排查"></a>场景2排查</h2><p>有了场景1的思路，我们优先怀疑是不是sni的问题，所以直接把三方回调地址改成http，发现直接可行了，那么没跑了，又是sni的异常。</p><ol><li>ingress-controller可以，istio-gateway不可以</li></ol><p>为什么之前使用ingress没有这个问题，istio-gateway不可以</p><ol start="2"><li>抓包看看吧，先抓使用ingress时候的包</li></ol><p>看Server Hello，发现是有一个默认的sni，是ingress下发的。</p><p><img src="/img/istio-gateway-502/1.png" alt="png1"></p><ol start="3"><li>抓包看看吧，继续抓使用istio-gateway时候的包</li></ol><p>最终结果是没有抓到，在helloClient就rst了。</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过上述可以得到的结论是，</p><ul><li><p>ingress-controller在客户端没有配置sni的情况下，会下发一个默认的sni，istio-gateway没有默认下发。<br><img src="/img/istio-gateway-502/2.png" alt="png2"></p></li><li><p>建议调用方都主动配置sni</p></li></ul>]]></content>
+    
+    
+    <summary type="html">业务从ingress迁移到istio出现502情况</summary>
+    
+    
+    
+    <category term="k8s" scheme="https://blog.itmonkey.icu/categories/k8s/"/>
+    
+    
+    <category term="ingress" scheme="https://blog.itmonkey.icu/tags/ingress/"/>
+    
+    <category term="istio" scheme="https://blog.itmonkey.icu/tags/istio/"/>
+    
+  </entry>
   
   <entry>
     <title>istio gateway在GCP上的最佳实践</title>
@@ -450,29 +473,6 @@
     
     
     <summary type="html">动手写一个operator，第二天</summary>
-    
-    
-    
-    <category term="k8s" scheme="https://blog.itmonkey.icu/categories/k8s/"/>
-    
-    
-    <category term="k8s" scheme="https://blog.itmonkey.icu/tags/k8s/"/>
-    
-    <category term="operator" scheme="https://blog.itmonkey.icu/tags/operator/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>《1》动手写一个operator</title>
-    <link href="https://blog.itmonkey.icu/2020/12/22/write-an-operator-1/"/>
-    <id>https://blog.itmonkey.icu/2020/12/22/write-an-operator-1/</id>
-    <published>2020-12-22T03:04:09.000Z</published>
-    <updated>2020-12-22T08:37:52.082Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>前几天学了一下go，准备拿一个项目练练手，刚好了解到operator，想写一个管理定时任务的operator，这个定时任务主要是定时滚动更新deployment。举个例子：我创建一个cr资源，绑定了某个deployment A，当匹配到cron表达式，那么就定时滚动更新A deployment下面所有的pod。 (优雅的更新)</p><a id="more"></a><h3 id="项目前提要求"><a href="#项目前提要求" class="headerlink" title="项目前提要求"></a>项目前提要求</h3><ol><li>会go</li><li>懂k8s</li><li>听过operator</li><li>见过operator-sdk</li></ol><h3 id="啥是crd"><a href="#啥是crd" class="headerlink" title="啥是crd"></a>啥是crd</h3><p>学习operator，首先你要知道什么是crd(CustomResourceDefinition)，可以去官网看看。</p><p>想知道最简单的crd例子，可以看之前的博客：<a href="https://blog.itmonkey.icu/2020/12/01/def-custom-crd/">CRD</a></p><p>我个人理解，operator就是通过自定义的cr资源去管理符合条件的pod，类似deployment.</p><p>可以看看当前你集群中有哪些crd资源：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl get crd</span></span><br><span class="line">NAME                                             CREATED AT</span><br><span class="line">alertmanagers.monitoring.coreos.com              2019-10-12T10:07:13Z</span><br><span class="line">applications.app.k8s.io                          2020-05-21T15:22:07Z</span><br><span class="line">csidrivers.csi.storage.k8s.io                    2019-10-11T08:25:46Z</span><br><span class="line">csinodeinfos.csi.storage.k8s.io                  2019-10-11T08:25:46Z</span><br><span class="line">horizontalnodeautoscalers.autoscaling.cce.io     2020-02-13T04:16:57Z</span><br><span class="line">network-attachment-definitions.k8s.cni.cncf.io   2019-10-11T08:25:07Z</span><br><span class="line">permissions.rbac.cce.io                          2019-10-11T08:25:10Z</span><br><span class="line">podmonitors.monitoring.coreos.com                2019-10-12T10:07:18Z</span><br><span class="line">prometheuses.monitoring.coreos.com               2019-10-12T10:07:24Z</span><br><span class="line">prometheusrules.monitoring.coreos.com            2019-10-12T10:07:29Z</span><br><span class="line">servicemonitors.monitoring.coreos.com            2019-10-12T10:07:35Z</span><br><span class="line">syncvolumes.csms.storage                         2020-03-10T04:46:34Z</span><br></pre></td></tr></table></figure><h3 id="operator工作原理"><a href="#operator工作原理" class="headerlink" title="operator工作原理"></a>operator工作原理</h3><p>Operator 实际上作为kubernetes自定义扩展资源注册到controller-manager,通过list and watch的方式监听对应资源的变化，然后在周期内的各个环节做相应的协调处理。所谓的处理就是operator实现由状态的应用的核心部分，当然不同应用其处理的方式也不同</p><h3 id="代码生成器介绍"><a href="#代码生成器介绍" class="headerlink" title="代码生成器介绍"></a>代码生成器介绍</h3><p>operator中核心controller的代码都已经被封装好了，我们只需要写具体的逻辑即可。</p><p>即：你不用关心controller如何监听这个资源，不用关心去读取队列消息等等，只需要写当你获取到这个资源变化的事件信息，你应该做什么，或者应该响应什么。</p><p>那么接下来就是介绍<code>operator-sdk</code>了，他就很好的帮你实现了上述的功能，自动生成一套代码，你往里面插入数据就行了。</p><h3 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h3><p>打算：目前我们集群中部分业务会出现内存或者显存溢出的问题，所以想针对这些异常pod做一些定时重启(滚动更新一下)的动作。</p><p>想法：deployment配置上特定的annotation，比如<code>mtsre.meitu.com/eru: &quot;true&quot;</code>，自定义controller监听到这个key，我就为这个deployment创建一个cr资源，这个cr资源可以配置定时任务表达式，最终会按照这个定时任务表达式去定时的更新deployment。更新deployment这个操作可以通过修改spec.template pod的annotation来实现。</p><h4 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h4><p>项目名称，我定为优雅的滚动更新(Elegant rolling updates)，简称ERU.</p><p>通过operator-sdk生成代码模板：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> operator-sdk new eru-operator</span></span><br></pre></td></tr></table></figure><p>operator-sdk的安装可以直接看官方文档：<a href="https://sdk.operatorframework.io/docs/installation/" target="_blank" rel="noopener">安装operator-sdk</a><br>我这里安装的版本是<code>0.15.2</code>.</p><h4 id="创建api"><a href="#创建api" class="headerlink" title="创建api"></a>创建api</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> operator-sdk add api --api-version=mtsre.meitu.com/v1 --kind=Eru</span></span><br></pre></td></tr></table></figure><h4 id="创建controller"><a href="#创建controller" class="headerlink" title="创建controller"></a>创建controller</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> operator-sdk add controller --api-version=mtsre.meitu.com/v1 --kind=Eru</span></span><br></pre></td></tr></table></figure><h4 id="看看默认的代码结构"><a href="#看看默认的代码结构" class="headerlink" title="看看默认的代码结构"></a>看看默认的代码结构</h4><p><img src="/img/write-an-operator/1.png" alt="png1"></p><h4 id="运行试试"><a href="#运行试试" class="headerlink" title="运行试试"></a>运行试试</h4><p>要想运行项目，我们首先要在我们的集群中部署一下我们的role,rolebinding,crd等资源。<br>在deploy目录里有这几个文件，我们分别依次部署一下：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl apply -f role.yaml </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> kubectl apply -f role_binding.yaml </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> kubectl apply -f service_account.yaml</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> kubectl apply -f crds/mtsre.meitu.com_erus_crd.yaml</span></span><br></pre></td></tr></table></figure><p>部署好之后，我们在项目的跟目录下直接运行：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> operator-sdk run --<span class="built_in">local</span>  --namespace your-namespace-name</span></span><br></pre></td></tr></table></figure><p>这时你就可以看到输出，默认的代码是监听这个namespace下pod的变化。</p>]]></content>
-    
-    
-    <summary type="html">动手写一个operator,第一天</summary>
     
     
     

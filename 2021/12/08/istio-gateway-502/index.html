@@ -17,18 +17,25 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>猿的野生香蕉</title>
-  <meta name="description" content="在运维道路上一路狂飙的老司机">
-<meta property="og:type" content="website">
-<meta property="og:title" content="猿的野生香蕉">
-<meta property="og:url" content="https://blog.itmonkey.icu/index.html">
+  <title>记一次迁移到istio gateway后502问题排查 | 猿的野生香蕉</title>
+  <meta name="description" content="业务从ingress迁移到istio出现502情况">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次迁移到istio gateway后502问题排查">
+<meta property="og:url" content="https://blog.itmonkey.icu/2021/12/08/istio-gateway-502/index.html">
 <meta property="og:site_name" content="猿的野生香蕉">
-<meta property="og:description" content="在运维道路上一路狂飙的老司机">
+<meta property="og:description" content="业务从ingress迁移到istio出现502情况">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/istio-gateway-502/1.png">
+<meta property="og:image" content="https://blog.itmonkey.icu/img/istio-gateway-502/2.png">
+<meta property="article:published_time" content="2021-12-08T02:28:03.000Z">
+<meta property="article:modified_time" content="2021-12-13T07:50:17.627Z">
 <meta property="article:author" content="野生">
+<meta property="article:tag" content="ingress">
+<meta property="article:tag" content="istio">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.itmonkey.icu/img/istio-gateway-502/1.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://blog.itmonkey.icu/index.html">
+  <link rel="canonical" href="https://blog.itmonkey.icu/2021/12/08/istio-gateway-502/index.html">
   
     <link rel="alternate" href="/atom.xml" title="猿的野生香蕉" type="application/atom+xml">
   
@@ -328,43 +335,52 @@
 </aside>
 
   
-  <main class="main" role="main">
   
-  <div class="content article-list">
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-istio-gateway-502" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
+    <div class="article-header">
+      
+        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/12/08/istio-gateway-502/">记一次迁移到istio gateway后502问题排查</a>
+    <h1 class="article-title" itemprop="name">
+      记一次迁移到istio gateway后502问题排查
     </h1>
   
 
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
+      
+      <div class="article-meta">
+        <span class="article-date">
     <i class="icon icon-calendar-check"></i>
 	<a href="/2021/12/08/istio-gateway-502/" class="article-date">
-	  <time datetime="2021-12-08T02:28:03.000Z" itemprop="datePublished">Dec 8</time>
+	  <time datetime="2021-12-08T02:28:03.000Z" itemprop="datePublished">2021-12-08</time>
 	</a>
 </span>
-    
+        
   <span class="article-category">
     <i class="icon icon-folder"></i>
     <a class="article-category-link" href="/categories/k8s/">k8s</a>
   </span>
 
-    
+        
   <span class="article-tag">
     <i class="icon icon-tags"></i>
 	<a class="article-tag-link" href="/tags/ingress/" rel="tag">ingress</a>, <a class="article-tag-link" href="/tags/istio/" rel="tag">istio</a>
   </span>
 
 
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/12/08/istio-gateway-502/#comments" class="article-comment-link">Comments</a></span>
-    
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/12/08/istio-gateway-502/#comments" class="article-comment-link">Comments</a></span>
+        
 	
 		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 552(words)</span>
 	
@@ -372,443 +388,190 @@
 		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 2(minutes)</span>
 	
 
-  </p>
-</article>
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>我们目前架构从ingress-controller迁移到istio-gateway后，出现了两次服务出现502的情况。</p>
+<ul>
+<li>A服务调用B服务，出现502</li>
+<li>三方服务回调我方域名，出现502</li>
+</ul>
+<h2 id="场景说明"><a href="#场景说明" class="headerlink" title="场景说明"></a>场景说明</h2><ul>
+<li>场景1<br>AB服务在同一个k8s集群，架构是nginx+php，A服务配置了proxy_pass到B服务</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location /api/ &#123;</span><br><span class="line">    proxy_pass https://api.dgsfor.com/;</span><br><span class="line">    proxy_set_header Host "api.dgsfor.com";</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/11/17/istio-in-gcp/">istio gateway在GCP上的最佳实践</a>
-    </h1>
-  
+<ul>
+<li>场景2<br>三方服务(可以认为是百度等平台)回调我方C服务，三方服务反映结果502</li>
+</ul>
+<h2 id="初步思路"><a href="#初步思路" class="headerlink" title="初步思路"></a>初步思路</h2><p>正常502，我们都会优先怀疑到服务端是不是有问题，比如最大进程数、request_timeout、数据库、进程挂了等等。<br>所以我们优先看日志。</p>
+<p>假设我方服务是：<code>https://api.dgsfor.com/v1/callback</code>.</p>
+<h2 id="场景1排查"><a href="#场景1排查" class="headerlink" title="场景1排查"></a>场景1排查</h2><ol>
+<li>查看B服务nginx 日志，发现异常</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2021/12/01 11:19:37 [error] 44#0: *255 peer closed connection in SSL handshake (104: Connection reset by peer) while SSL handshaking to</span><br><span class="line"> upstream, client: 10.18.33.71, server: api.dgsfor.com, request: "GET /api/ HTTP/1.1", upstream: "https://x.x.x.x:443/",</span><br><span class="line">host: "api.dgsfor.com"</span><br></pre></td></tr></table></figure>
 
+<ol start="2">
+<li>可以判断是证书错误，手动curl测试了一下发现正常</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -vvv "https://api.dgsfor.com/v1/callback"</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>初步判断是SNI有问题，直接抓包看看</li>
+</ol>
+<p>抓包结果发现 HelloClient 没有 SNI Extension，因此 gateway RST 连接，直接导致502</p>
+<ol start="4">
+<li>开启sni extension</li>
+</ol>
+<p>nginx+php模式，需要配置<code>proxy_ssl_server_name on;</code>，才会SNI 扩展。</p>
+<ol start="5">
+<li>开启后正常</li>
+</ol>
+<h2 id="场景2排查"><a href="#场景2排查" class="headerlink" title="场景2排查"></a>场景2排查</h2><p>有了场景1的思路，我们优先怀疑是不是sni的问题，所以直接把三方回调地址改成http，发现直接可行了，那么没跑了，又是sni的异常。</p>
+<ol>
+<li>ingress-controller可以，istio-gateway不可以</li>
+</ol>
+<p>为什么之前使用ingress没有这个问题，istio-gateway不可以</p>
+<ol start="2">
+<li>抓包看看吧，先抓使用ingress时候的包</li>
+</ol>
+<p>看Server Hello，发现是有一个默认的sni，是ingress下发的。</p>
+<p><img src="/img/istio-gateway-502/1.png" alt="png1"></p>
+<ol start="3">
+<li>抓包看看吧，继续抓使用istio-gateway时候的包</li>
+</ol>
+<p>最终结果是没有抓到，在helloClient就rst了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过上述可以得到的结论是，</p>
+<ul>
+<li><p>ingress-controller在客户端没有配置sni的情况下，会下发一个默认的sni，istio-gateway没有默认下发。<br><img src="/img/istio-gateway-502/2.png" alt="png2"></p>
+</li>
+<li><p>建议调用方都主动配置sni</p>
+</li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.itmonkey.icu/2021/12/08/istio-gateway-502/" title="记一次迁移到istio gateway后502问题排查" target="_blank" rel="external">https://blog.itmonkey.icu/2021/12/08/istio-gateway-502/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/gsgs-libin" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/img/wechat/avatar.jpeg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/gsgs-libin" target="_blank"><span class="text-dark">猿的野生香蕉</span><small class="ml-1x">SRE</small></a></h3>
+        <div>一个在运维道路上狂飙的老司机</div>
+      </div>
+    </figure>
   </div>
+</div>
+
+
+    </div>
+  </article>
   
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/11/17/istio-in-gcp/" class="article-date">
-	  <time datetime="2021-11-17T05:48:02.000Z" itemprop="datePublished">Nov 17</time>
-	</a>
-</span>
     
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </span>
-
+  <section id="comments">
+  	
+           
     
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/envory/" rel="tag">envory</a>, <a class="article-tag-link" href="/tags/gcp/" rel="tag">gcp</a>, <a class="article-tag-link" href="/tags/istio/" rel="tag">istio</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>
-  </span>
+  </section>
 
 
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/11/17/istio-in-gcp/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.1k(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 5(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/11/14/sre-mobile-tools/">SRE移动端运维工具- 小程序</a>
-    </h1>
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
   
-
-  </div>
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2021/11/17/istio-in-gcp/" title="istio gateway在GCP上的最佳实践"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
   
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/11/14/sre-mobile-tools/" class="article-date">
-	  <time datetime="2021-11-14T14:34:35.000Z" itemprop="datePublished">Nov 14</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/DevOps/">DevOps</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/sre/" rel="tag">sre</a>, <a class="article-tag-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a>, <a class="article-tag-link" href="/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%BF%90%E7%BB%B4/" rel="tag">移动端运维</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/11/14/sre-mobile-tools/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.2k(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 4(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/11/12/sre-stability-operation-platform-report/">SRE稳定性运营平台之 巡检和运营报告</a>
-    </h1>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
   
-
-  </div>
   
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/11/12/sre-stability-operation-platform-report/" class="article-date">
-	  <time datetime="2021-11-12T09:01:45.000Z" itemprop="datePublished">Nov 12</time>
-	</a>
-</span>
+  <div class="bar-right">
     
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/sre-report/">sre-report</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/devops/" rel="tag">devops</a>, <a class="article-tag-link" href="/tags/sre/" rel="tag">sre</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/11/12/sre-stability-operation-platform-report/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 476(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/11/09/sre-stability-operation-platform-authority-message/">SRE稳定性运营平台之模板和权威消息</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/11/09/sre-stability-operation-platform-authority-message/" class="article-date">
-	  <time datetime="2021-11-09T05:12:21.000Z" itemprop="datePublished">Nov 9</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/sre-report/">sre-report</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/devops/" rel="tag">devops</a>, <a class="article-tag-link" href="/tags/sre/" rel="tag">sre</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/11/09/sre-stability-operation-platform-authority-message/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.2k(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 4(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/26/ubuntu-gpu-monitor-prometheus/">基于DCGM的ubuntu GPU监控方案</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/10/26/ubuntu-gpu-monitor-prometheus/" class="article-date">
-	  <time datetime="2021-10-26T08:50:15.000Z" itemprop="datePublished">Oct 26</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/k8s/">k8s</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/gpu/" rel="tag">gpu</a>, <a class="article-tag-link" href="/tags/grafana/" rel="tag">grafana</a>, <a class="article-tag-link" href="/tags/prometheus/" rel="tag">prometheus</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/10/26/ubuntu-gpu-monitor-prometheus/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 359(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/08/31/hwcloud-cce-dual-gpu-version-coexist/">实现华为云cce集群双GPU版本共存</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/08/31/hwcloud-cce-dual-gpu-version-coexist/" class="article-date">
-	  <time datetime="2021-08-31T06:31:08.000Z" itemprop="datePublished">Aug 31</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/GPU/" rel="tag">GPU</a>, <a class="article-tag-link" href="/tags/k8s/" rel="tag">k8s</a>, <a class="article-tag-link" href="/tags/%E5%8D%8E%E4%B8%BA%E4%BA%91/" rel="tag">华为云</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/08/31/hwcloud-cce-dual-gpu-version-coexist/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 423(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/08/27/gcp-firewalls-restrict-release-of-public-networks-to-the-intranet/">gcp如何限制某台机器公网流量，放行内网流量</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/08/27/gcp-firewalls-restrict-release-of-public-networks-to-the-intranet/" class="article-date">
-	  <time datetime="2021-08-27T07:38:40.000Z" itemprop="datePublished">Aug 27</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/%E4%BA%91%E8%BF%90%E7%BB%B4/">云运维</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/firewalls/" rel="tag">firewalls</a>, <a class="article-tag-link" href="/tags/gcp/" rel="tag">gcp</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/08/27/gcp-firewalls-restrict-release-of-public-networks-to-the-intranet/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 161(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/21/ops-time/">编程时间处理</a>
-    </h1>
-  
-
-  </div>
-  
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="golang"><a href="#golang" class="headerlink" title="golang"></a>golang</h3>
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/21/ops-time/" class="article-date">
-	  <time datetime="2021-07-21T03:12:05.000Z" itemprop="datePublished">Jul 21</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/DevOps/">DevOps</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/time/" rel="tag">time</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/21/ops-time/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 81(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 1(minutes)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/15/ops_report/report-02/">稳定性报告(report)平台 -- 模板篇</a>
-    </h1>
-  
-
-  </div>
-  
-  <div class="article-entry text-muted" itemprop="description">
-    <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>后续我们称这个平台为<code>srp</code>平台。</p>
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/15/ops_report/report-02/" class="article-date">
-	  <time datetime="2021-07-15T05:37:17.000Z" itemprop="datePublished">Jul 15</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/Report/">Report</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/%E5%B7%A1%E6%A3%80/" rel="tag">巡检</a>, <a class="article-tag-link" href="/tags/%E8%BF%90%E8%90%A5%E6%8A%A5%E5%91%8A/" rel="tag">运营报告</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/15/ops_report/report-02/#comments" class="article-comment-link">Comments</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.5k(words)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">Read Count: 5(minutes)</span>
-	
-
-  </p>
-</article>
-
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
     
   </div>
-
+  </div>
+</nav>
   
-    
-    <nav class="bar bar-footer clearfix" data-stick-bottom>
-        <div class="bar-inner">
-        <ul class="pager pull-left">
-            
-            <li class="prev disabled">
-                <a href="javascript:;">
-                    <i class="icon icon-angle-left"></i>
-                    Prev
-                </a>
-            </li>
-            
-            
-            <li class="next">
-                <a href="/page/2/">
-                    Next
-                    <i class="icon icon-angle-right"></i>
-                </a>
-            </li>
-            
-        </ul>
-        <div class="total-article bar-right">Page 1 of 5</div>
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/img/wechat/alpay.jpeg" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/img/wechat/wepay.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
         </div>
-    </nav>
-    
- 
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 </main>
 
   <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
@@ -869,6 +632,28 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 
 
 
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '4c1562de952eeb22333e',
+    clientSecret: '94b2bbe132cd9d532bb6777536f81ef662ede824',
+    repo: 'libin_blog_gittalk',
+    owner: 'gsgs-libin',
+    admin: ['gsgs-libin'],
+    id: md5(location.pathname),
+    distractionFreeMode: true,
+    proxy: 'https://shielded-brushlands-08810.herokuapp.com/https://github.com/login/oauth/access_token'
+  })
+  gitalk.render('comments')
+  </script>
+
+      
 
 
 
