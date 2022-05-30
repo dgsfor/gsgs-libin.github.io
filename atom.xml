@@ -6,7 +6,7 @@
   <link href="https://blog.itmonkey.icu/atom.xml" rel="self"/>
   
   <link href="https://blog.itmonkey.icu/"/>
-  <updated>2022-03-03T02:04:11.664Z</updated>
+  <updated>2022-05-30T03:35:29.040Z</updated>
   <id>https://blog.itmonkey.icu/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于gpu的一些命令</title>
+    <link href="https://blog.itmonkey.icu/2022/05/30/some-commands-for-gpu/"/>
+    <id>https://blog.itmonkey.icu/2022/05/30/some-commands-for-gpu/</id>
+    <published>2022-05-30T03:29:02.000Z</published>
+    <updated>2022-05-30T03:35:29.040Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul><li>nvidia-smi</li></ul><p>一个可视化的界面，能查看当前gpu的信息和一些进程信息</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Mon May 30 11:28:03 2022</span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| NVIDIA-SMI 460.39       Driver Version: 460.39       CUDA Version: 11.2     |</span><br><span class="line">|-------------------------------+----------------------+----------------------+</span><br><span class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</span><br><span class="line">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</span><br><span class="line">|                               |                      |               MIG M. |</span><br><span class="line">|===============================+======================+======================|</span><br><span class="line">|   0  Tesla V100-PCIE...  Off  | 00000000:21:01.0 Off |                    0 |</span><br><span class="line">| N/A   31C    P0    23W / 250W |      0MiB / 32510MiB |      0%      Default |</span><br><span class="line">|                               |                      |                  N/A |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line"></span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| Processes:                                                                  |</span><br><span class="line">|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |</span><br><span class="line">|        ID   ID                                                   Usage      |</span><br><span class="line">|=============================================================================|</span><br><span class="line">|  No running processes found                                                 |</span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">WARNING: infoROM is corrupted at gpu 0000:21:01.0</span><br></pre></td></tr></table></figure><ul><li>nvidia-sim -L</li></ul><p>查看显卡版本，以及uuid</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GPU 0: Tesla V100-PCIE-32GB (UUID: GPU-854583bb-xxxxx-4b07-4571-xxxxxxxxxx)</span><br></pre></td></tr></table></figure><ul><li>nvidia-smi -a</li></ul><p>查看详细的gpu卡信息</p><ul><li>lspci</li></ul><p>如果没有命令，请安装：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install pciutils</span><br></pre></td></tr></table></figure><ul><li>lspci | grep -i nvidia</li></ul><p>查看当前机器的gpu卡设备</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">21:01.0 3D controller: NVIDIA Corporation GV100GL [Tesla V100 PCIe 32GB] (rev a1)</span><br></pre></td></tr></table></figure><ul><li>lspci -v -s 21:01.0</li></ul><p>后面是显卡代号，可以查看显卡详情</p><ul><li>其他</li></ul><p>如果还是查不到，可以到这里查询: <a href="http://pci-ids.ucw.cz/read/PC/10de/2208" target="_blank" rel="noopener">点击我</a></p>]]></content>
+    
+    
+    <summary type="html">日常常用的一些关于gpu的命令</summary>
+    
+    
+    
+    <category term="k8s" scheme="https://blog.itmonkey.icu/categories/k8s/"/>
+    
+    
+    <category term="k8s" scheme="https://blog.itmonkey.icu/tags/k8s/"/>
+    
+    <category term="gpu" scheme="https://blog.itmonkey.icu/tags/gpu/"/>
+    
+  </entry>
   
   <entry>
     <title>耗时4个月，精心给自己做了一顿饭</title>
@@ -461,27 +484,6 @@
     
     
     <category term="cdn" scheme="https://blog.itmonkey.icu/tags/cdn/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>定义ingress 403页面</title>
-    <link href="https://blog.itmonkey.icu/2021/02/02/ingress-self-define-403/"/>
-    <id>https://blog.itmonkey.icu/2021/02/02/ingress-self-define-403/</id>
-    <published>2021-02-02T05:43:39.000Z</published>
-    <updated>2021-02-02T07:16:08.196Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>默认的ingress controller提供的403 error页面太丑了，想要定制化一下</p><a id="more"></a><h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>1.增加一个configmap，定义403页面<br>2.挂载到ingress-controller的pod里<br>3.对单个ingress对象增加annotation注解</p><h3 id="开始吧"><a href="#开始吧" class="headerlink" title="开始吧"></a>开始吧</h3><h4 id="增加一个configmap"><a href="#增加一个configmap" class="headerlink" title="增加一个configmap"></a>增加一个configmap</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">meitu403.html: | </span><br><span class="line">   &lt;head&gt;&lt;meta charset="UTF-8"&gt;&lt;/head&gt;</span><br><span class="line">   &lt;html&gt;</span><br><span class="line">       &lt;h1 align="center"&gt;禁止外部访问&lt;/h1&gt;</span><br><span class="line">       &lt;p align="center"&gt;请连接美图wifi或者有线!&lt;/p&gt;</span><br><span class="line">   &lt;/html&gt;</span><br></pre></td></tr></table></figure><h4 id="挂载到ingress-controller的pod里"><a href="#挂载到ingress-controller的pod里" class="headerlink" title="挂载到ingress-controller的pod里"></a>挂载到ingress-controller的pod里</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">volumeMounts:</span><br><span class="line">        - mountPath: /etc/nginx/conf</span><br><span class="line">          name: nginx-whitelist-volume</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">volumes:</span><br><span class="line">      - configMap:</span><br><span class="line">          defaultMode: 420</span><br><span class="line">          name: nginx-whitelist</span><br><span class="line">        name: nginx-whitelist-volume</span><br></pre></td></tr></table></figure><h4 id="增加annotation"><a href="#增加annotation" class="headerlink" title="增加annotation"></a>增加annotation</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx.ingress.kubernetes.io/server-snippet: error_page 403 /meitu403.html; location  /meitu403.html &#123; internal; root /etc/nginx/conf; allow all; &#125;</span><br></pre></td></tr></table></figure><h3 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h3><p><img src="/img/ingress-self-define-403/1.png" alt="png1"></p>]]></content>
-    
-    
-    <summary type="html">如何自定义ingress 403页面</summary>
-    
-    
-    
-    <category term="k8s" scheme="https://blog.itmonkey.icu/categories/k8s/"/>
-    
-    
-    <category term="ingress" scheme="https://blog.itmonkey.icu/tags/ingress/"/>
     
   </entry>
   
